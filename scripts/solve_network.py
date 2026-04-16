@@ -52,6 +52,11 @@ from scripts._helpers import (
     set_scenario_config,
     update_config_from_wildcards,
 )
+from scripts.romania_winter_stress import (
+    add_import_cap_constraints,
+    add_scada_proxy_constraints,
+    apply_timeseries_shocks,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -420,70 +425,14 @@ def add_retrofit_gas_boiler_constraint(
     n.model.add_constraints(lhs == rhs, name="gas_retrofit")
 
 
-def add_load_balance_components(n, config, sign=1):
-    """
-    Add load shedding or load sinks to the network with carrier 'load'.
-
-    Parameters
-    ----------
-    n : pypsa.Network
-        The PyPSA network to be modified.
-    config : dict
-        The load shedding or load sinks settings.
-    sign : float
-        Direction of the added generators. Positive for load shedding, negative for load sinks.
-
-    Returns
-    -------
-    None
-        Modifies PyPSA network in place.
-    """
-    if "load" not in n.carriers.index:
-        n.add("Carrier", "load")
-
-    carriers = config.get("carriers", {})
-    default_cost = config.get("default_cost")
-    balance_comp = "shedding" if sign > 0 else "sink"
-
-    logger.info(
-        f"Add load {balance_comp} for {'all carriers' if config.get('all_carriers') else ', '.join(carriers)}."
-    )
-
-    for bus_carrier, price in carriers.items():
-        buses_i = n.buses[n.buses.carrier == bus_carrier].index
-        n.add(
-            "Generator",
-            buses_i,
-            f" load {balance_comp}",
-            bus=buses_i,
-            carrier="load",
-            marginal_cost=price,
-            p_nom=np.inf,
-            sign=sign,
-        )
-
-    if config.get("all_carriers", False):
-        buses_rest_i = n.buses[~n.buses.carrier.isin(carriers)].index
-        n.add(
-            "Generator",
-            buses_rest_i,
-            f" load {balance_comp}",
-            bus=buses_rest_i,
-            carrier="load",
-            marginal_cost=default_cost,
-            p_nom=np.inf,
-            sign=sign,
-        )
-
-
 def prepare_network(
     n: pypsa.Network,
     solve_opts: dict,
+    config: dict,
     foresight: str,
     planning_horizons: str | None,
     co2_sequestration_potential: dict[str, float],
     limit_max_growth: dict[str, Any] | None = None,
-    rolling_horizon: bool = False,
 ) -> None:
     """
     Prepare network with various constraints and modifications.
@@ -494,6 +443,8 @@ def prepare_network(
         The PyPSA network instance
     solve_opts : Dict
         Dictionary of solving options containing clip_p_max_pu, load_shedding etc.
+    config : Dict
+        Full scenario configuration dictionary.
     foresight : str
         Planning foresight type ('myopic' or 'perfect')
     planning_horizons : str or None
@@ -516,13 +467,23 @@ def prepare_network(
         ):
             df.where(df.abs() > solve_opts["clip_p_max_pu"], other=0.0, inplace=True)
 
-    if (load_shedding := solve_opts.get("load_shedding", {})).get("enable", False):
+    if load_shedding := solve_opts.get("load_shedding"):
         # intersect between macroeconomic and surveybased willingness to pay
         # http://journal.frontiersin.org/article/10.3389/fenrg.2015.00055/full
-        add_load_balance_components(n, load_shedding)
+        n.add("Carrier", "load")
+        buses_i = n.buses.index
+        if isinstance(load_shedding, bool):
+            load_shedding = 1e5  # Eur/MWh
 
-    if (load_sinks := solve_opts.get("load_sinks", {})).get("enable", False):
-        add_load_balance_components(n, load_sinks, sign=-1)
+        n.add(
+            "Generator",
+            buses_i,
+            " load",
+            bus=buses_i,
+            carrier="load",
+            marginal_cost=load_shedding,  # Eur/MWh
+            p_nom=np.inf,
+        )
 
     if solve_opts.get("curtailment_mode"):
         n.add("Carrier", "curtailment", color="#fedfed", nice_name="Curtailment")
@@ -541,25 +502,28 @@ def prepare_network(
         )
 
     if solve_opts.get("noisy_costs"):
-        for t in n.components:
-            # if 'capital_cost' in t.static:
-            #    t.static['capital_cost'] += 1e1 + 2.*(np.random.random(len(t.static)) - 0.5)
-            if "marginal_cost" in t.static:
-                t.static["marginal_cost"] += 1e-2 + 2e-3 * (
-                    np.random.random(len(t.static)) - 0.5
+        for t in n.iterate_components():
+            # if 'capital_cost' in t.df:
+            #    t.df['capital_cost'] += 1e1 + 2.*(np.random.random(len(t.df)) - 0.5)
+            if "marginal_cost" in t.df:
+                t.df["marginal_cost"] += 1e-2 + 2e-3 * (
+                    np.random.random(len(t.df)) - 0.5
                 )
 
-        for t in n.components[["Line", "Link"]]:
-            if t.static.empty:
-                continue
-            t.static["capital_cost"] += (
-                1e-1 + 2e-2 * (np.random.random(len(t.static)) - 0.5)
-            ) * t.static["length"]
+        for t in n.iterate_components(["Line", "Link"]):
+            t.df["capital_cost"] += (
+                1e-1 + 2e-2 * (np.random.random(len(t.df)) - 0.5)
+            ) * t.df["length"]
 
     if solve_opts.get("nhours"):
         nhours = solve_opts["nhours"]
         n.set_snapshots(n.snapshots[:nhours])
         n.snapshot_weightings[:] = 8760.0 / nhours
+
+    stress_cfg = config.get("stress_test", {})
+    if stress_cfg.get("enable", False):
+        logger.info("Applying Romania winter stress timeseries shocks.")
+        apply_timeseries_shocks(n, n.snapshots, stress_cfg)
 
     if foresight == "myopic" and planning_horizons:
         add_land_use_constraint(n, planning_horizons)
@@ -574,13 +538,6 @@ def prepare_network(
         add_co2_sequestration_limit(
             n, limit_dict=limit_dict, planning_horizons=planning_horizons
         )
-
-    # rolling horizon disables cyclic storage
-    if rolling_horizon:
-        n.storage_units.state_of_charge_cyclic = False
-        n.storage_units.state_of_charge_initial = 0
-        n.stores.e_cyclic = False
-        n.stores.e_initial = 0
 
 
 def add_CCL_constraints(
@@ -1055,7 +1012,7 @@ def add_lossy_bidirectional_link_constraints(n):
 
     carriers = n.links.loc[n.links.reversed, "carrier"].unique()  # noqa: F841
     backwards = n.links.query(
-        "carrier in @carriers and p_nom_extendable and reversed and active"
+        "carrier in @carriers and p_nom_extendable and reversed"
     ).index
     forwards = backwards.str.replace("-reversed", "")
     lhs = n.model["Link-p_nom"].loc[backwards]
@@ -1124,10 +1081,10 @@ def add_pipe_retrofit_constraint(n):
     if "reversed" not in n.links.columns:
         n.links["reversed"] = False
     gas_pipes_i = n.links.query(
-        "carrier == 'gas pipeline' and p_nom_extendable and ~reversed and active"
+        "carrier == 'gas pipeline' and p_nom_extendable and ~reversed"
     ).index
     h2_retrofitted_i = n.links.query(
-        "carrier == 'H2 pipeline retrofitted' and p_nom_extendable and ~reversed and active"
+        "carrier == 'H2 pipeline retrofitted' and p_nom_extendable and ~reversed"
     ).index
 
     if h2_retrofitted_i.empty or gas_pipes_i.empty:
@@ -1288,6 +1245,13 @@ def extra_functionality(
     if config["sector"]["imports"]["enable"]:
         add_import_limit_constraint(n, snapshots)
 
+    stress_cfg = config.get("stress_test", {})
+    if stress_cfg.get("enable", False):
+        logger.info("Adding Romania stress SCADA proxy constraints.")
+        add_scada_proxy_constraints(n, snapshots, stress_cfg)
+        logger.info("Adding Romania stress import cap constraints.")
+        add_import_cap_constraints(n, snapshots, stress_cfg)
+
     if n.params.custom_extra_functionality:
         source_path = n.params.custom_extra_functionality
         assert os.path.exists(source_path), f"{source_path} does not exist"
@@ -1413,7 +1377,6 @@ def collect_kwargs(
 
         if cf_solving["post_discretization"].get("enable", False):
             logger.info("Add post-discretization parameters.")
-            cf_solving["post_discretization"].pop("enable", None)
             all_kwargs.update(cf_solving["post_discretization"])
 
         return all_kwargs, {}
@@ -1494,11 +1457,11 @@ if __name__ == "__main__":
     prepare_network(
         n,
         solve_opts=snakemake.params.solving["options"],
+        config=snakemake.config,
         foresight=snakemake.params.foresight,
         planning_horizons=planning_horizons,
         co2_sequestration_potential=snakemake.params["co2_sequestration_potential"],
         limit_max_growth=snakemake.params.get("sector", {}).get("limit_max_growth"),
-        rolling_horizon=cf_solving["rolling_horizon"],
     )
 
     # Determine solve mode
@@ -1517,7 +1480,7 @@ if __name__ == "__main__":
     with memory_logger(
         filename=getattr(snakemake.log, "memory", None), interval=logging_frequency
     ) as mem:
-        if rolling_horizon:
+        if rolling_horizon and snakemake.rule == "solve_operations_network":
             logger.info("Using rolling horizon optimization...")
             all_kwargs, _ = collect_kwargs(
                 snakemake.config,
@@ -1597,9 +1560,6 @@ if __name__ == "__main__":
 
     n.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
     n.export_to_netcdf(snakemake.output.network)
-
-    if snakemake.output.get("model"):
-        n.model.to_netcdf(snakemake.output.model)
 
     with open(snakemake.output.config, "w") as file:
         yaml.dump(

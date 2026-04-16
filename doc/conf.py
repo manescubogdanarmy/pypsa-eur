@@ -64,8 +64,6 @@ extensions = [
     #'sphinxcontrib.tikz',
     #'rinoh.frontend.sphinx',
     "sphinx.ext.imgconverter",  # for SVG conversion
-    "sphinx-jsonschema",
-    "sphinx_design",
 ]
 
 autodoc_mock_imports = [
@@ -78,8 +76,6 @@ autodoc_mock_imports = [
     "powerplantmatching",
     "rasterio",
     "dask.distributed",
-    "pydantic",
-    "ruamel",
 ]
 
 autodoc_default_flags = ["members"]
@@ -104,15 +100,15 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyPSA-Eur"
-copyright = "PyPSA-Eur Contributors"
-author = "PyPSA-Eur Contributors"
+copyright = "2017-2025 Tom Brown (TUB, KIT, FIAS), Jonas Hoersch (OET, KIT, FIAS), Fabian Hofmann (OET, TUB, FIAS), Fabian Neumann (TUB, KIT), Marta Victoria (DTU, Aarhus University), Lisa Zeyen (TUB, KIT)"
+author = "Tom Brown (TUB, KIT, FIAS), Jonas Hoersch (OET, KIT, FIAS), Fabian Hofmann (OET, TUB, FIAS), Fabian Neumann (TUB, KIT), Marta Victoria (DTU, Aarhus University), Lisa Zeyen (TUB, KIT)"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = "v2026.02.0"
+version = "v2025.07.0"
 # The full version, including alpha/beta/rc tags.
 release = version + ""
 
