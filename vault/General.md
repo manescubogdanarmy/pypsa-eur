@@ -15,12 +15,12 @@ Comprehensive documentation for the PyPSA-Eur Romania analysis project. Organize
 ### Configuration & Setup
 
 #### **PLAN.md**
-Original project plan outlining the winter 2020 stress scenario implementation.
+Original project plan outlining the winter 2023 stress scenario implementation.
 
 **Contents:**
 - Baseline & stress scenario definitions
 - Geographic scope (Romania + neighboring countries)
-- Temporal window (January 13-20, 2020)
+- Temporal window (January 13-20, 2023)
 - Shock definitions and implementation strategy
 - Hybrid operations mode specifications
 - SCADA proxy constraints (ramp rates)
@@ -32,7 +32,7 @@ Original project plan outlining the winter 2020 stress scenario implementation.
 ### Dashboard Documentation
 
 #### **DASHBOARD_README.md**
-User guide for v1 dashboard - baseline vs. stress scenario visualization.
+User guide for v1 dashboard - baseline vs. stress scenario visualization (2023).
 
 **Contents:**
 - Installation instructions
@@ -145,7 +145,7 @@ Detailed explanation of Romania scenario configuration (English).
 
 #### **romania_complex_explanation.md**
 (Virtual Reference - Documentation only)
-The Maximum Complexity Simulation (`romania_2020_complex.yaml`) enables **all** conventional and renewable carriers simultaneously to model the grid at maximum fidelity.
+The Maximum Complexity Simulation (`romania_2023_complex.yaml`) enables **all** conventional and renewable carriers simultaneously to model the grid at maximum fidelity.
 
 **Key Features:**
 - **Carriers Enabled:** Solar (incl. tracking), Wind (On/Off/Float), Hydro (RoR/Reservoir), Nuclear, Coal, Lignite, Biomass, Geothermal, OCGT, CCGT, Oil.
@@ -326,7 +326,7 @@ results/           → Scenario outputs (root)
 
 ## Document Maintenance
 
-**Last Updated:** January 2026
+**Last Updated:** April 2026
 
 **Maintained By:** PyPSA-Eur Romania Analysis Team
 
@@ -382,19 +382,19 @@ This document describes the custom workflow developed for running PyPSA-Eur ener
 pypsa-eur/
 ├── config/
 │   ├── romania.yaml                 # Base Romania config (2013 tutorial)
-│   ├── romania_2020_winter.yaml     # Winter 2020 scenario
-│   ├── romania_2020_spring.yaml     # Spring 2020 scenario
-│   ├── romania_2020_summer.yaml     # Summer 2020 scenario
-│   ├── romania_2020_autumn.yaml     # Autumn 2020 scenario
-│   ├── romania_2020_december.yaml   # December 2020 scenario
+│   ├── romania_2023_winter.yaml     # Winter 2023 scenario
+│   ├── romania_2023_spring.yaml     # Spring 2023 scenario
+│   ├── romania_2023_summer.yaml     # Summer 2023 scenario
+│   ├── romania_2023_autumn.yaml     # Autumn 2023 scenario
+│   ├── romania_2023_december.yaml   # December 2023 scenario
 │   └── plotting.default.yaml        # Plotting configuration
 ├── results/
 │   ├── romania-test/                # Initial tutorial test run
-│   ├── romania-2020-winter/         # Winter scenario results
-│   ├── romania-2020-spring/         # Spring scenario results
-│   ├── romania-2020-summer/         # Summer scenario results
-│   ├── romania-2020-autumn/         # Autumn scenario results
-│   └── romania-2020-december/       # December scenario results
+│   ├── romania-2023-winter/         # Winter scenario results
+│   ├── romania-2023-spring/         # Spring scenario results
+│   ├── romania-2023-summer/         # Summer scenario results
+│   ├── romania-2023-autumn/         # Autumn scenario results
+│   └── romania-2023-december/       # December scenario results
 ├── download_zenodo_files.py         # Download all required datasets
 ├── download_cutout.py               # Download weather cutouts only
 ├── generate_configs.py              # Generate seasonal config files
@@ -442,7 +442,7 @@ python download_zenodo_files.py
 python download_cutout.py
 ```
 
-Downloads only the ERA5/SARAH3 weather cutouts for 2013 and 2020.
+Downloads only the ERA5/SARAH3 weather cutouts for 2013, 2020, and 2023.
 
 ### 1.3 Check URL Availability
 
@@ -480,17 +480,17 @@ The base configuration for Romania includes:
 python generate_configs.py
 ```
 
-Creates 5 seasonal configuration files for year 2020:
+Creates 5 seasonal configuration files for year 2023:
 
 | Config File | Period | Run Name |
 |-------------|--------|----------|
-| `romania_2020_winter.yaml` | Jan 1-8, 2020 | romania-2020-winter |
-| `romania_2020_spring.yaml` | Apr 1-8, 2020 | romania-2020-spring |
-| `romania_2020_summer.yaml` | Jul 1-8, 2020 | romania-2020-summer |
-| `romania_2020_autumn.yaml` | Oct 1-8, 2020 | romania-2020-autumn |
-| `romania_2020_december.yaml` | Dec 1-8, 2020 | romania-2020-december |
+| `romania_2023_winter.yaml` | Jan 1-8, 2023 | romania-2023-winter |
+| `romania_2023_spring.yaml` | Apr 1-8, 2023 | romania-2023-spring |
+| `romania_2023_summer.yaml` | Jul 1-8, 2023 | romania-2023-summer |
+| `romania_2023_autumn.yaml` | Oct 1-8, 2023 | romania-2023-autumn |
+| `romania_2023_december.yaml` | Dec 1-8, 2023 | romania-2023-december |
 
-All 2020 scenarios use the `europe-2020-sarah3-era5` weather cutout.
+All 2023 scenarios use the `europe-2023-sarah3-era5` weather cutout.
 
 ---
 
@@ -503,7 +503,7 @@ All 2020 scenarios use the `europe-2020-sarah3-era5` weather cutout.
 conda run -n pypsa snakemake --unlock --configfile config/romania_2020_december.yaml
 
 # Run the simulation
-conda run -n pypsa snakemake -call results/romania-2020-december/networks/base_s_5_elec_.nc --configfile config/romania_2020_december.yaml
+conda run -n pypsa snakemake -call results/romania-2023-december/networks/base_s_5_elec_.nc --configfile config/romania_2023_december.yaml
 ```
 
 ### 3.2 Run All Seasonal Scenarios
@@ -673,15 +673,15 @@ python check_romania.py
 | Scenario | Status | Results Path |
 |----------|--------|--------------|
 | romania-test | ✅ Complete | `results/romania-test/` |
-| romania-2020-winter | ✅ Complete | `results/romania-2020-winter/` |
-| romania-2020-spring | ✅ Complete | `results/romania-2020-spring/` |
-| romania-2020-summer | ✅ Complete | `results/romania-2020-summer/` |
-| romania-2020-autumn | ✅ Complete | `results/romania-2020-autumn/` |
-| romania-2020-december | ✅ Complete | `results/romania-2020-december/` |
+| romania-2023-winter | ✅ Complete | `results/romania-2023-winter/` |
+| romania-2023-spring | ✅ Complete | `results/romania-2023-spring/` |
+| romania-2023-summer | ✅ Complete | `results/romania-2023-summer/` |
+| romania-2023-autumn | ✅ Complete | `results/romania-2023-autumn/` |
+| romania-2023-december | ✅ Complete | `results/romania-2023-december/` |
 
 ---
 
-*Last updated: February 2026*
+*Last updated: April 2026*
 
 ---
 
@@ -692,7 +692,7 @@ Acest scenariu ("Sibiu Regional Crisis") a simulat o situație extremă constân
 - **Restricții de rețea:** Capacitate de transport redusă la 30% și izolare totală față de vecini (fără importuri).
 - **Cerere crescută:** Consum majorat cu 20%.
 
-### Rezultate Principale (Săptămâna 1-7 Decembrie 2020)
+### Rezultate Principale (Săptămâna 1-7 Decembrie 2023)
 
 În ciuda restricțiilor severe, sistemul a reușit să acopere cererea fără deconectări majore de consumatori ("load shedding"), bazându-se pe un mix energetic de urgență:
 
@@ -727,8 +727,8 @@ Acest document descrie extensia PyPSA-Eur pentru simulări complexe de stres a s
 ```
 pypsa-eur/
 ├── config/adversarial/
-│   ├── romania_2019_winter_baseline.yaml      # Config: scenariu de bază (fără șocuri)
-│   ├── romania_2019_winter_stress.yaml        # Config: scenariu stres (cu toate șocurile)
+│   ├── romania_2023_winter_baseline.yaml      # Config: scenariu de bază (fără șocuri)
+│   ├── romania_2023_winter_stress.yaml        # Config: scenariu stres (cu toate șocurile)
 │   └── [alte scenarii adversariale...]
 │
 ├── scripts/
@@ -737,11 +737,11 @@ pypsa-eur/
 │   └── solve_network.py                       # (Modificat) Integrare șocuri în solver
 │
 ├── results/
-│   ├── romania-2019-winter-baseline/
+│   ├── romania-2023-winter-baseline/
 │   │   └── networks/base_s_10_elec_.nc       # Rețea reolvată (bază)
-│   ├── romania-2020-winter-stress/
+│   ├── romania-2023-winter-stress/
 │   │   └── networks/base_s_10_elec_.nc       # Rețea rezolvată (stres)
-│   └── romania-2020-winter-stress-comparison/
+│   └── romania-2023-winter-stress-comparison/
 │       ├── system_cost_comparison.csv         # Comparație costuri
 │       ├── ens_summary.csv                    # Rezumat energie nelivrată
 │       ├── generation_mix_mwh.csv             # Mix de generare
@@ -770,10 +770,10 @@ pypsa-eur/
 
 ### 1. **Configurare Scenarii** (`config/adversarial/*.yaml`)
 
-Două configurații paralele pentru același interval de timp (Dec 1-8, 2020):
+Două configurații paralele pentru același interval de timp (Dec 1-8, 2023):
 
-#### `romania_2019_winter_baseline.yaml`
-- **Run name:** `romania-2019-winter-baseline`
+#### `romania_2023_winter_baseline.yaml`
+- **Run name:** `romania-2023-winter-baseline`
 - **Țări:** RO, BG, HU, RS
 - **Clustere:** 10 noduri
 - **Șocuri:** NICIUN șoc aplicat

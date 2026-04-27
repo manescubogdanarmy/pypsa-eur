@@ -125,11 +125,11 @@ python explore_scenarios.py
 **Output:**
 ```
 Found 5 scenarios:
-  1. romania-2020-winter-stress-comparison (NEW format, 7 CSVs)
-  2. romania-2020-summer (LEGACY format, 14 CSVs)
-  3. romania-2020-autumn (LEGACY format, 14 CSVs)
-  4. romania-2020-spring (LEGACY format, 14 CSVs)
-  5. romania-2020-december (LEGACY format, 14 CSVs)
+  1. romania-2023-winter-stress-comparison (NEW format, 7 CSVs)
+  2. romania-2023-summer (LEGACY format, 14 CSVs)
+  3. romania-2023-autumn (LEGACY format, 14 CSVs)
+  4. romania-2023-spring (LEGACY format, 14 CSVs)
+  5. romania-2023-december (LEGACY format, 14 CSVs)
 ```
 
 ---
@@ -180,10 +180,10 @@ Orchestrates summary generation for multiple scenarios.
 
 **Scenarios Processed:**
 ```
-romania-2020-december
-romania-2020-autumn
-romania-2020-spring
-romania-2020-summer
+romania-2023-december
+romania-2023-autumn
+romania-2023-spring
+romania-2023-summer
 ```
 
 **How to Run:**
@@ -265,16 +265,16 @@ analysis/
 **Inputs:**
 ```
 results/
-├── romania-2020-winter-baseline/networks/*.nc
-├── romania-2020-winter-stress/networks/*.nc
-└── romania-2020-*/csvs/*.csv
+├── romania-2023-winter-baseline/networks/*.nc
+├── romania-2023-winter-stress/networks/*.nc
+└── romania-2023-*/csvs/*.csv
 ```
 
 **Outputs:**
 ```
 results/
-├── romania-2020-*/                  # Summary CSVs
-└── romania-2020-*-comparison/       # Comparison reports
+├── romania-2023-*/                  # Summary CSVs
+└── romania-2023-*-comparison/       # Comparison reports
 ```
 
 ---
@@ -806,7 +806,7 @@ python check_romania.py
 ### Task 3: Check output data quality
 ```bash
 python check_csv.py
-# Point to: results/romania-2020-*/csvs/
+# Point to: results/romania-2023-*/csvs/
 ```
 **Output:** No errors = CSVs are valid
 
@@ -882,7 +882,7 @@ runners/ → diagnostics → analysis/ → dashboard/
 When diagnostics fail, check:
 ```
 logs/
-├── romania-2020-*/solve_network/    # Snakemake logs
+├── romania-2023-*/solve_network/    # Snakemake logs
 ├── gurobi.log                       # Solver logs
 └── run.log                          # Workflow logs
 ```
