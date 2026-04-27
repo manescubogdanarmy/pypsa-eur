@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, Manrope } from "next/font/google";
+import { JetBrains_Mono, IBM_Plex_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 
-const displayFont = Fraunces({
+const displayFont = JetBrains_Mono({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 const bodyFont = Manrope({
@@ -15,12 +16,12 @@ const bodyFont = Manrope({
 const monoFont = IBM_Plex_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "PlanUI Vizualizer",
-  description: "Scenario manager and results dashboard for PyPSA-Eur Romania.",
+  title: "PlanUI Vizualizer // Grid Dispatch",
+  description: "Romania grid stress dispatch console for PyPSA-Eur scenarios.",
 };
 
 export default function RootLayout({
