@@ -19,6 +19,8 @@ Below is an overview of the directories within the PyPSA-Eur Romania project and
 - **`personal_runners/`**: Convenience scripts and batch files to quickly launch specific scenarios without manually invoking Snakemake.
 - **`personal_tests/`**: Unit tests and validation scripts for custom constraints and cutout implementations (e.g., `test_cutout_implementation.py`).
 - **`personal_scratch/`**: Sandbox folder for temporary, one-off, or experimental scripts (e.g., `scratch_update.py`).
+- **`personal_docs/`**: Miscellaneous documents and templates that are distinct from the primary documentation vault (e.g., `scenario_template.yaml`, `results_summary.md`).
+
 
 ## Documentation
 - **`vault/`**: The consolidated Obsidian knowledge base containing installation, running, usage, architecture documentation, and historical archival logs.
