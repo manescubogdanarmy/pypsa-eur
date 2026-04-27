@@ -1,13 +1,20 @@
+"""
+Generate a Maximum Complexity Scenario Configuration for Romania
+=============================================================
+This config enables all available energy carriers (conventional and renewable)
+and allows the solver to optimize extensions for all of them.
+"""
 
 import yaml
 import os
-import copy
 
-# Base config content (simplified from romania.yaml)
-base_config = {
+OUTPUT_DIR = "config/adversarial"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+complex_config = {
     "tutorial": True,
     "run": {
-        "name": "romania-test",
+        "name": "romania-2023-complex",
         "disable_progressbar": True,
         "shared_resources": {"policy": False}
     },
@@ -17,19 +24,24 @@ base_config = {
     },
     "countries": ["RO"],
     "snapshots": {
-        "start": "2013-03-01",
-        "end": "2013-03-08"
+        "start": "2023-12-01",
+        "end": "2023-12-08"
     },
     "electricity": {
         "co2limit_enable": True,
-        "co2limit": 100.e+6,
+        "co2limit": 100.0e+6,
         "extendable_carriers": {
-            "Generator": ["solar", "onwind", "offwind-ac", "OCGT", "CCGT", "nuclear"],
+            "Generator": [
+                "solar", "solar-hsat", "onwind", "offwind-ac", "offwind-dc", "offwind-float", 
+                "OCGT", "CCGT", "nuclear", "coal", "lignite", "biomass", "geothermal", "oil"
+            ],
             "StorageUnit": ["battery"],
             "Store": ["H2"],
             "Link": ["H2 pipeline"]
         },
-        "renewable_carriers": ["solar", "onwind", "offwind-ac"],
+        "conventional_carriers": ["nuclear", "oil", "OCGT", "CCGT", "coal", "lignite", "geothermal", "biomass"],
+        "renewable_carriers": ["solar", "solar-hsat", "onwind", "offwind-ac", "offwind-dc", "offwind-float", "hydro"],
+        "powerplants_filter": "(DateOut >= 2024 or DateOut != DateOut)", # Remove any exclusion of nuclear/coal
         "estimate_renewable_capacities": {
             "enable": True,
             "from_gem": True,
@@ -47,8 +59,8 @@ base_config = {
         "cutouts": {
             "europe-2023-sarah3-era5": {
                 "module": ["sarah", "era5"],
-                "x": [-12., 42.],
-                "y": [33., 72.],
+                "x": [-12.0, 42.0],
+                "y": [33.0, 72.0],
                 "dx": 0.3,
                 "dy": 0.3,
                 "time": ["2023", "2023"]
@@ -61,7 +73,7 @@ base_config = {
         "offwind-float": {"max_depth": False, "min_depth": False}
     },
     "clustering": {
-        "exclude_carriers": ["OCGT", "offwind-ac", "coal"],
+        "exclude_carriers": [], # Do not exclude ANY carriers
         "temporal": {"resolution_elec": "24h"}
     },
     "lines": {
@@ -79,42 +91,10 @@ base_config = {
     }
 }
 
-periods = [
-    ("2023-01-01", "2023-01-08", "winter"),
-    ("2023-04-01", "2023-04-08", "spring"),
-    ("2023-07-01", "2023-07-08", "summer"),
-    ("2023-10-01", "2023-10-08", "autumn"),
-    ("2023-12-01", "2023-12-08", "december"),
-]
+filename = os.path.join(OUTPUT_DIR, "romania_2023_complex.yaml")
+with open(filename, 'w') as f:
+    f.write("# Maximum Complexity Scenario: All Energy Sources of Romania\n")
+    f.write(f"# Run name: {complex_config['run']['name']}\n\n")
+    yaml.dump(complex_config, f, sort_keys=False, default_flow_style=False)
 
-for start, end, season in periods:
-    cfg = copy.deepcopy(base_config)
-    
-    # Update Run Name
-    cfg["run"]["name"] = f"romania-2023-{season}"
-    
-    # Update Snapshots
-    cfg["snapshots"]["start"] = start
-    cfg["snapshots"]["end"] = end
-    
-    # Update Electricity Year
-    cfg["electricity"]["estimate_renewable_capacities"]["year"] = 2023
-    
-    # Update Atlite Cutouts
-    cfg["atlite"]["default_cutout"] = "europe-2023-sarah3-era5"
-    cfg["atlite"]["cutouts"] = {
-        "europe-2023-sarah3-era5": {
-            "module": ["sarah", "era5"],
-            "x": [-12., 42.],
-            "y": [33., 72.],
-            "dx": 0.3,
-            "dy": 0.3,
-            "time": ["2023", "2023"]
-        }
-    }
-    
-    filename = f"config/romania_2023_{season}.yaml"
-    with open(filename, 'w') as f:
-        yaml.dump(cfg, f, sort_keys=False)
-    print(f"Created {filename}")
-
+print(f"Created highly complex config: {filename}")

@@ -143,6 +143,20 @@ Detailed explanation of Romania scenario configuration (English).
 
 ---
 
+#### **romania_complex_explanation.md**
+(Virtual Reference - Documentation only)
+The Maximum Complexity Simulation (`romania_2020_complex.yaml`) enables **all** conventional and renewable carriers simultaneously to model the grid at maximum fidelity.
+
+**Key Features:**
+- **Carriers Enabled:** Solar (incl. tracking), Wind (On/Off/Float), Hydro (RoR/Reservoir), Nuclear, Coal, Lignite, Biomass, Geothermal, OCGT, CCGT, Oil.
+- **Extendable:** All generation carriers are marked as extendable, allowing the solver to optimize capacity for any of them.
+- **No Exclusion:** `clustering.exclude_carriers` is completely emptied, meaning no technologies are artificially removed before solving.
+- **Filter adjustment:** The `powerplants_filter` does not exclude nuclear or coal.
+
+**For:** Advanced system modeling involving the entire spectrum of Romanian energy resources.
+
+---
+
 #### **romania_config_explanation_ro.md**
 Same as above but in Romanian (🇷🇴).
 

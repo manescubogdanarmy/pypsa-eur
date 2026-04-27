@@ -9,8 +9,12 @@ files_to_download = [
         "name": "europe-2013-sarah3-era5.nc"
     },
     {
-        "url": "https://zenodo.org/records/15349674/files/europe-2020-sarah3-era5.nc",
+        "url": "https://zenodo.org/api/records/15349674/files/europe-2020-sarah3-era5.nc/content",
         "name": "europe-2020-sarah3-era5.nc"
+    },
+    {
+        "url": "https://zenodo.org/api/records/15349674/files/europe-2023-sarah3-era5.nc/content",
+        "name": "europe-2023-sarah3-era5.nc"
     }
 ]
 

@@ -306,6 +306,14 @@ python analyze_scenario_11.py
 python generate_adversarial_configs.py
 ```
 
+### Task 6: Run Maximum Complexity Simulation
+To simulate the Romanian grid with all possible energy carriers enabled (including nuclear, coal, biomass, and all renewables) without any clustering exclusions:
+```bash
+python personal_analysis/generate_complex_config.py
+personal_runners\run_complex_scenario.bat
+```
+This will run the solver and generate the CSVs required by the dashboard.
+
 ---
 
 ## Documentation
