@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Usage.md",
+                "file": "QuickStart.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Usage"
+              "title": "QuickStart"
             }
           }
         ]
@@ -185,6 +185,7 @@
   },
   "active": "6b86b489a5580ccf",
   "lastOpenFiles": [
+    "Usage.md",
     "README.md",
     "FolderStructure.md",
     "Index.md",
