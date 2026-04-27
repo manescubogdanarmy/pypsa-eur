@@ -15,8 +15,8 @@ countries:
   - HU
   - RS
 snapshots:
-  start: 2023-12-01
-  end: 2023-12-08
+  start: "2023-12-01"
+  end: "2023-12-08"
 electricity:
   co2limit_enable: true
   co2limit: 100000000

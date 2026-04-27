@@ -257,12 +257,25 @@ function toPosixPath(value: string): string {
   return value.split(path.sep).join(path.posix.sep);
 }
 
+function stringifyConfig(config: Record<string, unknown>): string {
+  // Snapshot dates must be emitted as quoted strings; otherwise PyYAML decodes
+  // them as datetime.date, which breaks json.dumps(n.meta) in base_network.py.
+  const doc = new YAML.Document(config);
+  for (const p of [["snapshots", "start"], ["snapshots", "end"]]) {
+    const node = doc.getIn(p, true);
+    if (node instanceof YAML.Scalar) {
+      node.type = YAML.Scalar.QUOTE_DOUBLE;
+    }
+  }
+  return String(doc);
+}
+
 export async function buildWorkingYaml(inputs: ScenarioInputs): Promise<string> {
   const templateConfig = await loadTemplateConfig(inputs.cutoutYear);
   const base = inputs.workingYaml ? parseWorkingYaml(inputs.workingYaml) : structuredClone(templateConfig);
   const runName = sanitizeSlug(inputs.scenarioSlug || "working-draft");
   const config = applyInputsToConfig(base, inputs, runName, inputs.stressEnable);
-  return YAML.stringify(config);
+  return stringifyConfig(config);
 }
 
 export async function buildConfigs(inputs: ScenarioInputs): Promise<ConfigBuildResult> {
@@ -309,7 +322,7 @@ export async function buildConfigs(inputs: ScenarioInputs): Promise<ConfigBuildR
 
   await fs.mkdir(generatedConfigDir(), { recursive: true });
   const scenarioCfgPath = path.join(generatedConfigDir(), `${slug}_${token}_scenario.yaml`);
-  await fs.writeFile(scenarioCfgPath, YAML.stringify(scenarioConfig), "utf-8");
+  await fs.writeFile(scenarioCfgPath, stringifyConfig(scenarioConfig), "utf-8");
 
   const generatedConfigs: { scenario: string; baseline?: string | null } = {
     scenario: scenarioCfgPath,
@@ -318,7 +331,7 @@ export async function buildConfigs(inputs: ScenarioInputs): Promise<ConfigBuildR
   let baselineCfgPath: string | null = null;
   if (baselineConfig) {
     baselineCfgPath = path.join(generatedConfigDir(), `${slug}_${token}_baseline.yaml`);
-    await fs.writeFile(baselineCfgPath, YAML.stringify(baselineConfig), "utf-8");
+    await fs.writeFile(baselineCfgPath, stringifyConfig(baselineConfig), "utf-8");
     generatedConfigs.baseline = baselineCfgPath;
   }
 

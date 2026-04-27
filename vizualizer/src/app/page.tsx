@@ -393,22 +393,69 @@ async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   return data;
 }
 
-function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
+type MetricTone = "amber" | "cyan" | "green" | "red" | "neutral";
+
+function SectionHeader({
+  id,
+  title,
+  subtitle,
+}: {
+  id?: string;
+  title: string;
+  subtitle: string;
+}) {
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-2xl font-display text-ink">{title}</h2>
-      <p className="text-sm text-muted max-w-2xl">{subtitle}</p>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-baseline gap-3 flex-wrap">
+        {id ? <span className="eyebrow-muted">{id}</span> : null}
+        <span className="eyebrow">{`// ${title}`}</span>
+      </div>
+      <p className="max-w-2xl text-sm text-soft leading-relaxed">{subtitle}</p>
     </div>
   );
 }
 
-function MetricCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
+function MetricCard({
+  label,
+  value,
+  hint,
+  tone = "neutral",
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  tone?: MetricTone;
+}) {
+  const toneClass = tone === "neutral" ? "" : tone;
   return (
-    <div className="glass rounded-xl p-4 flex flex-col gap-2">
-      <span className="text-xs uppercase tracking-[0.2em] text-muted">{label}</span>
-      <span className="text-lg font-semibold text-ink">{value}</span>
-      {hint ? <span className="text-xs text-muted">{hint}</span> : null}
+    <div className="metric">
+      <span className="metric-label">{label}</span>
+      <span className={`metric-value ${toneClass}`}>{value}</span>
+      {hint ? <span className="metric-hint">{hint}</span> : null}
     </div>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const s = status.toLowerCase();
+  const cls =
+    s === "running" ? "badge-running"
+    : s === "queued" ? "badge-queued"
+    : s === "success" || s === "completed" || s === "ok" ? "badge-success"
+    : s === "failed" || s === "error" ? "badge-failed"
+    : s === "cancelled" || s === "canceled" ? "badge-cancelled"
+    : "badge-default";
+  const dot =
+    s === "running" ? "live-dot"
+    : s === "queued" ? "live-dot"
+    : s === "success" || s === "completed" ? "live-dot green"
+    : s === "failed" || s === "error" ? "live-dot red"
+    : "live-dot idle";
+  return (
+    <span className={`badge ${cls}`}>
+      <span className={dot} style={{ width: 6, height: 6 }} />
+      {status}
+    </span>
   );
 }
 
@@ -418,22 +465,20 @@ function DataTable({ preview, emptyLabel }: { preview: CsvPreview | null; emptyL
   }
 
   return (
-    <div className="overflow-auto rounded-xl border border-stroke bg-white">
-      <table className="min-w-full text-sm">
-        <thead className="bg-surface-muted text-muted">
+    <div className="data-wrap">
+      <table className="data-table">
+        <thead>
           <tr>
             {preview.columns.map((col) => (
-              <th key={col} className="px-3 py-2 text-left font-semibold">
-                {col}
-              </th>
+              <th key={col}>{col}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {preview.rows.map((row, idx) => (
-            <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-surface-muted/40"}>
+            <tr key={idx}>
               {preview.columns.map((col) => (
-                <td key={col} className="px-3 py-2 text-muted">
+                <td key={col}>
                   {row[col] === null || row[col] === undefined ? "" : String(row[col])}
                 </td>
               ))}
@@ -448,6 +493,7 @@ function DataTable({ preview, emptyLabel }: { preview: CsvPreview | null; emptyL
 function BarPairList({
   data,
   labels,
+  locale = "en-US",
 }: {
   data: Array<{ label: string; baseline: number; scenario: number }>;
   labels: { empty: string; baseline: string; scenario: string };
@@ -458,34 +504,30 @@ function BarPairList({
   }
   const max = Math.max(...data.flatMap((item) => [item.baseline, item.scenario, 0.01]));
   return (
-    <div className="space-y-4">
+    <div>
       {data.map((item) => (
-        <div key={item.label} className="grid gap-3 lg:grid-cols-[160px_1fr]">
-          <div className="text-xs uppercase tracking-[0.2em] text-muted">{item.label}</div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="w-20 text-xs text-muted">{labels.baseline}</span>
-              <div className="h-2 flex-1 rounded-full bg-surface-muted">
+        <div key={item.label} className="meter-row">
+          <div className="meter-label">{item.label}</div>
+          <div className="meter-pair">
+            <div className="meter-line">
+              <span className="meter-tag baseline">{labels.baseline}</span>
+              <div className="meter-bar">
                 <div
-                  className="h-2 rounded-full bg-accent-2"
-                  style={{ width: `${(item.baseline / max) * 100}%` }}
+                  className="meter-fill"
+                  style={{ width: `${Math.max(0, Math.min(100, (item.baseline / max) * 100))}%` }}
                 />
               </div>
-              <span className="w-24 text-right text-xs text-muted">
-                {formatNumber(item.baseline, 2, locale)}
-              </span>
+              <span className="meter-value">{formatNumber(item.baseline, 2, locale)}</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="w-20 text-xs text-muted">{labels.scenario}</span>
-              <div className="h-2 flex-1 rounded-full bg-surface-muted">
+            <div className="meter-line">
+              <span className="meter-tag scenario">{labels.scenario}</span>
+              <div className="meter-bar">
                 <div
-                  className="h-2 rounded-full bg-accent"
-                  style={{ width: `${(item.scenario / max) * 100}%` }}
+                  className="meter-fill scenario"
+                  style={{ width: `${Math.max(0, Math.min(100, (item.scenario / max) * 100))}%` }}
                 />
               </div>
-              <span className="w-24 text-right text-xs text-muted">
-                {formatNumber(item.scenario, 2, locale)}
-              </span>
+              <span className="meter-value">{formatNumber(item.scenario, 2, locale)}</span>
             </div>
           </div>
         </div>
@@ -853,84 +895,138 @@ export default function Home() {
     ];
   }, [chartPack.prices, text.labelMean, text.labelP95, text.labelMax]);
 
+  const tabMeta: Record<TabKey, { num: string; label: string }> = {
+    builder: { num: "01", label: text.tabBuilder },
+    runs: { num: "02", label: text.tabRuns },
+    results: { num: "03", label: text.tabResults },
+  };
+
   return (
-    <div className="min-h-screen">
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-horizon" />
-        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
-        <div className="absolute -bottom-16 left-10 h-60 w-60 rounded-full bg-accent-2/20 blur-3xl" />
-        <header className="relative z-10 mx-auto max-w-6xl px-6 py-16">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <span className="text-xs uppercase tracking-[0.4em] text-muted">{text.brand}</span>
-                <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted">
-                  <span>{text.languageLabel}</span>
-                  <div className="flex rounded-full border border-stroke bg-white/80 p-1">
-                    <button
-                      type="button"
-                      onClick={() => setLanguage("en")}
-                      className={`lang-pill ${language === "en" ? "lang-pill-active" : ""}`}
-                    >
-                      EN
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setLanguage("ro")}
-                      className={`lang-pill ${language === "ro" ? "lang-pill-active" : ""}`}
-                    >
-                      RO
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-display text-ink">{text.title}</h1>
-              <p className="max-w-2xl text-sm md:text-base text-muted">{text.subtitle}</p>
+    <div className="dispatch-shell">
+      <header className="relative mx-auto max-w-6xl px-6 pt-12 pb-6">
+        <div className="flex flex-wrap items-start justify-between gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline gap-3">
+              <span className="eyebrow">{text.brand}</span>
+              <span className="text-dim font-mono text-xs">{"//"}</span>
+              <span className="eyebrow-muted">{"STA-001 // BUCHAREST"}</span>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <MetricCard
-                label={text.metricQueue}
-                value={`${jobCount} ${text.metricJobsSuffix}`}
-                hint={activeJob ? text.metricQueueHintActive : text.metricQueueHintIdle}
-              />
-              <MetricCard
-                label={text.metricResults}
-                value={`${resultCount} ${text.metricReadySuffix}`}
-                hint={text.metricResultsHint}
-              />
-              <MetricCard label={text.metricStatus} value={status} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {(["builder", "runs", "results"] as TabKey[]).map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setActiveTab(tab)}
-                  className={`tab-button ${activeTab === tab ? "tab-active" : "tab-idle"}`}
-                >
-                  {tab === "builder" ? text.tabBuilder : tab === "runs" ? text.tabRuns : text.tabResults}
-                </button>
-              ))}
-              <button type="button" onClick={refreshWorkingYaml} className="tab-button tab-ghost">
-                {text.tabSyncYaml}
+            <span className="coords">44.4268°N · 26.1025°E · UTC+02 · v0.1.0</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="eyebrow-muted">{text.languageLabel}</span>
+            <div className="lang-switch">
+              <button
+                type="button"
+                onClick={() => setLanguage("en")}
+                className={`lang-pill ${language === "en" ? "lang-pill-active" : ""}`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage("ro")}
+                className={`lang-pill ${language === "ro" ? "lang-pill-active" : ""}`}
+              >
+                RO
               </button>
             </div>
           </div>
-        </header>
-      </div>
+        </div>
 
-      <main className="relative z-10 mx-auto max-w-6xl px-6 pb-20">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1.4fr_1fr] items-end">
+          <div>
+            <h1 className="headline">
+              {text.title.split(" ").slice(0, -1).join(" ")}{" "}
+              <em>{text.title.split(" ").slice(-1)}</em>
+            </h1>
+            <p className="mt-5 max-w-xl text-sm md:text-base text-soft leading-relaxed">
+              {text.subtitle}
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <MetricCard
+              label={text.metricQueue}
+              value={String(jobCount).padStart(2, "0")}
+              hint={activeJob ? text.metricQueueHintActive : text.metricQueueHintIdle}
+              tone={activeJob ? "amber" : "neutral"}
+            />
+            <MetricCard
+              label={text.metricResults}
+              value={String(resultCount).padStart(2, "0")}
+              hint={text.metricResultsHint}
+              tone="cyan"
+            />
+            <MetricCard
+              label={text.metricStatus}
+              value={activeJob ? "ACT" : "RDY"}
+              hint={activeJob ? "PROCESS RUNNING" : "STANDBY"}
+              tone={activeJob ? "amber" : "green"}
+            />
+          </div>
+        </div>
+
+        <div className="mt-10 ticker">
+          <div className="ticker-cell">
+            <span className={`live-dot ${activeJob ? "" : "green"}`} />
+            <span className="label">{activeJob ? "LIVE" : "IDLE"}</span>
+          </div>
+          <div className="ticker-cell">
+            <span className="label">Q</span>
+            <span className="value value-amber">
+              {jobCount} {text.metricJobsSuffix}
+            </span>
+          </div>
+          <div className="ticker-cell">
+            <span className="label">R</span>
+            <span className="value value-cyan">
+              {resultCount} {text.metricReadySuffix}
+            </span>
+          </div>
+          <div className="ticker-cell">
+            <span className="label">MSG</span>
+            <span className="ticker-msg">{status}</span>
+          </div>
+        </div>
+
+        <div className="tab-row">
+          {(["builder", "runs", "results"] as TabKey[]).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`tab-button ${activeTab === tab ? "tab-active" : ""}`}
+            >
+              <span className="num">{tabMeta[tab].num}</span>
+              <span>{tabMeta[tab].label}</span>
+            </button>
+          ))}
+          <button type="button" onClick={refreshWorkingYaml} className="tab-button tab-ghost">
+            {text.tabSyncYaml}
+          </button>
+        </div>
+      </header>
+
+      <main className="relative mx-auto max-w-6xl px-6 pb-24 pt-8">
         <section className={activeTab === "builder" ? "block" : "hidden"}>
-          <div className="glass rounded-2xl p-6 mb-8 reveal">
+          <div className="mb-8 reveal">
             <SectionHeader
+              id="01"
               title={text.sectionBuilderTitle}
               subtitle={text.sectionBuilderSubtitle}
             />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-            <div className="glass rounded-2xl p-6 reveal stagger-1">
-              <h3 className="text-lg font-display text-ink mb-4">{text.sectionCoreInputs}</h3>
+            <div className="panel panel-bracket reveal stagger-1">
+              <div className="panel-header">
+                <span className="panel-title">
+                  <span className="panel-title-id">01.A</span>
+                  {text.sectionCoreInputs}
+                </span>
+                <span className="eyebrow-muted">CFG</span>
+              </div>
+              <div className="panel-body">
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="field">
                   <span>{text.fieldRunMode}</span>
@@ -1037,17 +1133,19 @@ export default function Home() {
                 </label>
               </div>
 
-              <div className="mt-6">
-                <h3 className="text-lg font-display text-ink mb-4">{text.sectionStressControls}</h3>
-                <label className="flex items-center gap-3 text-sm text-muted mb-4">
-                  <input
-                    type="checkbox"
-                    checked={inputs.stressEnable}
-                    onChange={(event) => updateInput("stressEnable", event.target.checked)}
-                    className="h-4 w-4 accent-accent"
-                  />
-                  {text.fieldStressEnable}
-                </label>
+              <div className="mt-8 pt-6 border-t border-[var(--stroke)]">
+                <div className="flex items-center justify-between mb-5">
+                  <span className="eyebrow">{`// ${text.sectionStressControls}`}</span>
+                  <label className="flex items-center gap-2 text-xs font-mono text-soft cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={inputs.stressEnable}
+                      onChange={(event) => updateInput("stressEnable", event.target.checked)}
+                      className="h-4 w-4"
+                    />
+                    {text.fieldStressEnable}
+                  </label>
+                </div>
                 <div className="grid gap-4 md:grid-cols-3">
                   <label className="field">
                     <span>{text.fieldStressLoad}</span>
@@ -1138,8 +1236,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button type="button" className="button-primary" onClick={refreshWorkingYaml}>
+              <div className="mt-8 pt-6 border-t border-[var(--stroke)] flex flex-wrap gap-3">
+                <button type="button" className="button-ghost" onClick={refreshWorkingYaml}>
                   {text.buttonApplyControls}
                 </button>
                 <button type="button" className="button-secondary" onClick={applyYamlToControls}>
@@ -1152,65 +1250,97 @@ export default function Home() {
                   {text.buttonEnqueueRun}
                 </button>
               </div>
+              </div>
             </div>
 
             <div className="space-y-6">
-              <div className="glass rounded-2xl p-6 reveal stagger-2">
-                <h3 className="text-lg font-display text-ink mb-4">{text.yamlWorkingTitle}</h3>
-                <textarea
-                  value={workingYaml}
-                  onChange={(event) => setWorkingYaml(event.target.value)}
-                  className="yaml-box"
-                  spellCheck={false}
-                />
+              <div className="panel panel-bracket panel-bracket-cyan reveal stagger-2">
+                <div className="panel-header">
+                  <span className="panel-title">
+                    <span className="panel-title-id">01.B</span>
+                    {text.yamlWorkingTitle}
+                  </span>
+                  <span className="eyebrow-muted">EDIT</span>
+                </div>
+                <div className="panel-body">
+                  <textarea
+                    value={workingYaml}
+                    onChange={(event) => setWorkingYaml(event.target.value)}
+                    className="yaml-box"
+                    spellCheck={false}
+                  />
+                </div>
               </div>
-              <div className="glass rounded-2xl p-6 reveal stagger-3">
-                <h3 className="text-lg font-display text-ink mb-4">{text.yamlTemplateTitle}</h3>
-                <textarea value={templateYaml} readOnly className="yaml-box muted" />
+              <div className="panel reveal stagger-3">
+                <div className="panel-header">
+                  <span className="panel-title">
+                    <span className="panel-title-id">01.C</span>
+                    {text.yamlTemplateTitle}
+                  </span>
+                  <span className="eyebrow-muted">RO</span>
+                </div>
+                <div className="panel-body">
+                  <textarea value={templateYaml} readOnly className="yaml-box muted" />
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         <section className={activeTab === "runs" ? "block" : "hidden"}>
-          <div className="glass rounded-2xl p-6 mb-8 reveal">
+          <div className="mb-8 reveal">
             <SectionHeader
+              id="02"
               title={text.sectionRunsTitle}
               subtitle={text.sectionRunsSubtitle}
             />
           </div>
           <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-            <div className="glass rounded-2xl p-6 reveal stagger-1">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-display text-ink">{text.runsQueueTitle}</h3>
+            <div className="panel panel-bracket reveal stagger-1">
+              <div className="panel-header">
+                <span className="panel-title">
+                  <span className="panel-title-id">02.A</span>
+                  {text.runsQueueTitle}
+                </span>
                 <button type="button" className="button-ghost" onClick={refreshJobs}>
                   {text.buttonRefresh}
                 </button>
               </div>
-              <div className="overflow-auto rounded-xl border border-stroke">
-                <table className="min-w-full text-sm">
-                  <thead className="bg-surface-muted text-muted">
+              <div className="data-wrap" style={{ borderLeft: 0, borderRight: 0, borderBottom: 0 }}>
+                <table className="data-table">
+                  <thead>
                     <tr>
-                      <th className="px-3 py-2 text-left">{text.tableJob}</th>
-                      <th className="px-3 py-2 text-left">{text.tableStatus}</th>
-                      <th className="px-3 py-2 text-left">{text.tableMode}</th>
-                      <th className="px-3 py-2 text-left">{text.tableOutput}</th>
-                      <th className="px-3 py-2 text-left">{text.tableProgress}</th>
-                      <th className="px-3 py-2 text-left">{text.tableActions}</th>
+                      <th>{text.tableJob}</th>
+                      <th>{text.tableStatus}</th>
+                      <th>{text.tableMode}</th>
+                      <th>{text.tableOutput}</th>
+                      <th>{text.tableProgress}</th>
+                      <th>{text.tableActions}</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {jobs.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: "center", padding: "2rem", color: "var(--ink-dim)" }}>
+                          — NO JOBS —
+                        </td>
+                      </tr>
+                    ) : null}
                     {jobs.map((job) => (
                       <tr
                         key={job.spec.jobId}
-                        className={selectedJobId === job.spec.jobId ? "bg-surface-muted/60" : "bg-white"}
+                        style={
+                          selectedJobId === job.spec.jobId
+                            ? { background: "rgba(245, 185, 66, 0.06)" }
+                            : undefined
+                        }
                       >
-                        <td className="px-3 py-2 text-muted">{job.spec.jobId}</td>
-                        <td className="px-3 py-2 text-muted">{job.status}</td>
-                        <td className="px-3 py-2 text-muted">{job.spec.mode}</td>
-                        <td className="px-3 py-2 text-muted">{job.spec.outputName}</td>
-                        <td className="px-3 py-2 text-muted">{job.progressMessage}</td>
-                        <td className="px-3 py-2">
+                        <td style={{ color: "var(--ink)" }}>{job.spec.jobId}</td>
+                        <td><StatusBadge status={job.status} /></td>
+                        <td>{job.spec.mode}</td>
+                        <td>{job.spec.outputName}</td>
+                        <td>{job.progressMessage}</td>
+                        <td>
                           <div className="flex gap-2">
                             <button
                               type="button"
@@ -1240,58 +1370,70 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="glass rounded-2xl p-6 reveal stagger-2">
-              <h3 className="text-lg font-display text-ink mb-4">{text.runsSelectedTitle}</h3>
+            <div className="panel panel-bracket panel-bracket-cyan reveal stagger-2">
+              <div className="panel-header">
+                <span className="panel-title">
+                  <span className="panel-title-id">02.B</span>
+                  {text.runsSelectedTitle}
+                </span>
+                <span className="eyebrow-muted">{selectedJobId ? "OPEN" : "—"}</span>
+              </div>
+              <div className="panel-body">
               {selectedJobId ? (
-                <div className="space-y-4">
-                  <div className="grid gap-3 text-sm text-muted">
-                    {jobs
-                      .filter((job) => job.spec.jobId === selectedJobId)
-                      .map((job) => (
-                        <div key={job.spec.jobId} className="space-y-1">
-                          <div>
-                            {text.runsOutputLabel}: {job.spec.outputName}
-                          </div>
-                          <div>
-                            {text.runsCreatedLabel}: {job.spec.createdAt}
-                          </div>
-                          <div>
-                            {text.runsStatusLabel}: {job.status}
-                          </div>
-                          <div>
-                            {text.runsLogLabel}: {job.spec.logPath}
-                          </div>
-                        </div>
-                      ))}
-                  </div>
+                <div className="space-y-5">
+                  {jobs
+                    .filter((job) => job.spec.jobId === selectedJobId)
+                    .map((job) => (
+                      <dl key={job.spec.jobId} className="grid grid-cols-[120px_1fr] gap-x-4 gap-y-2 text-xs font-mono">
+                        <dt className="text-dim uppercase tracking-[0.18em]">{text.runsOutputLabel}</dt>
+                        <dd className="text-soft break-all">{job.spec.outputName}</dd>
+                        <dt className="text-dim uppercase tracking-[0.18em]">{text.runsCreatedLabel}</dt>
+                        <dd className="text-soft">{job.spec.createdAt}</dd>
+                        <dt className="text-dim uppercase tracking-[0.18em]">{text.runsStatusLabel}</dt>
+                        <dd><StatusBadge status={job.status} /></dd>
+                        <dt className="text-dim uppercase tracking-[0.18em]">{text.runsLogLabel}</dt>
+                        <dd className="text-soft break-all">{job.spec.logPath}</dd>
+                      </dl>
+                    ))}
                   <div>
-                    <h4 className="text-sm font-semibold text-ink">{text.runsLogTail}</h4>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="eyebrow">{`// ${text.runsLogTail}`}</span>
+                      <span className="text-dim font-mono text-xs">tail -f</span>
+                    </div>
                     <pre className="log-box">{jobLog || text.runsLogEmpty}</pre>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-muted">{text.runsSelectHelp}</p>
+                <p className="text-sm text-muted font-mono">{text.runsSelectHelp}</p>
               )}
+              </div>
             </div>
           </div>
         </section>
 
         <section className={activeTab === "results" ? "block" : "hidden"}>
-          <div className="glass rounded-2xl p-6 mb-8 reveal">
+          <div className="mb-8 reveal">
             <SectionHeader
+              id="03"
               title={text.sectionResultsTitle}
               subtitle={text.sectionResultsSubtitle}
             />
           </div>
-          <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-            <div className="glass rounded-2xl p-4 reveal stagger-1">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-ink">{text.resultsFoldersTitle}</h3>
+          <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+            <div className="panel reveal stagger-1">
+              <div className="panel-header">
+                <span className="panel-title">
+                  <span className="panel-title-id">03.A</span>
+                  {text.resultsFoldersTitle}
+                </span>
                 <button type="button" className="button-ghost" onClick={refreshResults}>
                   {text.buttonRefresh}
                 </button>
               </div>
-              <div className="space-y-2 max-h-[520px] overflow-auto">
+              <div className="max-h-[600px] overflow-auto">
+                {results.length === 0 ? (
+                  <p className="px-4 py-6 text-xs font-mono text-dim text-center">— EMPTY —</p>
+                ) : null}
                 {results.map((result) => (
                   <button
                     key={result.name}
@@ -1299,11 +1441,9 @@ export default function Home() {
                     onClick={() => setSelectedResult(result.name)}
                     className={`result-chip ${selectedResult === result.name ? "result-chip-active" : ""}`}
                   >
-                    <div className="text-left">
-                      <div className="text-sm font-semibold text-ink">{result.name}</div>
-                      <div className="text-xs text-muted">
-                        {text.resultsUpdatedLabel} {new Date(result.timestamp).toLocaleString(locale)}
-                      </div>
+                    <div className="result-chip-name">{result.name}</div>
+                    <div className="result-chip-time">
+                      {text.resultsUpdatedLabel} {new Date(result.timestamp).toLocaleString(locale)}
                     </div>
                   </button>
                 ))}
@@ -1311,23 +1451,37 @@ export default function Home() {
             </div>
 
             <div className="space-y-6">
-              <div className="glass rounded-2xl p-6 reveal stagger-2">
-                <h3 className="text-lg font-display text-ink mb-4">{text.summaryTitle}</h3>
+              <div className="panel panel-bracket reveal stagger-2">
+                <div className="panel-header">
+                  <span className="panel-title">
+                    <span className="panel-title-id">03.B</span>
+                    {text.summaryTitle}
+                  </span>
+                  <span className="eyebrow-muted">{selectedResult || "—"}</span>
+                </div>
+                <div className="panel-body">
                 {resultDetails ? (
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
                     <MetricCard
                       label={text.summaryBaselineCost}
                       value={formatCurrency(resultDetails.summary.baseline_cost, locale)}
+                      tone="cyan"
                     />
                     <MetricCard
                       label={text.summaryScenarioCost}
                       value={formatCurrency(resultDetails.summary.scenario_cost, locale)}
+                      tone="amber"
                     />
                     <MetricCard
                       label={text.summaryDeltaPercent}
                       value={`${formatNumber(resultDetails.summary.delta_percent, 2, locale)}%`}
+                      tone={Number(resultDetails.summary.delta_percent) > 0 ? "red" : "green"}
                     />
-                    <MetricCard label={text.summaryEns} value={formatNumber(resultDetails.summary.ens_mwh, 2, locale)} />
+                    <MetricCard
+                      label={text.summaryEns}
+                      value={formatNumber(resultDetails.summary.ens_mwh, 2, locale)}
+                      tone={Number(resultDetails.summary.ens_mwh) > 0 ? "red" : "neutral"}
+                    />
                     <MetricCard
                       label={text.summarySheddingHours}
                       value={formatNumber(resultDetails.summary.hours_with_shedding, 0, locale)}
@@ -1346,86 +1500,138 @@ export default function Home() {
                     />
                   </div>
                 ) : (
-                  <p className="text-sm text-muted">{text.summarySelectHelp}</p>
+                  <p className="text-sm text-muted font-mono">{text.summarySelectHelp}</p>
                 )}
-              </div>
-
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="glass rounded-2xl p-6 reveal stagger-3">
-                  <h3 className="text-lg font-display text-ink mb-4">{text.chartGeneration}</h3>
-                  <BarPairList
-                    data={generationPairs}
-                    labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
-                    locale={locale}
-                  />
-                </div>
-                <div className="glass rounded-2xl p-6 reveal stagger-3">
-                  <h3 className="text-lg font-display text-ink mb-4">{text.chartCongestion}</h3>
-                  <BarPairList
-                    data={congestionPairs}
-                    labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
-                    locale={locale}
-                  />
                 </div>
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
-                <div className="glass rounded-2xl p-6 reveal stagger-4">
-                  <h3 className="text-lg font-display text-ink mb-4">{text.chartLmp}</h3>
-                  <BarPairList
-                    data={pricePairs}
-                    labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
-                    locale={locale}
-                  />
+                <div className="panel reveal stagger-3">
+                  <div className="panel-header">
+                    <span className="panel-title">
+                      <span className="panel-title-id">03.C</span>
+                      {text.chartGeneration}
+                    </span>
+                    <span className="eyebrow-muted">MWh</span>
+                  </div>
+                  <div className="panel-body">
+                    <BarPairList
+                      data={generationPairs}
+                      labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
+                      locale={locale}
+                    />
+                  </div>
                 </div>
-                <div className="glass rounded-2xl p-6 reveal stagger-4">
-                  <h3 className="text-lg font-display text-ink mb-4">{text.chartCsvPreview}</h3>
-                  {resultDetails ? (
-                    <div className="space-y-3">
-                      <select
-                        value={selectedCsv}
-                        onChange={(event) => setSelectedCsv(event.target.value)}
-                        className="select-field"
-                      >
-                        {resultDetails.csvFiles.map((file) => (
-                          <option key={file} value={file}>
-                            {file}
-                          </option>
+                <div className="panel reveal stagger-3">
+                  <div className="panel-header">
+                    <span className="panel-title">
+                      <span className="panel-title-id">03.D</span>
+                      {text.chartCongestion}
+                    </span>
+                    <span className="eyebrow-muted">%</span>
+                  </div>
+                  <div className="panel-body">
+                    <BarPairList
+                      data={congestionPairs}
+                      labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
+                      locale={locale}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <div className="panel reveal stagger-4">
+                  <div className="panel-header">
+                    <span className="panel-title">
+                      <span className="panel-title-id">03.E</span>
+                      {text.chartLmp}
+                    </span>
+                    <span className="eyebrow-muted">€/MWh</span>
+                  </div>
+                  <div className="panel-body">
+                    <BarPairList
+                      data={pricePairs}
+                      labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
+                      locale={locale}
+                    />
+                  </div>
+                </div>
+                <div className="panel reveal stagger-4">
+                  <div className="panel-header">
+                    <span className="panel-title">
+                      <span className="panel-title-id">03.F</span>
+                      {text.chartCsvPreview}
+                    </span>
+                    <span className="eyebrow-muted">CSV</span>
+                  </div>
+                  <div className="panel-body">
+                    {resultDetails ? (
+                      <div className="space-y-3">
+                        <select
+                          value={selectedCsv}
+                          onChange={(event) => setSelectedCsv(event.target.value)}
+                          className="select-field"
+                        >
+                          {resultDetails.csvFiles.map((file) => (
+                            <option key={file} value={file}>
+                              {file}
+                            </option>
+                          ))}
+                        </select>
+                        <DataTable preview={csvPreview} emptyLabel={text.dataTableEmpty} />
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted font-mono">{text.csvSelectHelp}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <div className="panel reveal stagger-5">
+                  <div className="panel-header">
+                    <span className="panel-title">
+                      <span className="panel-title-id">03.G</span>
+                      {text.figuresTitle}
+                    </span>
+                    <span className="eyebrow-muted">PNG</span>
+                  </div>
+                  <div className="panel-body">
+                    {resultDetails && resultDetails.figureFiles.length ? (
+                      <div className="grid gap-3 md:grid-cols-2">
+                        {resultDetails.figureFiles.map((file) => (
+                          <figure key={file} className="border border-[var(--stroke)] bg-[var(--bg-elev)] p-2">
+                            <img
+                              src={`/api/results/figure?name=${selectedResult}&file=${file}`}
+                              alt={file}
+                              className="w-full block"
+                              style={{ filter: "invert(0.92) hue-rotate(180deg)" }}
+                            />
+                            <figcaption className="mt-2 text-[0.65rem] font-mono text-dim break-words tracking-wider">
+                              {file}
+                            </figcaption>
+                          </figure>
                         ))}
-                      </select>
-                      <DataTable preview={csvPreview} emptyLabel={text.dataTableEmpty} />
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted">{text.csvSelectHelp}</p>
-                  )}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted font-mono">{text.figuresEmpty}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="glass rounded-2xl p-6 reveal stagger-5">
-                  <h3 className="text-lg font-display text-ink mb-4">{text.figuresTitle}</h3>
-                  {resultDetails && resultDetails.figureFiles.length ? (
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {resultDetails.figureFiles.map((file) => (
-                        <div key={file} className="rounded-xl border border-stroke bg-white p-3">
-                          <img
-                            src={`/api/results/figure?name=${selectedResult}&file=${file}`}
-                            alt={file}
-                            className="rounded-lg w-full object-cover"
-                          />
-                          <p className="mt-2 text-xs text-muted break-words">{file}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted">{text.figuresEmpty}</p>
-                  )}
-                </div>
-                <div className="glass rounded-2xl p-6 reveal stagger-5">
-                  <h3 className="text-lg font-display text-ink mb-4">{text.assumptionsTitle}</h3>
-                  <pre className="log-box">
-                    {resultDetails?.assumptions || text.assumptionsEmpty}
-                  </pre>
+                <div className="panel panel-bracket panel-bracket-cyan reveal stagger-5">
+                  <div className="panel-header">
+                    <span className="panel-title">
+                      <span className="panel-title-id">03.H</span>
+                      {text.assumptionsTitle}
+                    </span>
+                    <span className="eyebrow-muted">.MD</span>
+                  </div>
+                  <div className="panel-body">
+                    <pre className="log-box">
+                      {resultDetails?.assumptions || text.assumptionsEmpty}
+                    </pre>
+                  </div>
                 </div>
               </div>
             </div>
