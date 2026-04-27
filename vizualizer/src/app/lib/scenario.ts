@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import YAML from "yaml";
 
-import { generatedConfigDir, templatesDir } from "./paths";
+import { generatedConfigDir, resultsDir, templatesDir } from "./paths";
 import { resolveRuntimePrefixes, snakemakeExtraArgs } from "./runtime";
 import type { CommandSpec, ScenarioInputs, ScenarioInputsPayload } from "./types";
 
@@ -271,8 +271,9 @@ export async function buildConfigs(inputs: ScenarioInputs): Promise<ConfigBuildR
   }
 
   const reportOutdir = path.join("results", inputs.outputName);
+  const reportOutdirAbs = path.join(resultsDir(), inputs.outputName);
   try {
-    await fs.access(reportOutdir);
+    await fs.access(reportOutdirAbs);
     throw new Error("Result output folder already exists.");
   } catch {
     // ok
