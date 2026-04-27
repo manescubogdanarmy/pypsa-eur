@@ -133,6 +133,7 @@ const copy = {
       "Queue runs, watch progress, and open logs. Runs are executed sequentially with conda-aware commands.",
     runsQueueTitle: "Queue and history",
     buttonRefresh: "Refresh",
+    buttonReset: "Reset Runner",
     tableJob: "Job",
     tableStatus: "Status",
     tableMode: "Mode",
@@ -141,6 +142,7 @@ const copy = {
     tableActions: "Actions",
     buttonDetails: "Details",
     buttonCancel: "Cancel",
+    buttonDelete: "Delete",
     runsSelectedTitle: "Selected job",
     runsOutputLabel: "Output",
     runsCreatedLabel: "Created",
@@ -197,6 +199,7 @@ const copy = {
     statusJobQueued: "Job queued",
     statusQueueFailed: "Failed to queue run.",
     statusCancelFailed: "Failed to cancel job.",
+    statusDeleteFailed: "Failed to delete job.",
     statusLoadResultFailed: "Failed to load result.",
     statusLoadCsvFailed: "Failed to load CSV preview.",
   },
@@ -258,6 +261,7 @@ const copy = {
       "Pune rulari in coada, urmareste progresul, deschide loguri. Rularile se executa secvential cu comenzi conda.",
     runsQueueTitle: "Coada si istoric",
     buttonRefresh: "Refresh",
+    buttonReset: "Reset Coada",
     tableJob: "Job",
     tableStatus: "Status",
     tableMode: "Mod",
@@ -266,6 +270,7 @@ const copy = {
     tableActions: "Actiuni",
     buttonDetails: "Detalii",
     buttonCancel: "Anuleaza",
+    buttonDelete: "Sterge",
     runsSelectedTitle: "Job selectat",
     runsOutputLabel: "Output",
     runsCreatedLabel: "Creat",
@@ -322,6 +327,7 @@ const copy = {
     statusJobQueued: "Job pus in coada",
     statusQueueFailed: "Nu pot pune in coada.",
     statusCancelFailed: "Nu pot anula job.",
+    statusDeleteFailed: "Nu pot sterge job.",
     statusLoadResultFailed: "Nu pot incarca rezultatul.",
     statusLoadCsvFailed: "Nu pot incarca previzualizarea CSV.",
   },
@@ -722,6 +728,30 @@ export default function Home() {
       await refreshJobs();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : text.statusCancelFailed);
+    }
+  };
+
+  const deleteJob = async (jobId: string) => {
+    try {
+      await fetchJson("/api/runs/delete", {
+        method: "POST",
+        body: JSON.stringify({ jobId }),
+      });
+      await refreshJobs();
+      if (selectedJobId === jobId) {
+        setSelectedJobId("");
+      }
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : text.statusDeleteFailed);
+    }
+  };
+
+  const resetRunner = async () => {
+    try {
+      await fetchJson("/api/runs/reset", { method: "POST" });
+      await refreshJobs();
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Failed to reset runner.");
     }
   };
 
@@ -1305,6 +1335,9 @@ export default function Home() {
                 <button type="button" className="button-ghost" onClick={refreshJobs}>
                   {text.buttonRefresh}
                 </button>
+                <button type="button" className="button-secondary" onClick={resetRunner}>
+                  {text.buttonReset}
+                </button>
               </div>
               <div className="data-wrap" style={{ borderLeft: 0, borderRight: 0, borderBottom: 0 }}>
                 <table className="data-table">
@@ -1361,6 +1394,13 @@ export default function Home() {
                                 {text.buttonCancel}
                               </button>
                             ) : null}
+                            <button
+                              type="button"
+                              className="button-failed"
+                              onClick={() => deleteJob(job.spec.jobId)}
+                            >
+                              {text.buttonDelete}
+                            </button>
                           </div>
                         </td>
                       </tr>

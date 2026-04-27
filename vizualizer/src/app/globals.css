@@ -510,6 +510,30 @@ body::after {
   border-color: var(--amber-soft);
 }
 
+.button-failed {
+  background: transparent;
+  color: var(--red);
+  border-color: var(--red);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.button-failed:hover {
+  background: var(--red);
+  color: var(--bg);
+}
+
 /* =========================================================
    FORM FIELDS
    ========================================================= */

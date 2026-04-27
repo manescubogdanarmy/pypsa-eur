@@ -153,6 +153,45 @@ export class JobRunner {
     return false;
   }
 
+  delete(jobId: string): boolean {
+    this.loadState();
+    const jobIndex = this.jobs.findIndex((item) => item.spec.jobId === jobId);
+    if (jobIndex === -1) {
+      return false;
+    }
+    if (this.activeProcess && this.activeJobId === jobId) {
+      this.activeProcess.kill();
+    }
+    this.jobs.splice(jobIndex, 1);
+    this.saveState();
+    this.runNext();
+    return true;
+  }
+
+  reset(): void {
+    if (this.activeProcess) {
+      this.activeProcess.kill();
+    }
+    this.activeProcess = null;
+    this.activeJobId = null;
+    this.isRunning = false;
+    this.loadState();
+    // Also normalize any jobs that might be stuck in "running" status
+    this.jobs = this.jobs.map(job => {
+      if (job.status === "running") {
+        return {
+          ...job,
+          status: "interrupted",
+          progressMessage: "Reset by user.",
+          finishedAt: nowIso()
+        };
+      }
+      return job;
+    });
+    this.saveState();
+    this.runNext();
+  }
+
   async getLog(jobId: string, maxLines = 200): Promise<string> {
     const job = this.jobs.find((item) => item.spec.jobId === jobId);
     if (!job) {
