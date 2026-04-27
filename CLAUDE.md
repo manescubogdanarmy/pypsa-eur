@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **PyPSA-Eur Romania** is a comprehensive energy system modeling project combining:
 - **Core Modeling**: PyPSA-based optimization using Snakemake workflows for energy system simulations
 - **Scenario Management**: Python-based scenario builder and configuration system
-- **Interactive Visualization**: Next.js/React dashboard (in `vizualizer/` folder) for scenario management and results visualization
+- **Interactive Visualization**: Next.js/React web dashboard (in `vizualizer/` folder) for scenario management and results visualization
 - **Analysis & Reporting**: Post-processing and stress-test analysis tools
 - **Documentation**: Obsidian vault (in `vault/`) containing architecture, planning, and configuration guides
 
@@ -25,7 +25,7 @@ Results (networks/, CSVs, figures)
     ↓
 Analysis & Reporting (personal_analysis/)
     ↓
-Visualization & Dashboard (vizualizer/)
+Visualization & Dashboard (vizualizer/ web UI  or  personal_dashboard/ Tkinter)
 ```
 
 ### Directory Organization
@@ -39,7 +39,8 @@ Visualization & Dashboard (vizualizer/)
 - `results/` - Output networks (.nc files), CSVs, and figures
 
 **Custom Romania Project Directories:**
-- `personal_dashboard/` - Tkinter UI + Next.js React app (scenario manager, results viewer)
+- `vizualizer/` - **Primary web dashboard** (Next.js/React, scenario builder + run queue + results viewer)
+- `personal_dashboard/` - Legacy Tkinter UI (scenario manager, results viewer); stable but superseded by vizualizer
 - `personal_runners/` - Scripts to execute baseline/stress scenarios without Snakemake CLI
 - `personal_analysis/` - Post-processing: CSV generation, reporting, figure creation
 - `personal_diagnostics/` - Validation tools (config checks, data integrity, URL testing)
@@ -49,36 +50,31 @@ Visualization & Dashboard (vizualizer/)
 
 ### Scenario Manager System
 
-The scenario manager (in `personal_dashboard/scenario_manager/`) uses:
+The scenario manager logic is shared between the web dashboard (`vizualizer/`) and the legacy Tkinter UI (`personal_dashboard/scenario_manager/`). Both use:
 - **Immutable Template Pattern**: Read-only canonical YAML templates in `personal_docs/`
 - **Year-Specific Templates**: `scenario_template.yaml` (default/2020) and `scenario_template_2023.yaml` auto-selected based on cutout year
 - **Config Builder**: Generates YAML by merging user inputs with template defaults
 - **Dual Editing Modes**: Structured form controls OR raw YAML editor (both update same config)
-- **Bilingual Support**: English/Romanian UI via static i18n map
 - **Queue-Based Execution**: Non-blocking subprocess management; status persisted to JSON
 
-Key modules:
+Legacy Tkinter key modules (`personal_dashboard/scenario_manager/`):
 - `config_builder.py` - `resolve_template_path()` intelligently selects year-specific templates; `build_configs()` generates paired baseline+stress YAMLs
 - `run_manager.py` - Queue management, subprocess orchestration, job state tracking
 - `results_index.py` - Scans `results/` for new-format comparison outputs; validates required CSV presence
 - `state_store.py` - Persistent JSON state for jobs, history, language preference
 
-## Visualizer Sub-Project (Next.js Dashboard)
+## Vizualizer – Web Dashboard (Next.js)
 
-**Location:** `vizualizer/` (Note: intentional spelling with 'z')
+**Location:** `vizualizer/` (intentional spelling with 'z')
 
-**Stack:**
-- Next.js 16.2.4 (App Router)
-- React 19.2.4
-- TypeScript 5
-- Tailwind CSS 4
+**Stack:** Next.js 16.2.4 (App Router), React 19.2.4, TypeScript 5, Tailwind CSS 4, papaparse, yaml
 
-**Current State:** Minimal scaffolding (layout.tsx, page.tsx)
+**Status:** Production-ready — fully replaces the Tkinter UI for day-to-day use.
 
-**Planned Feature:** Scenario management and visualization dashboard
-- Integration with scenario manager outputs (baseline + stress results)
-- Interactive scenario comparison (CSVs, figures, metrics)
-- Results browsing and export
+**Pages:**
+- **Scenario Builder** — form + YAML editor to configure and enqueue paired or single runs
+- **Runs** — queue list with live progress, log viewer, cancel support
+- **Results** — auto-scanned list of valid comparison outputs; tabs for Summary, CSV Data, Figures, Assumptions
 
 **Development:**
 ```bash
@@ -88,6 +84,20 @@ npm run dev        # Start dev server (http://localhost:3000)
 npm run build      # Production build
 npm run lint       # ESLint check
 ```
+
+**Runtime detection:** The app auto-discovers the conda environment at startup — priority order: `PLANUI_CONDA_PREFIX` env var → `CONDA_PREFIX` → `PLANUI_CONDA_ENV` → `CONDA_DEFAULT_ENV` → `pypsa` → `pypsa-eur` → system Python.
+
+**State persistence:** `vizualizer/.data/planui-state.json` (jobs survive restart; running → interrupted on restart)
+
+**Log files:** `logs/planui-web/<jobId>.log`
+
+**Known environment issue (Python 3.13 + linopy):**
+`linopy` imports `google-cloud-storage` at module level. The old version `1.31.2` uses the deprecated `pkg_resources` API, which is missing in Python 3.13. Fix:
+```bash
+conda run -n pypsa pip install "google-cloud-storage>=2.10"
+```
+
+Full API and architecture details: `vault/Vizualizer.md`
 
 ## Key Concepts & Patterns
 
@@ -106,7 +116,7 @@ Defined in `stress_test` YAML block (only in stress configs):
 - **Shock Application**: Pre-solve (in `scripts/romania_winter_stress.py`) via `apply_timeseries_shocks()`, then constraint addition via `add_scada_proxy_constraints()` and `add_import_cap_constraints()`
 
 ### Results Format
-New-format results (required for scenario manager):
+New-format results (required for both dashboards):
 - **Required CSVs**: `system_cost_comparison.csv`, `generation_mix_mwh.csv`, `lmp_summary_ro.csv`, `ens_summary.csv`, `curtailment_mwh.csv`, `daily_net_imports_mwh.csv`, `interconnector_flow_congestion.csv`
 - **Figures**: PNG + PDF versions (fig_01 through fig_05)
 - **Assumptions Note**: `assumptions_limitations.md` documenting shock formulation, constraints, and interpretation limits
@@ -123,6 +133,7 @@ New-format results (required for scenario manager):
 - `vault/Index.md` - Master index to all Obsidian documentation
 - `vault/Architecture.md` - Stress test implementation plan, shock logic, reporting specs
 - `vault/FolderStructure.md` - Directory roles and organization
+- `vault/Vizualizer.md` - Web dashboard architecture, API endpoints, env vars, known issues
 - `personal_docs/PLAN.md` - Original project scope and acceptance criteria
 - `personal_docs/TEMPLATE_ARCHITECTURE.md` - Year-specific template selection system (400+ lines)
 - `personal_docs/romania_config_explanation.md` - YAML configuration guide (English)
@@ -130,8 +141,8 @@ New-format results (required for scenario manager):
 - `personal_docs/PROJECT_ORGANIZATION.md` - Updated folder structure guide with quick-start workflows
 
 **For dashboard/UI details:**
-- `personal_docs/planui.md` - Scenario Manager UI architecture and implementation notes
-- `personal_dashboard/README.md` - Dashboard usage guide
+- `personal_docs/planui.md` - Legacy Tkinter Scenario Manager UI architecture and implementation notes
+- `personal_dashboard/README.md` - Tkinter dashboard usage guide
 
 ## Common Development Tasks
 
@@ -161,9 +172,9 @@ python explore_scenarios.py                  # Discover available scenarios
 
 **View results with dashboard:**
 ```bash
-cd personal_dashboard
-python visualize_scenarios_ui_v2.py          # Tkinter UI (legacy, Python-based)
-# Coming: vizualizer/npm run dev              # Next.js web dashboard
+cd vizualizer && npm run dev                 # Web dashboard (http://localhost:3000) — recommended
+# or
+python personal_dashboard/visualize_scenarios_ui_v2.py   # Legacy Tkinter UI
 ```
 
 **Add new year support (e.g., 2024):**
@@ -176,28 +187,22 @@ python visualize_scenarios_ui_v2.py          # Tkinter UI (legacy, Python-based)
 
 1. **Immutable Template Pattern**: Templates in `personal_docs/` are read-only; user configs generated to `config/adversarial/generated/`
 2. **Year-Specific Templates**: Auto-select logic eliminates manual template management; fallback safety if template missing
-3. **Bilingual UI**: Static i18n map (no external library); easily extensible to more languages
+3. **Web-First Dashboard**: `vizualizer/` (Next.js) is the primary UI; Tkinter UI retained as stable fallback
 4. **Queue-Based Execution**: Async subprocess management prevents blocking; job state persisted across app restarts
 5. **New-Format Results Only**: Results page only displays comparison outputs meeting CSV validation criteria (discards legacy formats)
 6. **Dual Editing Modes**: Form + YAML allows both guided and power-user workflows updating same underlying config
 7. **Stress Test Modular Design**: Shock logic isolated in `romania_winter_stress.py` for testability and reusability
+8. **Conda Auto-Discovery**: Web dashboard detects the conda env at startup; override via `PLANUI_CONDA_ENV` if needed
 
-## Integration Points for New Dashboard (vizualizer)
+## Vizualizer Data Flow
 
-When building scenario management and visualization in `vizualizer/`:
-
-1. **Results Data Source**: Read from `results/` directory; validate CSV presence and parse metrics for summary display
-2. **Scenario Templates**: Reference `personal_docs/scenario_template*.yaml` for default parameters (read-only reference)
-3. **Configuration Discovery**: Query `config/adversarial/generated/` to list available scenario configs
-4. **Figure Rendering**: Load PNG/PDF figures from `results/<output_name>/` for display in tabs
-5. **CSV Previewing**: Parse and display sample rows from required CSVs in structured tabs
-6. **Assumptions Display**: Render `assumptions_limitations.md` as text/markdown in UI
-
-**Data Flow:**
 ```
-vizualizer/ reads → results/ (comparison outputs)
-                  → config/adversarial/generated/ (scenario configs)
-                  → personal_docs/ (templates, for reference)
+vizualizer/ reads  → results/                        (comparison outputs)
+                   → config/adversarial/generated/   (scenario configs)
+                   → personal_docs/                  (templates, read-only)
+vizualizer/ writes → config/adversarial/generated/   (newly generated configs)
+                   → logs/planui-web/                (per-job log files)
+                   → vizualizer/.data/               (job state JSON)
 ```
 
 ## Testing
@@ -214,8 +219,8 @@ pytest test/test_romania_winter_stress.py
 
 ## Notes for Future Development
 
-- **Consolidation Opportunity**: Tkinter UI (`visualize_scenarios_ui_v2.py`) and Next.js app (`vizualizer/`) have overlapping features; plan eventual unification
+- **Bilingual Expansion**: Web dashboard bilingual support (EN/RO) is planned; Tkinter UI already has it via `scenario_manager/i18n.py`
+- **Tkinter Consolidation**: Once web dashboard reaches feature parity (bilingual toggle, all result tabs), the Tkinter UI can be retired
 - **Cutout Management**: Weather data (ERA5 cutouts) is heavy; `personal_data_download/download_cutout.py` pre-caches to `data/cutout/archive/v0.8/`
-- **Bilingual Expansion**: Add more language pairs by updating i18n maps in `scenario_manager/i18n.py`
 - **Template Versioning**: As new years are added, keep all templates in sync for consistency; document breaking changes in `personal_docs/`
 - **Performance**: Large networks solve slowly; clustering and temporal resolution settings in config significantly impact runtime
