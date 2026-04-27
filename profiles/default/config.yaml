@@ -4,4 +4,5 @@
 
 # See https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles
 
-logger: pypsa
+# Minimal profile configuration
+cores: null

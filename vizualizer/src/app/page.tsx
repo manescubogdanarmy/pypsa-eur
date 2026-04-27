@@ -74,26 +74,281 @@ const defaultInputs: ScenarioInputsState = {
   importFactor: "0.50",
 };
 
-function formatNumber(value: string | number | undefined, digits = 2): string {
+const copy = {
+  en: {
+    brand: "PlanUI Vizualizer",
+    title: "Romania Scenario Control Room",
+    subtitle: "Build stress test runs, watch the queue, and explore new-format comparison reports.",
+    metricQueue: "Queue",
+    metricResults: "Results",
+    metricStatus: "Status",
+    metricJobsSuffix: "jobs",
+    metricReadySuffix: "ready",
+    metricQueueHintActive: "Active run in progress",
+    metricQueueHintIdle: "Idle",
+    metricResultsHint: "New-format folders",
+    tabBuilder: "Scenario Builder",
+    tabRuns: "Run Queue",
+    tabResults: "Results",
+    tabSyncYaml: "Sync YAML",
+    sectionBuilderTitle: "Scenario Builder",
+    sectionBuilderSubtitle:
+      "Use structured controls or edit YAML directly. Generated configs go to config/adversarial/generated.",
+    sectionCoreInputs: "Core Inputs",
+    fieldRunMode: "Run mode",
+    runModePaired: "Paired (baseline + scenario)",
+    runModeSingle: "Single (reference baseline)",
+    fieldOutputName: "Output name",
+    fieldScenarioSlug: "Scenario slug",
+    fieldStressCountry: "Stress country",
+    fieldCountries: "Countries (comma separated)",
+    fieldSnapshotStart: "Snapshot start",
+    fieldSnapshotEnd: "Snapshot end",
+    fieldCutoutYear: "Cutout year",
+    fieldClusters: "Clusters",
+    fieldSolverName: "Solver name",
+    fieldSolverOptions: "Solver options",
+    fieldReferenceBaseline: "Reference baseline network",
+    fieldBaselinePlaceholder: "Select baseline network",
+    sectionStressControls: "Stress Controls",
+    fieldStressEnable: "Enable stress test",
+    fieldStressLoad: "Load factor",
+    fieldStressHydro: "Hydro factor",
+    fieldStressGas: "Gas factor",
+    fieldScadaTight: "SCADA tight hours",
+    fieldScadaRelaxed: "SCADA relaxed hours",
+    fieldScadaRampTight: "SCADA ramp tight",
+    fieldScadaRampRelaxed: "SCADA ramp relaxed",
+    fieldImportZero: "Import cap zero hours",
+    fieldImportHalf: "Import cap half hours",
+    fieldImportFactor: "Import half factor",
+    buttonApplyControls: "Apply controls to YAML",
+    buttonApplyYaml: "Apply YAML to controls",
+    buttonRefreshBaselines: "Refresh baselines",
+    buttonEnqueueRun: "Enqueue run",
+    yamlWorkingTitle: "Working YAML",
+    yamlTemplateTitle: "Template YAML (read-only)",
+    sectionRunsTitle: "Run Queue",
+    sectionRunsSubtitle:
+      "Queue runs, watch progress, and open logs. Runs are executed sequentially with conda-aware commands.",
+    runsQueueTitle: "Queue and history",
+    buttonRefresh: "Refresh",
+    tableJob: "Job",
+    tableStatus: "Status",
+    tableMode: "Mode",
+    tableOutput: "Output",
+    tableProgress: "Progress",
+    tableActions: "Actions",
+    buttonDetails: "Details",
+    buttonCancel: "Cancel",
+    runsSelectedTitle: "Selected job",
+    runsOutputLabel: "Output",
+    runsCreatedLabel: "Created",
+    runsStatusLabel: "Status",
+    runsLogLabel: "Log file",
+    runsLogTail: "Log tail",
+    runsLogEmpty: "No log output yet.",
+    runsSelectHelp: "Select a job to inspect commands and log output.",
+    sectionResultsTitle: "Results and Vizualizer",
+    sectionResultsSubtitle:
+      "Preview new-format comparison results with summaries, charts, CSV tables, and figures.",
+    resultsFoldersTitle: "Result folders",
+    resultsUpdatedLabel: "Updated",
+    summaryTitle: "Summary",
+    summaryBaselineCost: "Baseline cost",
+    summaryScenarioCost: "Scenario cost",
+    summaryDeltaPercent: "Delta percent",
+    summaryEns: "ENS MWh",
+    summarySheddingHours: "Shedding hours",
+    summaryMaxShedding: "Max shedding MW",
+    summaryImportsDelta: "Imports delta MWh",
+    summaryLmpMean: "LMP mean",
+    summarySelectHelp: "Select a result to preview summary metrics.",
+    chartGeneration: "Generation mix",
+    chartCongestion: "Congestion loading",
+    chartLmp: "LMP comparison",
+    chartCsvPreview: "CSV preview",
+    csvSelectHelp: "Select a result to view CSV data.",
+    figuresTitle: "Figures",
+    figuresEmpty: "No figure files found.",
+    assumptionsTitle: "Assumptions",
+    assumptionsEmpty: "No assumptions_limitations.md found.",
+    dataTableEmpty: "Select a CSV file to preview rows.",
+    chartEmpty: "No chart data available.",
+    chartBaseline: "Baseline",
+    chartScenario: "Scenario",
+    labelMean: "Mean",
+    labelP95: "P95",
+    labelMax: "Max",
+    labelCarrierFallback: "Carrier",
+    labelLineFallback: "Line",
+    languageLabel: "Language",
+    statusReady: "Ready.",
+    statusBuildingYaml: "Building working YAML...",
+    statusYamlUpdated: "Working YAML updated.",
+    statusYamlApplied: "Controls updated from YAML.",
+    statusYamlInvalid: "Invalid YAML.",
+    statusLoadTemplateFailed: "Failed to load template.",
+    statusBuildYamlFailed: "Failed to build YAML.",
+    statusLoadBaselinesFailed: "Failed to load baselines.",
+    statusLoadJobsFailed: "Failed to load jobs.",
+    statusLoadResultsFailed: "Failed to load results.",
+    statusQueueingRun: "Queueing run...",
+    statusJobQueued: "Job queued",
+    statusQueueFailed: "Failed to queue run.",
+    statusCancelFailed: "Failed to cancel job.",
+    statusLoadResultFailed: "Failed to load result.",
+    statusLoadCsvFailed: "Failed to load CSV preview.",
+  },
+  ro: {
+    brand: "PlanUI Vizualizer",
+    title: "Camera de Control Scenarii Romania",
+    subtitle: "Construieste rulari de stress, urmareste coada, exploreaza rapoarte comparatie format nou.",
+    metricQueue: "Coada",
+    metricResults: "Rezultate",
+    metricStatus: "Status",
+    metricJobsSuffix: "joburi",
+    metricReadySuffix: "gata",
+    metricQueueHintActive: "Rulare activa in progres",
+    metricQueueHintIdle: "Inactiv",
+    metricResultsHint: "Foldere format nou",
+    tabBuilder: "Builder Scenarii",
+    tabRuns: "Coada Rulari",
+    tabResults: "Rezultate",
+    tabSyncYaml: "Sincronizeaza YAML",
+    sectionBuilderTitle: "Builder Scenarii",
+    sectionBuilderSubtitle:
+      "Foloseste controale structurate sau editeaza YAML. Configuri generate in config/adversarial/generated.",
+    sectionCoreInputs: "Inputuri de baza",
+    fieldRunMode: "Mod rulare",
+    runModePaired: "Pereche (baza + scenariu)",
+    runModeSingle: "Single (baza referinta)",
+    fieldOutputName: "Nume output",
+    fieldScenarioSlug: "Slug scenariu",
+    fieldStressCountry: "Tara stress",
+    fieldCountries: "Tari (separate prin virgula)",
+    fieldSnapshotStart: "Start snapshots",
+    fieldSnapshotEnd: "End snapshots",
+    fieldCutoutYear: "An cutout",
+    fieldClusters: "Clustere",
+    fieldSolverName: "Nume solver",
+    fieldSolverOptions: "Optiuni solver",
+    fieldReferenceBaseline: "Retea baza referinta",
+    fieldBaselinePlaceholder: "Selecteaza reteaua baza",
+    sectionStressControls: "Controale Stress",
+    fieldStressEnable: "Activeaza stress test",
+    fieldStressLoad: "Factor load",
+    fieldStressHydro: "Factor hidro",
+    fieldStressGas: "Factor gaz",
+    fieldScadaTight: "Ore SCADA tight",
+    fieldScadaRelaxed: "Ore SCADA relaxed",
+    fieldScadaRampTight: "Rampa SCADA tight",
+    fieldScadaRampRelaxed: "Rampa SCADA relaxed",
+    fieldImportZero: "Ore import zero",
+    fieldImportHalf: "Ore import half",
+    fieldImportFactor: "Factor import half",
+    buttonApplyControls: "Aplica controale -> YAML",
+    buttonApplyYaml: "Aplica YAML -> controale",
+    buttonRefreshBaselines: "Refresh baze",
+    buttonEnqueueRun: "Pune in coada",
+    yamlWorkingTitle: "Working YAML",
+    yamlTemplateTitle: "Template YAML (read-only)",
+    sectionRunsTitle: "Coada Rulari",
+    sectionRunsSubtitle:
+      "Pune rulari in coada, urmareste progresul, deschide loguri. Rularile se executa secvential cu comenzi conda.",
+    runsQueueTitle: "Coada si istoric",
+    buttonRefresh: "Refresh",
+    tableJob: "Job",
+    tableStatus: "Status",
+    tableMode: "Mod",
+    tableOutput: "Output",
+    tableProgress: "Progres",
+    tableActions: "Actiuni",
+    buttonDetails: "Detalii",
+    buttonCancel: "Anuleaza",
+    runsSelectedTitle: "Job selectat",
+    runsOutputLabel: "Output",
+    runsCreatedLabel: "Creat",
+    runsStatusLabel: "Status",
+    runsLogLabel: "Fisier log",
+    runsLogTail: "Ultimele linii log",
+    runsLogEmpty: "Inca nu exista log.",
+    runsSelectHelp: "Selecteaza un job pentru detalii si log.",
+    sectionResultsTitle: "Rezultate si Vizualizer",
+    sectionResultsSubtitle:
+      "Previzualizeaza rezultate format nou cu rezumat, grafice, CSV si figuri.",
+    resultsFoldersTitle: "Foldere rezultate",
+    resultsUpdatedLabel: "Actualizat",
+    summaryTitle: "Rezumat",
+    summaryBaselineCost: "Cost baza",
+    summaryScenarioCost: "Cost scenariu",
+    summaryDeltaPercent: "Delta procent",
+    summaryEns: "ENS MWh",
+    summarySheddingHours: "Ore shedding",
+    summaryMaxShedding: "Max shedding MW",
+    summaryImportsDelta: "Delta import MWh",
+    summaryLmpMean: "LMP medie",
+    summarySelectHelp: "Selecteaza un rezultat pentru rezumat.",
+    chartGeneration: "Mix generatie",
+    chartCongestion: "Incarcare congestie",
+    chartLmp: "Comparatie LMP",
+    chartCsvPreview: "Previzualizare CSV",
+    csvSelectHelp: "Selecteaza un rezultat pentru date CSV.",
+    figuresTitle: "Figuri",
+    figuresEmpty: "Nu exista figuri.",
+    assumptionsTitle: "Asumptii",
+    assumptionsEmpty: "Nu exista assumptions_limitations.md.",
+    dataTableEmpty: "Selecteaza un CSV pentru previzualizare.",
+    chartEmpty: "Nu exista date pentru grafic.",
+    chartBaseline: "Baza",
+    chartScenario: "Scenariu",
+    labelMean: "Medie",
+    labelP95: "P95",
+    labelMax: "Max",
+    labelCarrierFallback: "Tehnologie",
+    labelLineFallback: "Linie",
+    languageLabel: "Limba",
+    statusReady: "Gata.",
+    statusBuildingYaml: "Construiesc YAML...",
+    statusYamlUpdated: "Working YAML actualizat.",
+    statusYamlApplied: "Controale actualizate din YAML.",
+    statusYamlInvalid: "YAML invalid.",
+    statusLoadTemplateFailed: "Nu pot incarca template.",
+    statusBuildYamlFailed: "Nu pot construi YAML.",
+    statusLoadBaselinesFailed: "Nu pot incarca bazele.",
+    statusLoadJobsFailed: "Nu pot incarca joburile.",
+    statusLoadResultsFailed: "Nu pot incarca rezultatele.",
+    statusQueueingRun: "Pun rularea in coada...",
+    statusJobQueued: "Job pus in coada",
+    statusQueueFailed: "Nu pot pune in coada.",
+    statusCancelFailed: "Nu pot anula job.",
+    statusLoadResultFailed: "Nu pot incarca rezultatul.",
+    statusLoadCsvFailed: "Nu pot incarca previzualizarea CSV.",
+  },
+} as const;
+
+type Language = keyof typeof copy;
+
+function formatNumber(value: string | number | undefined, digits = 2, locale = "en-US"): string {
   const num = typeof value === "string" ? Number(value) : value ?? NaN;
   if (!Number.isFinite(num)) {
     return "-";
   }
-  return num.toLocaleString(undefined, { maximumFractionDigits: digits });
+  return num.toLocaleString(locale, { maximumFractionDigits: digits });
 }
 
-function formatCurrency(value: string | number | undefined): string {
+function formatCurrency(value: string | number | undefined, locale = "en-US"): string {
   const num = typeof value === "string" ? Number(value) : value ?? NaN;
   if (!Number.isFinite(num)) {
     return "-";
   }
   if (Math.abs(num) >= 1e9) {
-    return `${(num / 1e9).toFixed(2)}B EUR`;
+    return `${(num / 1e9).toLocaleString(locale, { maximumFractionDigits: 2 })}B EUR`;
   }
   if (Math.abs(num) >= 1e6) {
-    return `${(num / 1e6).toFixed(2)}M EUR`;
+    return `${(num / 1e6).toLocaleString(locale, { maximumFractionDigits: 2 })}M EUR`;
   }
-  return `${num.toFixed(2)} EUR`;
+  return `${num.toLocaleString(locale, { maximumFractionDigits: 2 })} EUR`;
 }
 
 function buildPayload(inputs: ScenarioInputsState, workingYaml: string) {
@@ -157,9 +412,9 @@ function MetricCard({ label, value, hint }: { label: string; value: string; hint
   );
 }
 
-function DataTable({ preview }: { preview: CsvPreview | null }) {
+function DataTable({ preview, emptyLabel }: { preview: CsvPreview | null; emptyLabel: string }) {
   if (!preview || preview.columns.length === 0) {
-    return <p className="text-sm text-muted">Select a CSV file to preview rows.</p>;
+    return <p className="text-sm text-muted">{emptyLabel}</p>;
   }
 
   return (
@@ -190,9 +445,16 @@ function DataTable({ preview }: { preview: CsvPreview | null }) {
   );
 }
 
-function BarPairList({ data }: { data: Array<{ label: string; baseline: number; scenario: number }> }) {
+function BarPairList({
+  data,
+  labels,
+}: {
+  data: Array<{ label: string; baseline: number; scenario: number }>;
+  labels: { empty: string; baseline: string; scenario: string };
+  locale?: string;
+}) {
   if (!data.length) {
-    return <p className="text-sm text-muted">No chart data available.</p>;
+    return <p className="text-sm text-muted">{labels.empty}</p>;
   }
   const max = Math.max(...data.flatMap((item) => [item.baseline, item.scenario, 0.01]));
   return (
@@ -202,24 +464,28 @@ function BarPairList({ data }: { data: Array<{ label: string; baseline: number; 
           <div className="text-xs uppercase tracking-[0.2em] text-muted">{item.label}</div>
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <span className="w-20 text-xs text-muted">Baseline</span>
+              <span className="w-20 text-xs text-muted">{labels.baseline}</span>
               <div className="h-2 flex-1 rounded-full bg-surface-muted">
                 <div
                   className="h-2 rounded-full bg-accent-2"
                   style={{ width: `${(item.baseline / max) * 100}%` }}
                 />
               </div>
-              <span className="w-24 text-right text-xs text-muted">{formatNumber(item.baseline)}</span>
+              <span className="w-24 text-right text-xs text-muted">
+                {formatNumber(item.baseline, 2, locale)}
+              </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="w-20 text-xs text-muted">Scenario</span>
+              <span className="w-20 text-xs text-muted">{labels.scenario}</span>
               <div className="h-2 flex-1 rounded-full bg-surface-muted">
                 <div
                   className="h-2 rounded-full bg-accent"
                   style={{ width: `${(item.scenario / max) * 100}%` }}
                 />
               </div>
-              <span className="w-24 text-right text-xs text-muted">{formatNumber(item.scenario)}</span>
+              <span className="w-24 text-right text-xs text-muted">
+                {formatNumber(item.scenario, 2, locale)}
+              </span>
             </div>
           </div>
         </div>
@@ -229,11 +495,12 @@ function BarPairList({ data }: { data: Array<{ label: string; baseline: number; 
 }
 
 export default function Home() {
+  const [language, setLanguage] = useState<Language>("en");
   const [activeTab, setActiveTab] = useState<TabKey>("builder");
   const [inputs, setInputs] = useState<ScenarioInputsState>(defaultInputs);
   const [workingYaml, setWorkingYaml] = useState("");
   const [templateYaml, setTemplateYaml] = useState("");
-  const [status, setStatus] = useState("Ready.");
+  const [status, setStatus] = useState(copy.en.statusReady);
   const [baselines, setBaselines] = useState<string[]>([]);
   const [jobs, setJobs] = useState<JobRecord[]>([]);
   const [selectedJobId, setSelectedJobId] = useState("");
@@ -244,6 +511,9 @@ export default function Home() {
   const [selectedCsv, setSelectedCsv] = useState("");
   const [csvPreview, setCsvPreview] = useState<CsvPreview | null>(null);
   const [chartPack, setChartPack] = useState<ChartPack>({});
+
+  const text = copy[language];
+  const locale = language === "ro" ? "ro-RO" : "en-US";
 
   const activeJob = useMemo(() => jobs.find((job) => job.status === "running"), [jobs]);
   const jobCount = jobs.length;
@@ -259,21 +529,21 @@ export default function Home() {
       setTemplateYaml(data.yaml);
       setWorkingYaml((prev) => prev || data.yaml);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to load template.");
+      setStatus(error instanceof Error ? error.message : text.statusLoadTemplateFailed);
     }
   };
 
   const refreshWorkingYaml = async () => {
     try {
-      setStatus("Building working YAML...");
+      setStatus(text.statusBuildingYaml);
       const data = await fetchJson<{ yaml: string }>("/api/scenario/build", {
         method: "POST",
         body: JSON.stringify(buildPayload(inputs, workingYaml)),
       });
       setWorkingYaml(data.yaml);
-      setStatus("Working YAML updated.");
+      setStatus(text.statusYamlUpdated);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to build YAML.");
+      setStatus(error instanceof Error ? error.message : text.statusBuildYamlFailed);
     }
   };
 
@@ -337,9 +607,9 @@ export default function Home() {
           updateInput("importFactor", String(cfg.stress_test.import_cap.half_factor ?? ""));
         }
       }
-      setStatus("Controls updated from YAML.");
+      setStatus(text.statusYamlApplied);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Invalid YAML.");
+      setStatus(error instanceof Error ? error.message : text.statusYamlInvalid);
     }
   };
 
@@ -348,7 +618,7 @@ export default function Home() {
       const data = await fetchJson<{ baselines: string[] }>("/api/runs/baselines");
       setBaselines(data.baselines);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to load baselines.");
+      setStatus(error instanceof Error ? error.message : text.statusLoadBaselinesFailed);
     }
   };
 
@@ -357,7 +627,7 @@ export default function Home() {
       const data = await fetchJson<{ jobs: JobRecord[] }>("/api/runs/jobs");
       setJobs(data.jobs);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to load jobs.");
+      setStatus(error instanceof Error ? error.message : text.statusLoadJobsFailed);
     }
   };
 
@@ -369,7 +639,7 @@ export default function Home() {
         setSelectedResult(data.results[0].name);
       }
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to load results.");
+      setStatus(error instanceof Error ? error.message : text.statusLoadResultsFailed);
     }
   };
 
@@ -388,16 +658,16 @@ export default function Home() {
 
   const enqueueRun = async () => {
     try {
-      setStatus("Queueing run...");
+      setStatus(text.statusQueueingRun);
       const data = await fetchJson<{ jobId: string }>("/api/runs/enqueue", {
         method: "POST",
         body: JSON.stringify(buildPayload(inputs, workingYaml)),
       });
-      setStatus(`Job queued: ${data.jobId}`);
+      setStatus(`${text.statusJobQueued}: ${data.jobId}`);
       setActiveTab("runs");
       await refreshJobs();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to queue run.");
+      setStatus(error instanceof Error ? error.message : text.statusQueueFailed);
     }
   };
 
@@ -409,7 +679,7 @@ export default function Home() {
       });
       await refreshJobs();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to cancel job.");
+      setStatus(error instanceof Error ? error.message : text.statusCancelFailed);
     }
   };
 
@@ -422,7 +692,7 @@ export default function Home() {
       }
     } catch (error) {
       setResultDetails(null);
-      setStatus(error instanceof Error ? error.message : "Failed to load result.");
+      setStatus(error instanceof Error ? error.message : text.statusLoadResultFailed);
     }
   };
 
@@ -438,7 +708,7 @@ export default function Home() {
       setCsvPreview(data.preview);
     } catch (error) {
       setCsvPreview(null);
-      setStatus(error instanceof Error ? error.message : "Failed to load CSV preview.");
+      setStatus(error instanceof Error ? error.message : text.statusLoadCsvFailed);
     }
   };
 
@@ -450,6 +720,29 @@ export default function Home() {
       setChartPack((prev) => ({ ...prev, [key]: null }));
     }
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const saved = window.localStorage.getItem("planui-language");
+    if (saved === "ro" || saved === "en") {
+      setLanguage(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    window.localStorage.setItem("planui-language", language);
+    setStatus((prev) => {
+      if (prev === copy.en.statusReady || prev === copy.ro.statusReady) {
+        return copy[language].statusReady;
+      }
+      return prev;
+    });
+  }, [language]);
 
   useEffect(() => {
     void refreshTemplate(inputs.cutoutYear);
@@ -517,11 +810,11 @@ export default function Home() {
     const baseline = preview.rows.filter((row) => row.case === "baseline");
     const scenario = preview.rows.filter((row) => row.case === "scenario");
     return baseline.map((row, idx) => ({
-      label: String(row.carrier || `Carrier ${idx + 1}`),
+      label: String(row.carrier || `${text.labelCarrierFallback} ${idx + 1}`),
       baseline: Number(row.generation_mwh || 0),
       scenario: Number(scenario[idx]?.generation_mwh || 0),
     }));
-  }, [chartPack.generation]);
+  }, [chartPack.generation, text.labelCarrierFallback]);
 
   const congestionPairs = useMemo(() => {
     const preview = chartPack.congestion;
@@ -529,11 +822,11 @@ export default function Home() {
     const baseline = preview.rows.filter((row) => row.case === "baseline");
     const scenario = preview.rows.filter((row) => row.case === "scenario");
     return baseline.map((row, idx) => ({
-      label: String(row.line || `Line ${idx + 1}`),
+      label: String(row.line || `${text.labelLineFallback} ${idx + 1}`),
       baseline: Number(row.mean_loading || 0) * 100,
       scenario: Number(scenario[idx]?.mean_loading || 0) * 100,
     }));
-  }, [chartPack.congestion]);
+  }, [chartPack.congestion, text.labelLineFallback]);
 
   const pricePairs = useMemo(() => {
     const preview = chartPack.prices;
@@ -543,22 +836,22 @@ export default function Home() {
     if (!baseline || !scenario) return [];
     return [
       {
-        label: "Mean",
+        label: text.labelMean,
         baseline: Number(baseline.mean_eur_per_mwh ?? baseline.mean ?? 0),
         scenario: Number(scenario.mean_eur_per_mwh ?? scenario.mean ?? 0),
       },
       {
-        label: "P95",
+        label: text.labelP95,
         baseline: Number(baseline.p95_eur_per_mwh ?? baseline.p95 ?? 0),
         scenario: Number(scenario.p95_eur_per_mwh ?? scenario.p95 ?? 0),
       },
       {
-        label: "Max",
+        label: text.labelMax,
         baseline: Number(baseline.max_eur_per_mwh ?? baseline.max ?? 0),
         scenario: Number(scenario.max_eur_per_mwh ?? scenario.max ?? 0),
       },
     ];
-  }, [chartPack.prices]);
+  }, [chartPack.prices, text.labelMean, text.labelP95, text.labelMax]);
 
   return (
     <div className="min-h-screen">
@@ -569,18 +862,43 @@ export default function Home() {
         <header className="relative z-10 mx-auto max-w-6xl px-6 py-16">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
-              <span className="text-xs uppercase tracking-[0.4em] text-muted">PlanUI Vizualizer</span>
-              <h1 className="text-4xl md:text-5xl font-display text-ink">
-                Romania Scenario Control Room
-              </h1>
-              <p className="max-w-2xl text-sm md:text-base text-muted">
-                Build stress test runs, watch the queue, and explore new-format comparison reports.
-              </p>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <span className="text-xs uppercase tracking-[0.4em] text-muted">{text.brand}</span>
+                <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted">
+                  <span>{text.languageLabel}</span>
+                  <div className="flex rounded-full border border-stroke bg-white/80 p-1">
+                    <button
+                      type="button"
+                      onClick={() => setLanguage("en")}
+                      className={`lang-pill ${language === "en" ? "lang-pill-active" : ""}`}
+                    >
+                      EN
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLanguage("ro")}
+                      className={`lang-pill ${language === "ro" ? "lang-pill-active" : ""}`}
+                    >
+                      RO
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-display text-ink">{text.title}</h1>
+              <p className="max-w-2xl text-sm md:text-base text-muted">{text.subtitle}</p>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <MetricCard label="Queue" value={`${jobCount} jobs`} hint={activeJob ? "Active run in progress" : "Idle"} />
-              <MetricCard label="Results" value={`${resultCount} ready`} hint="New-format folders" />
-              <MetricCard label="Status" value={status} />
+              <MetricCard
+                label={text.metricQueue}
+                value={`${jobCount} ${text.metricJobsSuffix}`}
+                hint={activeJob ? text.metricQueueHintActive : text.metricQueueHintIdle}
+              />
+              <MetricCard
+                label={text.metricResults}
+                value={`${resultCount} ${text.metricReadySuffix}`}
+                hint={text.metricResultsHint}
+              />
+              <MetricCard label={text.metricStatus} value={status} />
             </div>
             <div className="flex flex-wrap gap-2">
               {(["builder", "runs", "results"] as TabKey[]).map((tab) => (
@@ -590,11 +908,11 @@ export default function Home() {
                   onClick={() => setActiveTab(tab)}
                   className={`tab-button ${activeTab === tab ? "tab-active" : "tab-idle"}`}
                 >
-                  {tab === "builder" ? "Scenario Builder" : tab === "runs" ? "Run Queue" : "Results"}
+                  {tab === "builder" ? text.tabBuilder : tab === "runs" ? text.tabRuns : text.tabResults}
                 </button>
               ))}
               <button type="button" onClick={refreshWorkingYaml} className="tab-button tab-ghost">
-                Sync YAML
+                {text.tabSyncYaml}
               </button>
             </div>
           </div>
@@ -605,27 +923,27 @@ export default function Home() {
         <section className={activeTab === "builder" ? "block" : "hidden"}>
           <div className="glass rounded-2xl p-6 mb-8 reveal">
             <SectionHeader
-              title="Scenario Builder"
-              subtitle="Use structured controls or edit YAML directly. Generated configs go to config/adversarial/generated." 
+              title={text.sectionBuilderTitle}
+              subtitle={text.sectionBuilderSubtitle}
             />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
             <div className="glass rounded-2xl p-6 reveal stagger-1">
-              <h3 className="text-lg font-display text-ink mb-4">Core Inputs</h3>
+              <h3 className="text-lg font-display text-ink mb-4">{text.sectionCoreInputs}</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="field">
-                  <span>Run mode</span>
+                  <span>{text.fieldRunMode}</span>
                   <select
                     value={inputs.runMode}
                     onChange={(event) => updateInput("runMode", event.target.value as "paired" | "single")}
                   >
-                    <option value="paired">Paired (baseline + scenario)</option>
-                    <option value="single">Single (reference baseline)</option>
+                    <option value="paired">{text.runModePaired}</option>
+                    <option value="single">{text.runModeSingle}</option>
                   </select>
                 </label>
                 <label className="field">
-                  <span>Output name</span>
+                  <span>{text.fieldOutputName}</span>
                   <input
                     value={inputs.outputName}
                     onChange={(event) => updateInput("outputName", event.target.value)}
@@ -633,7 +951,7 @@ export default function Home() {
                   />
                 </label>
                 <label className="field">
-                  <span>Scenario slug</span>
+                  <span>{text.fieldScenarioSlug}</span>
                   <input
                     value={inputs.scenarioSlug}
                     onChange={(event) => updateInput("scenarioSlug", event.target.value)}
@@ -641,21 +959,21 @@ export default function Home() {
                   />
                 </label>
                 <label className="field">
-                  <span>Stress country</span>
+                  <span>{text.fieldStressCountry}</span>
                   <input
                     value={inputs.country}
                     onChange={(event) => updateInput("country", event.target.value.toUpperCase())}
                   />
                 </label>
                 <label className="field md:col-span-2">
-                  <span>Countries (comma separated)</span>
+                  <span>{text.fieldCountries}</span>
                   <input
                     value={inputs.countries}
                     onChange={(event) => updateInput("countries", event.target.value)}
                   />
                 </label>
                 <label className="field">
-                  <span>Snapshot start</span>
+                  <span>{text.fieldSnapshotStart}</span>
                   <input
                     type="date"
                     value={inputs.snapshotStart}
@@ -663,7 +981,7 @@ export default function Home() {
                   />
                 </label>
                 <label className="field">
-                  <span>Snapshot end</span>
+                  <span>{text.fieldSnapshotEnd}</span>
                   <input
                     type="date"
                     value={inputs.snapshotEnd}
@@ -671,7 +989,7 @@ export default function Home() {
                   />
                 </label>
                 <label className="field">
-                  <span>Cutout year</span>
+                  <span>{text.fieldCutoutYear}</span>
                   <select
                     value={inputs.cutoutYear}
                     onChange={(event) => updateInput("cutoutYear", event.target.value as "2020" | "2023")}
@@ -681,7 +999,7 @@ export default function Home() {
                   </select>
                 </label>
                 <label className="field">
-                  <span>Clusters</span>
+                  <span>{text.fieldClusters}</span>
                   <input
                     type="number"
                     value={inputs.clusters}
@@ -689,27 +1007,27 @@ export default function Home() {
                   />
                 </label>
                 <label className="field">
-                  <span>Solver name</span>
+                  <span>{text.fieldSolverName}</span>
                   <input
                     value={inputs.solverName}
                     onChange={(event) => updateInput("solverName", event.target.value)}
                   />
                 </label>
                 <label className="field">
-                  <span>Solver options</span>
+                  <span>{text.fieldSolverOptions}</span>
                   <input
                     value={inputs.solverOptions}
                     onChange={(event) => updateInput("solverOptions", event.target.value)}
                   />
                 </label>
                 <label className="field md:col-span-2">
-                  <span>Reference baseline network</span>
+                  <span>{text.fieldReferenceBaseline}</span>
                   <select
                     value={inputs.referenceBaselineNet}
                     onChange={(event) => updateInput("referenceBaselineNet", event.target.value)}
                     disabled={inputs.runMode !== "single"}
                   >
-                    <option value="">Select baseline network</option>
+                    <option value="">{text.fieldBaselinePlaceholder}</option>
                     {baselines.map((baseline) => (
                       <option key={baseline} value={baseline}>
                         {baseline}
@@ -720,7 +1038,7 @@ export default function Home() {
               </div>
 
               <div className="mt-6">
-                <h3 className="text-lg font-display text-ink mb-4">Stress Controls</h3>
+                <h3 className="text-lg font-display text-ink mb-4">{text.sectionStressControls}</h3>
                 <label className="flex items-center gap-3 text-sm text-muted mb-4">
                   <input
                     type="checkbox"
@@ -728,11 +1046,11 @@ export default function Home() {
                     onChange={(event) => updateInput("stressEnable", event.target.checked)}
                     className="h-4 w-4 accent-accent"
                   />
-                  Enable stress test
+                  {text.fieldStressEnable}
                 </label>
                 <div className="grid gap-4 md:grid-cols-3">
                   <label className="field">
-                    <span>Load factor</span>
+                    <span>{text.fieldStressLoad}</span>
                     <input
                       type="number"
                       step="0.01"
@@ -741,7 +1059,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>Hydro factor</span>
+                    <span>{text.fieldStressHydro}</span>
                     <input
                       type="number"
                       step="0.01"
@@ -750,7 +1068,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>Gas factor</span>
+                    <span>{text.fieldStressGas}</span>
                     <input
                       type="number"
                       step="0.01"
@@ -759,7 +1077,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>SCADA tight hours</span>
+                    <span>{text.fieldScadaTight}</span>
                     <input
                       type="number"
                       value={inputs.scadaTight}
@@ -767,7 +1085,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>SCADA relaxed hours</span>
+                    <span>{text.fieldScadaRelaxed}</span>
                     <input
                       type="number"
                       value={inputs.scadaRelaxed}
@@ -775,7 +1093,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>SCADA ramp tight</span>
+                    <span>{text.fieldScadaRampTight}</span>
                     <input
                       type="number"
                       step="0.01"
@@ -784,7 +1102,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>SCADA ramp relaxed</span>
+                    <span>{text.fieldScadaRampRelaxed}</span>
                     <input
                       type="number"
                       step="0.01"
@@ -793,7 +1111,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>Import cap zero hours</span>
+                    <span>{text.fieldImportZero}</span>
                     <input
                       type="number"
                       value={inputs.importZero}
@@ -801,7 +1119,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>Import cap half hours</span>
+                    <span>{text.fieldImportHalf}</span>
                     <input
                       type="number"
                       value={inputs.importHalf}
@@ -809,7 +1127,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="field">
-                    <span>Import half factor</span>
+                    <span>{text.fieldImportFactor}</span>
                     <input
                       type="number"
                       step="0.01"
@@ -822,23 +1140,23 @@ export default function Home() {
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <button type="button" className="button-primary" onClick={refreshWorkingYaml}>
-                  Apply controls to YAML
+                  {text.buttonApplyControls}
                 </button>
                 <button type="button" className="button-secondary" onClick={applyYamlToControls}>
-                  Apply YAML to controls
+                  {text.buttonApplyYaml}
                 </button>
                 <button type="button" className="button-ghost" onClick={refreshBaselines}>
-                  Refresh baselines
+                  {text.buttonRefreshBaselines}
                 </button>
                 <button type="button" className="button-accent" onClick={enqueueRun}>
-                  Enqueue run
+                  {text.buttonEnqueueRun}
                 </button>
               </div>
             </div>
 
             <div className="space-y-6">
               <div className="glass rounded-2xl p-6 reveal stagger-2">
-                <h3 className="text-lg font-display text-ink mb-4">Working YAML</h3>
+                <h3 className="text-lg font-display text-ink mb-4">{text.yamlWorkingTitle}</h3>
                 <textarea
                   value={workingYaml}
                   onChange={(event) => setWorkingYaml(event.target.value)}
@@ -847,7 +1165,7 @@ export default function Home() {
                 />
               </div>
               <div className="glass rounded-2xl p-6 reveal stagger-3">
-                <h3 className="text-lg font-display text-ink mb-4">Template YAML (read-only)</h3>
+                <h3 className="text-lg font-display text-ink mb-4">{text.yamlTemplateTitle}</h3>
                 <textarea value={templateYaml} readOnly className="yaml-box muted" />
               </div>
             </div>
@@ -857,28 +1175,28 @@ export default function Home() {
         <section className={activeTab === "runs" ? "block" : "hidden"}>
           <div className="glass rounded-2xl p-6 mb-8 reveal">
             <SectionHeader
-              title="Run Queue"
-              subtitle="Queue runs, watch progress, and open logs. Runs are executed sequentially with conda-aware commands." 
+              title={text.sectionRunsTitle}
+              subtitle={text.sectionRunsSubtitle}
             />
           </div>
           <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
             <div className="glass rounded-2xl p-6 reveal stagger-1">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-display text-ink">Queue and history</h3>
+                <h3 className="text-lg font-display text-ink">{text.runsQueueTitle}</h3>
                 <button type="button" className="button-ghost" onClick={refreshJobs}>
-                  Refresh
+                  {text.buttonRefresh}
                 </button>
               </div>
               <div className="overflow-auto rounded-xl border border-stroke">
                 <table className="min-w-full text-sm">
                   <thead className="bg-surface-muted text-muted">
                     <tr>
-                      <th className="px-3 py-2 text-left">Job</th>
-                      <th className="px-3 py-2 text-left">Status</th>
-                      <th className="px-3 py-2 text-left">Mode</th>
-                      <th className="px-3 py-2 text-left">Output</th>
-                      <th className="px-3 py-2 text-left">Progress</th>
-                      <th className="px-3 py-2 text-left">Actions</th>
+                      <th className="px-3 py-2 text-left">{text.tableJob}</th>
+                      <th className="px-3 py-2 text-left">{text.tableStatus}</th>
+                      <th className="px-3 py-2 text-left">{text.tableMode}</th>
+                      <th className="px-3 py-2 text-left">{text.tableOutput}</th>
+                      <th className="px-3 py-2 text-left">{text.tableProgress}</th>
+                      <th className="px-3 py-2 text-left">{text.tableActions}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -902,7 +1220,7 @@ export default function Home() {
                                 void refreshJobLog(job.spec.jobId);
                               }}
                             >
-                              Details
+                              {text.buttonDetails}
                             </button>
                             {job.status === "running" || job.status === "queued" ? (
                               <button
@@ -910,7 +1228,7 @@ export default function Home() {
                                 className="button-secondary"
                                 onClick={() => cancelJob(job.spec.jobId)}
                               >
-                                Cancel
+                                {text.buttonCancel}
                               </button>
                             ) : null}
                           </div>
@@ -923,7 +1241,7 @@ export default function Home() {
             </div>
 
             <div className="glass rounded-2xl p-6 reveal stagger-2">
-              <h3 className="text-lg font-display text-ink mb-4">Selected job</h3>
+              <h3 className="text-lg font-display text-ink mb-4">{text.runsSelectedTitle}</h3>
               {selectedJobId ? (
                 <div className="space-y-4">
                   <div className="grid gap-3 text-sm text-muted">
@@ -931,20 +1249,28 @@ export default function Home() {
                       .filter((job) => job.spec.jobId === selectedJobId)
                       .map((job) => (
                         <div key={job.spec.jobId} className="space-y-1">
-                          <div>Output: {job.spec.outputName}</div>
-                          <div>Created: {job.spec.createdAt}</div>
-                          <div>Status: {job.status}</div>
-                          <div>Log file: {job.spec.logPath}</div>
+                          <div>
+                            {text.runsOutputLabel}: {job.spec.outputName}
+                          </div>
+                          <div>
+                            {text.runsCreatedLabel}: {job.spec.createdAt}
+                          </div>
+                          <div>
+                            {text.runsStatusLabel}: {job.status}
+                          </div>
+                          <div>
+                            {text.runsLogLabel}: {job.spec.logPath}
+                          </div>
                         </div>
                       ))}
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-ink">Log tail</h4>
-                    <pre className="log-box">{jobLog || "No log output yet."}</pre>
+                    <h4 className="text-sm font-semibold text-ink">{text.runsLogTail}</h4>
+                    <pre className="log-box">{jobLog || text.runsLogEmpty}</pre>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-muted">Select a job to inspect commands and log output.</p>
+                <p className="text-sm text-muted">{text.runsSelectHelp}</p>
               )}
             </div>
           </div>
@@ -953,16 +1279,16 @@ export default function Home() {
         <section className={activeTab === "results" ? "block" : "hidden"}>
           <div className="glass rounded-2xl p-6 mb-8 reveal">
             <SectionHeader
-              title="Results and Vizualizer"
-              subtitle="Preview new-format comparison results with summaries, charts, CSV tables, and figures." 
+              title={text.sectionResultsTitle}
+              subtitle={text.sectionResultsSubtitle}
             />
           </div>
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             <div className="glass rounded-2xl p-4 reveal stagger-1">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-ink">Result folders</h3>
+                <h3 className="text-sm font-semibold text-ink">{text.resultsFoldersTitle}</h3>
                 <button type="button" className="button-ghost" onClick={refreshResults}>
-                  Refresh
+                  {text.buttonRefresh}
                 </button>
               </div>
               <div className="space-y-2 max-h-[520px] overflow-auto">
@@ -975,7 +1301,9 @@ export default function Home() {
                   >
                     <div className="text-left">
                       <div className="text-sm font-semibold text-ink">{result.name}</div>
-                      <div className="text-xs text-muted">Updated {new Date(result.timestamp).toLocaleString()}</div>
+                      <div className="text-xs text-muted">
+                        {text.resultsUpdatedLabel} {new Date(result.timestamp).toLocaleString(locale)}
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -984,41 +1312,74 @@ export default function Home() {
 
             <div className="space-y-6">
               <div className="glass rounded-2xl p-6 reveal stagger-2">
-                <h3 className="text-lg font-display text-ink mb-4">Summary</h3>
+                <h3 className="text-lg font-display text-ink mb-4">{text.summaryTitle}</h3>
                 {resultDetails ? (
                   <div className="grid gap-4 md:grid-cols-2">
-                    <MetricCard label="Baseline cost" value={formatCurrency(resultDetails.summary.baseline_cost)} />
-                    <MetricCard label="Scenario cost" value={formatCurrency(resultDetails.summary.scenario_cost)} />
-                    <MetricCard label="Delta percent" value={`${formatNumber(resultDetails.summary.delta_percent, 2)}%`} />
-                    <MetricCard label="ENS MWh" value={formatNumber(resultDetails.summary.ens_mwh)} />
-                    <MetricCard label="Shedding hours" value={formatNumber(resultDetails.summary.hours_with_shedding, 0)} />
-                    <MetricCard label="Max shedding MW" value={formatNumber(resultDetails.summary.max_shedding_mw)} />
-                    <MetricCard label="Imports delta MWh" value={formatNumber(resultDetails.summary.imports_delta_total_mwh)} />
-                    <MetricCard label="LMP mean" value={formatNumber(resultDetails.summary.lmp_mean, 2)} />
+                    <MetricCard
+                      label={text.summaryBaselineCost}
+                      value={formatCurrency(resultDetails.summary.baseline_cost, locale)}
+                    />
+                    <MetricCard
+                      label={text.summaryScenarioCost}
+                      value={formatCurrency(resultDetails.summary.scenario_cost, locale)}
+                    />
+                    <MetricCard
+                      label={text.summaryDeltaPercent}
+                      value={`${formatNumber(resultDetails.summary.delta_percent, 2, locale)}%`}
+                    />
+                    <MetricCard label={text.summaryEns} value={formatNumber(resultDetails.summary.ens_mwh, 2, locale)} />
+                    <MetricCard
+                      label={text.summarySheddingHours}
+                      value={formatNumber(resultDetails.summary.hours_with_shedding, 0, locale)}
+                    />
+                    <MetricCard
+                      label={text.summaryMaxShedding}
+                      value={formatNumber(resultDetails.summary.max_shedding_mw, 2, locale)}
+                    />
+                    <MetricCard
+                      label={text.summaryImportsDelta}
+                      value={formatNumber(resultDetails.summary.imports_delta_total_mwh, 2, locale)}
+                    />
+                    <MetricCard
+                      label={text.summaryLmpMean}
+                      value={formatNumber(resultDetails.summary.lmp_mean, 2, locale)}
+                    />
                   </div>
                 ) : (
-                  <p className="text-sm text-muted">Select a result to preview summary metrics.</p>
+                  <p className="text-sm text-muted">{text.summarySelectHelp}</p>
                 )}
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <div className="glass rounded-2xl p-6 reveal stagger-3">
-                  <h3 className="text-lg font-display text-ink mb-4">Generation mix</h3>
-                  <BarPairList data={generationPairs} />
+                  <h3 className="text-lg font-display text-ink mb-4">{text.chartGeneration}</h3>
+                  <BarPairList
+                    data={generationPairs}
+                    labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
+                    locale={locale}
+                  />
                 </div>
                 <div className="glass rounded-2xl p-6 reveal stagger-3">
-                  <h3 className="text-lg font-display text-ink mb-4">Congestion loading</h3>
-                  <BarPairList data={congestionPairs} />
+                  <h3 className="text-lg font-display text-ink mb-4">{text.chartCongestion}</h3>
+                  <BarPairList
+                    data={congestionPairs}
+                    labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
+                    locale={locale}
+                  />
                 </div>
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <div className="glass rounded-2xl p-6 reveal stagger-4">
-                  <h3 className="text-lg font-display text-ink mb-4">LMP comparison</h3>
-                  <BarPairList data={pricePairs} />
+                  <h3 className="text-lg font-display text-ink mb-4">{text.chartLmp}</h3>
+                  <BarPairList
+                    data={pricePairs}
+                    labels={{ empty: text.chartEmpty, baseline: text.chartBaseline, scenario: text.chartScenario }}
+                    locale={locale}
+                  />
                 </div>
                 <div className="glass rounded-2xl p-6 reveal stagger-4">
-                  <h3 className="text-lg font-display text-ink mb-4">CSV preview</h3>
+                  <h3 className="text-lg font-display text-ink mb-4">{text.chartCsvPreview}</h3>
                   {resultDetails ? (
                     <div className="space-y-3">
                       <select
@@ -1032,17 +1393,17 @@ export default function Home() {
                           </option>
                         ))}
                       </select>
-                      <DataTable preview={csvPreview} />
+                      <DataTable preview={csvPreview} emptyLabel={text.dataTableEmpty} />
                     </div>
                   ) : (
-                    <p className="text-sm text-muted">Select a result to view CSV data.</p>
+                    <p className="text-sm text-muted">{text.csvSelectHelp}</p>
                   )}
                 </div>
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <div className="glass rounded-2xl p-6 reveal stagger-5">
-                  <h3 className="text-lg font-display text-ink mb-4">Figures</h3>
+                  <h3 className="text-lg font-display text-ink mb-4">{text.figuresTitle}</h3>
                   {resultDetails && resultDetails.figureFiles.length ? (
                     <div className="grid gap-4 md:grid-cols-2">
                       {resultDetails.figureFiles.map((file) => (
@@ -1057,13 +1418,13 @@ export default function Home() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-muted">No figure files found.</p>
+                    <p className="text-sm text-muted">{text.figuresEmpty}</p>
                   )}
                 </div>
                 <div className="glass rounded-2xl p-6 reveal stagger-5">
-                  <h3 className="text-lg font-display text-ink mb-4">Assumptions</h3>
+                  <h3 className="text-lg font-display text-ink mb-4">{text.assumptionsTitle}</h3>
                   <pre className="log-box">
-                    {resultDetails?.assumptions || "No assumptions_limitations.md found."}
+                    {resultDetails?.assumptions || text.assumptionsEmpty}
                   </pre>
                 </div>
               </div>

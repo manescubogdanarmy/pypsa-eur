@@ -95,6 +95,21 @@ body {
   border: 1px dashed var(--stroke);
 }
 
+.lang-pill {
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lang-pill-active {
+  background: var(--ink);
+  color: #fff;
+}
+
 .button-primary,
 .button-secondary,
 .button-ghost,
