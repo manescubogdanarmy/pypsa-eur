@@ -825,6 +825,596 @@
       "exitCode": 1,
       "errorSummary": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress2-baseline-20260427192319/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter",
       "cancelRequested": false
+    },
+    {
+      "spec": {
+        "jobId": "9cb11626-724",
+        "outputName": "r33",
+        "mode": "paired",
+        "createdAt": "2026-04-27T19:44:34.682Z",
+        "commands": [
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194434_baseline.yaml"
+            ],
+            "description": "Unlock baseline workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-baseline-20260427194434/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194434_baseline.yaml"
+            ],
+            "description": "Solve baseline scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194434_scenario.yaml"
+            ],
+            "description": "Unlock scenario workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-scenario-20260427194434/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194434_scenario.yaml"
+            ],
+            "description": "Solve scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "scripts/report_romania_winter_stress.py",
+              "--baseline-net",
+              "results/romania-winter-stress-baseline-20260427194434/networks/base_s_10_elec_.nc",
+              "--scenario-net",
+              "results/romania-winter-stress-scenario-20260427194434/networks/base_s_10_elec_.nc",
+              "--country",
+              "RO",
+              "--outdir",
+              "results\\r33"
+            ],
+            "description": "Generate comparison report [conda-run]",
+            "allowFailure": false
+          }
+        ],
+        "generatedConfigs": [
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194434_scenario.yaml",
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194434_baseline.yaml"
+        ],
+        "reportOutdir": "results\\r33",
+        "logPath": "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\logs\\planui-web\\9cb11626-724.log",
+        "scenarioRunName": "romania-winter-stress-scenario-20260427194434",
+        "baselineRunName": "romania-winter-stress-baseline-20260427194434",
+        "country": "RO"
+      },
+      "status": "failed",
+      "progressMessage": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194434/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "startedAt": "2026-04-27T19:44:34.688Z",
+      "finishedAt": "2026-04-27T19:49:09.437Z",
+      "exitCode": 1,
+      "errorSummary": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194434/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "cancelRequested": false
+    },
+    {
+      "spec": {
+        "jobId": "2edd0148-b52",
+        "outputName": "r33",
+        "mode": "paired",
+        "createdAt": "2026-04-27T19:45:14.910Z",
+        "commands": [
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194514_baseline.yaml"
+            ],
+            "description": "Unlock baseline workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-baseline-20260427194514/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194514_baseline.yaml"
+            ],
+            "description": "Solve baseline scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194514_scenario.yaml"
+            ],
+            "description": "Unlock scenario workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-scenario-20260427194514/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194514_scenario.yaml"
+            ],
+            "description": "Solve scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "scripts/report_romania_winter_stress.py",
+              "--baseline-net",
+              "results/romania-winter-stress-baseline-20260427194514/networks/base_s_10_elec_.nc",
+              "--scenario-net",
+              "results/romania-winter-stress-scenario-20260427194514/networks/base_s_10_elec_.nc",
+              "--country",
+              "RO",
+              "--outdir",
+              "results\\r33"
+            ],
+            "description": "Generate comparison report [conda-run]",
+            "allowFailure": false
+          }
+        ],
+        "generatedConfigs": [
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194514_scenario.yaml",
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194514_baseline.yaml"
+        ],
+        "reportOutdir": "results\\r33",
+        "logPath": "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\logs\\planui-web\\2edd0148-b52.log",
+        "scenarioRunName": "romania-winter-stress-scenario-20260427194514",
+        "baselineRunName": "romania-winter-stress-baseline-20260427194514",
+        "country": "RO"
+      },
+      "status": "failed",
+      "progressMessage": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194514/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "startedAt": "2026-04-27T19:49:09.442Z",
+      "finishedAt": "2026-04-27T19:53:42.394Z",
+      "exitCode": 1,
+      "errorSummary": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194514/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "cancelRequested": false
+    },
+    {
+      "spec": {
+        "jobId": "666702eb-436",
+        "outputName": "r23",
+        "mode": "paired",
+        "createdAt": "2026-04-27T19:46:16.652Z",
+        "commands": [
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194616_baseline.yaml"
+            ],
+            "description": "Unlock baseline workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-baseline-20260427194616/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194616_baseline.yaml"
+            ],
+            "description": "Solve baseline scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194616_scenario.yaml"
+            ],
+            "description": "Unlock scenario workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-scenario-20260427194616/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194616_scenario.yaml"
+            ],
+            "description": "Solve scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "scripts/report_romania_winter_stress.py",
+              "--baseline-net",
+              "results/romania-winter-stress-baseline-20260427194616/networks/base_s_10_elec_.nc",
+              "--scenario-net",
+              "results/romania-winter-stress-scenario-20260427194616/networks/base_s_10_elec_.nc",
+              "--country",
+              "RO",
+              "--outdir",
+              "results\\r23"
+            ],
+            "description": "Generate comparison report [conda-run]",
+            "allowFailure": false
+          }
+        ],
+        "generatedConfigs": [
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194616_scenario.yaml",
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194616_baseline.yaml"
+        ],
+        "reportOutdir": "results\\r23",
+        "logPath": "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\logs\\planui-web\\666702eb-436.log",
+        "scenarioRunName": "romania-winter-stress-scenario-20260427194616",
+        "baselineRunName": "romania-winter-stress-baseline-20260427194616",
+        "country": "RO"
+      },
+      "status": "failed",
+      "progressMessage": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194616/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "startedAt": "2026-04-27T19:53:42.400Z",
+      "finishedAt": "2026-04-27T19:58:17.819Z",
+      "exitCode": 1,
+      "errorSummary": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194616/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "cancelRequested": false
+    },
+    {
+      "spec": {
+        "jobId": "13b8e7a7-102",
+        "outputName": "r23",
+        "mode": "paired",
+        "createdAt": "2026-04-27T19:46:43.005Z",
+        "commands": [
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194642_baseline.yaml"
+            ],
+            "description": "Unlock baseline workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-baseline-20260427194642/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194642_baseline.yaml"
+            ],
+            "description": "Solve baseline scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194642_scenario.yaml"
+            ],
+            "description": "Unlock scenario workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-scenario-20260427194642/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194642_scenario.yaml"
+            ],
+            "description": "Solve scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "scripts/report_romania_winter_stress.py",
+              "--baseline-net",
+              "results/romania-winter-stress-baseline-20260427194642/networks/base_s_10_elec_.nc",
+              "--scenario-net",
+              "results/romania-winter-stress-scenario-20260427194642/networks/base_s_10_elec_.nc",
+              "--country",
+              "RO",
+              "--outdir",
+              "results\\r23"
+            ],
+            "description": "Generate comparison report [conda-run]",
+            "allowFailure": false
+          }
+        ],
+        "generatedConfigs": [
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194642_scenario.yaml",
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427194642_baseline.yaml"
+        ],
+        "reportOutdir": "results\\r23",
+        "logPath": "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\logs\\planui-web\\13b8e7a7-102.log",
+        "scenarioRunName": "romania-winter-stress-scenario-20260427194642",
+        "baselineRunName": "romania-winter-stress-baseline-20260427194642",
+        "country": "RO"
+      },
+      "status": "failed",
+      "progressMessage": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194642/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "startedAt": "2026-04-27T19:58:17.824Z",
+      "finishedAt": "2026-04-27T20:02:52.121Z",
+      "exitCode": 1,
+      "errorSummary": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427194642/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "cancelRequested": false
+    },
+    {
+      "spec": {
+        "jobId": "79ed6f4a-2a9",
+        "outputName": "r23",
+        "mode": "paired",
+        "createdAt": "2026-04-27T19:50:06.639Z",
+        "commands": [
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427195006_baseline.yaml"
+            ],
+            "description": "Unlock baseline workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-baseline-20260427195006/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427195006_baseline.yaml"
+            ],
+            "description": "Solve baseline scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "--unlock",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427195006_scenario.yaml"
+            ],
+            "description": "Unlock scenario workflow [conda-run]",
+            "allowFailure": true
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "-m",
+              "snakemake",
+              "--storage-cached-http-skip-remote-checks",
+              "-c",
+              "all",
+              "results/romania-winter-stress-scenario-20260427195006/networks/base_s_10_elec_.nc",
+              "--configfile",
+              "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427195006_scenario.yaml"
+            ],
+            "description": "Solve scenario [conda-run]",
+            "allowFailure": false
+          },
+          {
+            "argv": [
+              "D:\\Anaconda\\Library\\bin\\conda.bat",
+              "run",
+              "-n",
+              "pypsa",
+              "python",
+              "scripts/report_romania_winter_stress.py",
+              "--baseline-net",
+              "results/romania-winter-stress-baseline-20260427195006/networks/base_s_10_elec_.nc",
+              "--scenario-net",
+              "results/romania-winter-stress-scenario-20260427195006/networks/base_s_10_elec_.nc",
+              "--country",
+              "RO",
+              "--outdir",
+              "results\\r23"
+            ],
+            "description": "Generate comparison report [conda-run]",
+            "allowFailure": false
+          }
+        ],
+        "generatedConfigs": [
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427195006_scenario.yaml",
+          "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-stress_20260427195006_baseline.yaml"
+        ],
+        "reportOutdir": "results\\r23",
+        "logPath": "C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\logs\\planui-web\\79ed6f4a-2a9.log",
+        "scenarioRunName": "romania-winter-stress-scenario-20260427195006",
+        "baselineRunName": "romania-winter-stress-baseline-20260427195006",
+        "country": "RO"
+      },
+      "status": "failed",
+      "progressMessage": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427195006/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "startedAt": "2026-04-27T20:02:52.126Z",
+      "finishedAt": "2026-04-27T20:07:24.848Z",
+      "exitCode": 1,
+      "errorSummary": "ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427195006/networks/base_s_10_elec_.nc --configfile C:\\Users\\Bogdan\\Desktop\\Projects\\pypsa-eur\\config\\adversarial\\generated\\romania-winter-",
+      "cancelRequested": false
     }
   ]
 }

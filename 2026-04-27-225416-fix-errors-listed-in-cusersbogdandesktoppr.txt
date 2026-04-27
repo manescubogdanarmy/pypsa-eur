@@ -1,0 +1,680 @@
+ ▐▛███▜▌   Claude Code v2.1.119
+▝▜█████▛▘  Opus 4.7 · Claude Pro
+  ▘▘ ▝▝    ~\Desktop\Projects\pypsa-eur
+
+❯ fix errors listed in :                                                        
+  C:\Users\Bogdan\Desktop\Projects\pypsa-eur\logs\planui-web\7bc6145c-060.log   
+
+● Skill(superpowers:systematic-debugging)
+  ⎿  Successfully loaded skill
+
+● I'll read the log file to understand what errors need fixing.
+
+  Read 1 file (ctrl+o to expand)
+
+● Two distinct errors in the log. Let me investigate them systematically:
+
+  Error 1 (line 462-490): base_network rule fails with TypeError: Object of type
+   date is not JSON serializable when calling n.export_to_netcdf
+
+  Error 2 (line 501-541): build_hydro_profile fails with TypeError: Cannot 
+  interpret '<StringDtype(na_value=nan)>' as a data type when calling
+  inflow.to_netcdf
+
+  Let me investigate both root causes.
+
+  Read 1 file (ctrl+o to expand)
+
+● Let me check the actual generated config file and PyPSA's save_meta to
+  understand what's being serialized.
+
+  Read 1 file (ctrl+o to expand)
+
+● Found it. The YAML has bare dates 2023-12-01 which Python parses as
+  datetime.date objects — these can't be JSON serialized when PyPSA exports
+  network meta. Let me verify with the default config and check how other
+  configs handle snapshots.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● The default config quotes dates as strings: "2013-01-01". The generated config
+   has bare dates that YAML parses as Python date objects. Let me find the
+  config generator.
+
+  Searched for 4 patterns, read 1 file (ctrl+o to expand)
+
+● The generated YAML has unquoted dates 2023-12-01. Let me trace whether the web
+   dashboard uses the same config_builder or a different path.
+
+  Searched for 2 patterns, read 1 file (ctrl+o to expand)
+
+● Now let me look at the second error in build_hydro_profile.py:
+
+  Read 1 file (ctrl+o to expand)
+
+● Let me check whether these are upstream PyPSA-Eur scripts or have custom
+  modifications, and check the YAML library's quoting capabilities.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && git log --oneline -5
+      -- scripts/base_network.py scripts/build_hydro_profile.py)
+  ⎿  4eed3b3d update
+     1b0ae327 PyPSA v1 deprecation warnings (#1903)
+     b46858eb fix handling of missing years in EIA stats (#2047)
+     … +2 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && git log --oneline -3
+      -- scripts/build_hydro_profile.py)
+  ⎿  4eed3b3d update
+     b46858eb fix handling of missing years in EIA stats (#2047)
+     a8692235 use absolute imports (#1643)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && git show --stat
+      4eed3b3d -- scripts/base_network.py scripts/build_hydro_profile.py 2>&1 |
+      head -30)
+  ⎿  commit 4eed3b3d3e370884c9e62ce5d2b40636d27978c2
+     Author: Mănescu Bogdan Andrei <210812691+manescubogdanarmy@users.norep
+     ly.github.com>
+     … +7 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && git show 4eed3b3d --
+      scripts/base_network.py scripts/build_hydro_profile.py)
+  ⎿  commit 4eed3b3d3e370884c9e62ce5d2b40636d27978c2
+     Author: Mănescu Bogdan Andrei <210812691+manescubogdanarmy@users.norep
+     ly.github.com>
+     … +24 lines (ctrl+o to expand)
+● Let me check the yaml npm library version and confirm both errors are
+  reproducible by understanding the library behavior.
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && cat
+      package.json | grep -E "yaml|version" | head -10)
+  ⎿    "version": "0.1.0",
+         "yaml": "^2.8.3"
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e
+      "const YAML = require('yaml');
+      console.log(JSON.stringify(YAML.stringify({snapshots: {star…)
+  ⎿  "snapshots:\n  start: 2023-12-01\n  end: 2023-12-08\n"
+
+● Confirmed Error 1's root cause. Let me test the fix approach for the YAML
+  library.
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e "
+      const YAML = require('yaml');…)
+  ⎿  snapshots:
+       start: "2023-12-01"
+       end: "2023-12-08"
+     foo: bar
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && python -c "import
+      yaml; print(repr(yaml.safe_load('start: \"2023-12-01\"\n')));
+      print(repr(yaml.safe_load('st…)
+  ⎿  {'start': '2023-12-01'}
+     {'start': datetime.date(2023, 12, 1)}
+
+● Now I have a clear plan. Let me verify my fix approach for the YAML produces
+  clean output:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e "
+      const YAML = require('yaml');…)
+  ⎿  tutorial: true
+     snapshots:
+       start: 2023-12-01
+     … +4 lines (ctrl+o to expand)
+  ⎿  You've hit your org's monthly usage limit
+     /upgrade to increase your usage limit.
+
+✻ Crunched for 4m 49s
+
+❯ continue                                                                      
+
+● The type assignment didn't take effect. Let me try a different approach:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e "
+      const YAML = require('yaml');…)
+  ⎿  start node type: object Scalar { value: '2023-12-01' }
+     Is Scalar? true
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e "
+      const YAML = require('yaml');…)
+  ⎿  tutorial: true
+     snapshots:
+       start: "2023-12-01"
+       end: "2023-12-08"
+
+● The Scalar.QUOTE_DOUBLE constant works (string literal didn't). Let me verify
+  the constant value:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e
+      "const YAML = require('yaml'); console.log(YAML.Scalar.QUOTE_DOUBLE,
+      YAML.Scalar.QUOTE_SIN…)
+  ⎿  QUOTE_DOUBLE QUOTE_SINGLE PLAIN
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e "
+      const YAML = require('yaml');…)
+  ⎿  Before: "2023-12-01"
+     After: "2023-12-01"
+     snapshots:
+     … +2 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node -e "
+      const YAML = require('yaml');…)
+  ⎿  tutorial: true
+     snapshots:
+       start: "2023-12-01"
+       end: "2023-12-08"
+
+● Now let me implement the fixes. First, I'll fix the YAML writer in
+  scenario.ts:
+
+  Read 1 file (ctrl+o to expand)
+
+● Now I'll add a helper that quotes the snapshot dates, and use it at all three
+  stringify call sites.
+● Update(vizualizer\src\app\lib\scenario.ts)
+  ⎿  Added 13 lines
+      257    return value.split(path.sep).join(path.posix.sep);
+      258  }
+      259  
+      260 +function stringifyConfig(config: Record<string, unknown>): str
+          +ing {                                                         
+      261 +  // Snapshot dates must be emitted as quoted strings; otherwi
+          +se PyYAML decodes                                             
+      262 +  // them as datetime.date, which breaks json.dumps(n.meta) in
+          + base_network.py.                                             
+      263 +  const doc = new YAML.Document(config);                      
+      264 +  for (const p of [["snapshots", "start"], ["snapshots", "end"
+          +]]) {                                                         
+      265 +    const node = doc.getIn(p, true);                          
+      266 +    if (node instanceof YAML.Scalar) {                        
+      267 +      node.type = YAML.Scalar.QUOTE_DOUBLE;                   
+      268 +    }                                                         
+      269 +  }                                                           
+      270 +  return String(doc);                                         
+      271 +}                                                             
+      272 +                                                              
+      273  export async function buildWorkingYaml(inputs: ScenarioInputs)
+           : Promise<string> {
+      274    const templateConfig = await loadTemplateConfig(inputs.cutou
+           tYear);
+      275    const base = inputs.workingYaml ? parseWorkingYaml(inputs.wo
+           rkingYaml) : structuredClone(templateConfig);
+
+● Update(vizualizer\src\app\lib\scenario.ts)
+  ⎿  Added 1 line, removed 1 line
+      275    const base = inputs.workingYaml ? parseWorkingYaml(inputs.wo
+           rkingYaml) : structuredClone(templateConfig);
+      276    const runName = sanitizeSlug(inputs.scenarioSlug || "working
+           -draft");
+      277    const config = applyInputsToConfig(base, inputs, runName, in
+           puts.stressEnable);
+      278 -  return YAML.stringify(config);                              
+      278 +  return stringifyConfig(config);                             
+      279  }
+      280  
+      281  export async function buildConfigs(inputs: ScenarioInputs): Pr
+           omise<ConfigBuildResult> {
+
+● Update(vizualizer\src\app\lib\scenario.ts)
+  ⎿  Added 1 line, removed 1 line
+      322  
+      323    await fs.mkdir(generatedConfigDir(), { recursive: true });
+      324    const scenarioCfgPath = path.join(generatedConfigDir(), `${s
+           lug}_${token}_scenario.yaml`);
+      325 -  await fs.writeFile(scenarioCfgPath, YAML.stringify(scenarioC
+          -onfig), "utf-8");                                             
+      325 +  await fs.writeFile(scenarioCfgPath, stringifyConfig(scenario
+          +Config), "utf-8");                                            
+      326  
+      327    const generatedConfigs: { scenario: string; baseline?: strin
+           g | null } = {
+      328      scenario: scenarioCfgPath,
+
+● Update(vizualizer\src\app\lib\scenario.ts)
+  ⎿  Added 1 line, removed 1 line
+      331    let baselineCfgPath: string | null = null;
+      332    if (baselineConfig) {
+      333      baselineCfgPath = path.join(generatedConfigDir(), `${slug}
+           _${token}_baseline.yaml`);
+      334 -    await fs.writeFile(baselineCfgPath, YAML.stringify(baselin
+          -eConfig), "utf-8");                                           
+      334 +    await fs.writeFile(baselineCfgPath, stringifyConfig(baseli
+          +neConfig), "utf-8");                                          
+      335      generatedConfigs.baseline = baselineCfgPath;
+      336    }
+      337  
+
+● Let me verify YAML.Scalar is accessible via default import:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node
+      --input-type=module -e "import YAML from 'yaml'; console.log(typeof
+      YAML.Scalar, YAML.Scalar?…)
+  ⎿  function QUOTE_DOUBLE
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && npx tsc
+      --noEmit 2>&1 | head -30)
+  ⎿  src/app/api/results/figure/route.ts(19,25): error TS2345: Argument of
+     type 'Buffer<ArrayBufferLike>' is not assignable to parameter of type
+     'BodyInit | null | undefined'.
+     … +52 lines (ctrl+o to expand)
+  ⎿  (timeout 2m)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && npx tsc
+      --noEmit 2>&1 | grep "scenario.ts")
+  ⎿  No matches found
+  ⎿  (timeout 2m)
+
+● Now I'll fix Error 2 in build_hydro_profile.py. The xarray CF encoder fails on
+   pandas StringDtype coords — convert the index to plain object dtype before
+  atlite uses it.
+
+● Update(scripts\build_hydro_profile.py)
+  ⎿  Added 3 lines
+      178          .set_index("name")["geometry"]
+      179          .reindex(countries)
+      180      )
+      181 +    # Force plain object dtype: pandas StringDtype propagates 
+          +to xarray coords                                              
+      182 +    # and breaks np.issubdtype checks during inflow.to_netcdf(
+          +) encoding.                                                   
+      183 +    country_shapes.index = country_shapes.index.astype(object)
+      184      country_shapes.index.name = "countries"
+      185  
+      186      fn = snakemake.input.eia_hydro_generation
+
+● Let me also patch the existing generated config so the user can retry this
+  specific run, then check for any sibling files.
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls -la
+      "config/adversarial/generated/" | grep "20260427192319")
+  ⎿  -rw-r--r-- 1 Bogdan 197608 2195 Apr 27 22:23 romania-winter-stress2_20
+     260427192319_baseline.yaml
+     -rw-r--r-- 1 Bogdan 197608 2194 Apr 27 22:23 romania-winter-stress2_20
+     260427192319_scenario.yaml
+
+● Update(config\adversarial\generated\romania-winter-stress2_20260427192319_base
+        line.yaml)
+  ⎿  Added 2 lines, removed 2 lines
+      15    - HU
+      16    - RS
+      17  snapshots:
+      18 -  start: 2023-12-01                                            
+      19 -  end: 2023-12-08                                              
+      18 +  start: "2023-12-01"                                          
+      19 +  end: "2023-12-08"                                            
+      20  electricity:
+      21    co2limit_enable: true
+      22    co2limit: 100000000
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(config\adversarial\generated\romania-winter-stress2_20260427192319_scen
+        ario.yaml)
+  ⎿  Added 2 lines, removed 2 lines
+      15    - HU
+      16    - RS
+      17  snapshots:
+      18 -  start: 2023-12-01                                            
+      19 -  end: 2023-12-08                                              
+      18 +  start: "2023-12-01"                                          
+      19 +  end: "2023-12-08"                                            
+      20  electricity:
+      21    co2limit_enable: true
+      22    co2limit: 100000000
+
+● Let me check if other generated configs have the same issue (all written by
+  the buggy JS code):
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Let me verify the final scenario.ts changes:
+
+  Read 1 file (ctrl+o to expand)
+
+● Let me run a smoke test simulating the actual code path:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur/vizualizer" && node
+      --input-type=module -e "
+      import YAML from 'yaml';…)  ⎿  tutorial: true
+     run:
+       name: x
+     … +7 lines (ctrl+o to expand)
+
+● Let me verify the build_hydro_profile.py fix is in proper context:
+
+  Read 1 file (ctrl+o to expand)
+
+● All three fixes applied. Summary:
+
+  Error 1 (base_network — Object of type date is not JSON serializable):
+  Root cause: the yaml npm library wrote start: 2023-12-01 unquoted. PyYAML
+  re-parsed those as datetime.date, and n.meta = snakemake.config then failed in
+   json.dumps.
+  - vizualizer/src/app/lib/scenario.ts:260 — added stringifyConfig helper that
+  wraps the config in a YAML.Document and forces snapshots.start/snapshots.end
+  to QUOTE_DOUBLE. Replaced all three YAML.stringify(...) call sites.
+  - Patched the two already-generated configs for run 20260427192319 to quote
+  the dates so this specific run is replayable without regenerating.
+
+  Error 2 (build_hydro_profile — Cannot interpret '<StringDtype(na_value=nan)>' 
+  as a data type):
+  Root cause: modern pandas gives country_shapes.index a StringDtype; that
+  propagates through atlite into inflow's coords, and xarray's CF encoder calls
+  np.issubdtype(v.dtype, np.datetime64) which can't read pandas extension
+  dtypes.
+  - scripts/build_hydro_profile.py:183 — coerced country_shapes.index to plain
+  object dtype right after construction.
+
+  To re-run: trigger the same scenario from the Vizualizer (or re-execute the
+  snakemake target). The patched YAMLs let snakemake resume from where it
+  failed; new generations from the UI will be properly quoted.
+
+✻ Cooked for 2m 44s
+
+※ recap: Goal: fix the two failures in logs/planui-web/7bc6145c-060.log so the baseline run completes. I patched the YAML writer, the two generated configs, and build_hydro_profile.py. Next: re-trigger the same scenario from Vizualizer. (disable recaps in /config)
+
+❯ the ui doesnt lis the latest enqueued jobs with yaml tutorial: true           
+  run:                                                                          
+    name: romania-winter-stress                                                 
+    disable_progressbar: true                                                   
+    shared_resources:                                                           
+      policy: false                                                             
+  scenario:                                                                     
+    clusters:                                                                   
+      - 10                                                                      
+    opts:                                                                       
+      - ""                                                                      
+  countries:                                                                    
+    - RO                                                                        
+  snapshots:                                                                    
+    start: "2023-12-01"                                                         
+    end: "2023-12-08"                                                           
+  electricity:                                                                  
+    co2limit_enable: true                                                       
+    co2limit: 100000000                                                         
+    extendable_carriers:                                                        
+      Generator: []                                                             
+      StorageUnit: []                                                           
+      Store: []                                                                 
+      Link: []                                                                  
+    renewable_carriers:                                                         
+      - solar                                                                   
+      - onwind                                                                  
+      - offwind-ac                                                              
+      - hydro                                                                   
+    estimate_renewable_capacities:                                              
+      enable: true                                                              
+      from_gem: true                                                            
+      year: 2020                                                                
+      expansion_limit: false                                                    
+      technology_mapping:                                                       
+        Offshore: offwind-ac                                                    
+        Onshore: onwind                                                         
+        PV: solar                                                               
+  atlite:                                                                       
+    default_cutout: europe-2020-sarah3-era5                                     
+    cutouts:                                                                    
+      europe-2020-sarah3-era5:                                                  
+        module: era5                                                            
+        x:                                                                      
+          - -12                                                                 
+          - 35                                                                  
+        y:                                                                      
+          - 33                                                                  
+          - 72                                                                  
+        dx: 0.3                                                                 
+        dy: 0.3                                                                 
+        time:                                                                   
+          - "2020"                                                              
+          - "2020"                                                              
+      europe-2023-sarah3-era5:                                                  
+        module: era5                                                            
+        x:                                                                      
+          - -12                                                                 
+          - 35                                                                  
+        y:                                                                      
+          - 33                                                                  
+          - 72                                                                  
+        dx: 0.3                                                                 
+        dy: 0.3                                                                 
+        time:                                                                   
+          - "2023"                                                              
+          - "2023"                                                              
+  renewable:                                                                    
+    hydro:                                                                      
+      carriers:                                                                 
+        - ror                                                                   
+        - PHS                                                                   
+        - hydro                                                                 
+      PHS_max_hours: 6                                                          
+      hydro_max_hours: energy_capacity_totals_by_country                        
+      flatten_dispatch: true                                                    
+      flatten_dispatch_buffer: 0.2                                              
+      clip_min_inflow: 1                                                        
+    offwind-ac:                                                                 
+      max_depth: false                                                          
+    offwind-dc:                                                                 
+      max_depth: false                                                          
+    offwind-float:                                                              
+      max_depth: false                                                          
+      min_depth: false                                                          
+  clustering:                                                                   
+    exclude_carriers:                                                           
+      - OCGT                                                                    
+      - offwind-ac                                                              
+      - coal                                                                    
+    temporal:                                                                   
+      resolution_elec: false                                                    
+  lines:                                                                        
+    max_extension: 500                                                          
+    dynamic_line_rating:                                                        
+      activate: false                                                           
+      max_line_rating: 1                                                        
+  links:                                                                        
+    max_extension: 500                                                          
+  solving:                                                                      
+    solver:                                                                     
+      name: highs                                                               
+      options: highs-simplex                                                    
+    options:                                                                    
+      load_shedding: 100000                                                     
+    check_objective:                                                            
+      enable: false                                                             
+  stress_test:                                                                  
+    enable: true                                                                
+    country: RO                                                                 
+    load_factor_full_window: 1.12                                               
+    hydro_factor_full_window: 0.6                                               
+    gas_factor_first_72h: 0.7                                                   
+    scada:                                                                      
+      tight_hours: 24                                                           
+      relaxed_hours: 48                                                         
+      ramp_tight_per_hour: 0.1                                                  
+      ramp_relaxed_per_hour: 0.25                                               
+    import_cap:                                                                 
+      zero_hours: 48                                                            
+      half_hours: 48                                                            
+      half_factor: 0.5                                                          
+  01.ACore Inputs                                                               
+  CFG                                                                           
+  Run mode                                                                      
+                                                                                
+  Paired (baseline + scenario)                                                  
+  Output name                                                                   
+  r23                                                                           
+  Scenario slug                                                                 
+  romania-winter-stress                                                         
+  Stress country                                                                
+  RO                                                                            
+  Countries (comma separated)                                                   
+  RO                                                                            
+  Snapshot start                                                                
+                                                                                
+  12/01/2023                                                                    
+  Snapshot end                                                                  
+                                                                                
+  12/08/2023                                                                    
+  Cutout year                                                                   
+                                                                                
+  2023                                                                          
+  Clusters                                                                      
+  10                                                                            
+  Solver name                                                                   
+  highs                                                                         
+  Solver options                                                                
+  highs-simplex                                                                 
+  Reference baseline network                                                    
+                                                                                
+  Select baseline network                                                       
+  // Stress Controls                                                            
+  Enable stress test                                                            
+  Load factor                                                                   
+  1.12                                                                          
+  Hydro factor                                                                  
+  0.6                                                                           
+  Gas factor                                                                    
+  0.7                                                                           
+  SCADA tight hours                                                             
+  24                                                                            
+  SCADA relaxed hours                                                           
+  48                                                                            
+  SCADA ramp tight                                                              
+  0.1                                                                           
+  SCADA ramp relaxed                                                            
+  0.25                                                                          
+  Import cap zero hours                                                         
+  48                                                                            
+  Import cap half hours                                                         
+  48                                                                            
+  Import half factor                                                            
+  0.5                                                                           
+  Apply controls to YAML                                                        
+  Apply YAML to controls                                                        
+  Refresh baselines                                                             
+  Enqueue run test it for me and tell me what i do wrong                        
+
+● Let me investigate the enqueue flow and runs listing.
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls
+      vizualizer/src/app/api/)
+  ⎿  results
+     runs
+     scenario
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls
+      vizualizer/src/app/api/runs/ vizualizer/src/app/api/scenario/)
+  ⎿  vizualizer/src/app/api/runs/:
+     baselines
+     cancel
+     … +7 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls
+      vizualizer/src/app/api/runs/jobs/ vizualizer/src/app/api/runs/enqueue/)
+  ⎿  vizualizer/src/app/api/runs/enqueue/:
+     route.ts
+     … +2 lines (ctrl+o to expand)
+
+  Read 2 files (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls -la results/ 2>&1 |
+       grep -E "^d.*r23" | head -5)
+  ⎿  (No output)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls results/ 2>&1 |
+      head -20)
+  ⎿  ls: cannot access 'results/': No such file or directory
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls vizualizer/.data/
+      2>&1; echo '---'; cat vizualizer/.data/planui-state.json 2>&1 | head -100)
+  ⎿  planui-state.json
+     ---
+     {
+     … +48 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && node -e "
+      const data = require('./vizualizer/.data/planui-state.json');…)
+  ⎿  Total jobs: 12
+     059af193-e56 r2023 2026-04-27T18:51:03.216Z failed
+     47a1ee3e-db9 r2023 2026-04-27T18:54:51.824Z failed
+     … +10 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls
+      vizualizer/src/app/)
+  ⎿  api
+     favicon.ico
+     globals.css
+     … +3 lines (ctrl+o to expand)
+
+  Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && ls
+      vizualizer/src/app/lib/)
+  ⎿  csv.ts
+     job-runner.ts
+     paths.ts
+     … +4 lines (ctrl+o to expand)
+
+  Searched for 1 pattern, read 2 files (ctrl+o to expand)
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && curl -s -m 5
+      http://localhost:3000/api/runs/jobs 2>&1 | head -200)
+  ⎿  {"jobs":[{"spec":{"jobId":"059af193-e56","outputName":"r2023","mode":"
+     paired","createdAt":"2026-04-27T18:51:03.216Z","commands":[{"argv":["D
+     :\\Anaconda\\Library\\bin\\conda.bat","run","-n","pypsa","python","-m"
+     … +355 lines (ctrl+o to expand)
+
+❯ the ui only lists these 059af193-e56                                                                                                                                                                                                                                                                                                           
+  failed    paired    r2023    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427185102/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter-      
+  Details                                                                                                                                                                                                                                                                                                                                        
+  47a1ee3e-db9                                                                                                                                                                                                                                                                                                                                   
+  failed    paired    r2023    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427185451/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter-      
+  Details                                                                                                                                                                                                                                                                                                                                        
+  8c9d0367-13c                                                                                                                                                                                                                                                                                                                                   
+  failed    paired    r2023    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427190139/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter-      
+  Details                                                                                                                                                                                                                                                                                                                                        
+  9c125517-85b                                                                                                                                                                                                                                                                                                                                   
+  failed    paired    r2023    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427190334/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter-      
+  Details                                                                                                                                                                                                                                                                                                                                        
+  c6e0bd38-d2e                                                                                                                                                                                                                                                                                                                                   
+  failed    paired    r2023    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260427190513/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter-      
+  Details                                                                                                                                                                                                                                                                                                                                        
+  45598eea-575                                                                                                                                                                                                                                                                                                                                   
+  failed    paired    r20233    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress2-baseline-20260427191649/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter     
+  Details                                                                                                                                                                                                                                                                                                                                        
+  7bc6145c-060                                                                                                                                                                                                                                                                                                                                   
+  failed    paired    r20233    ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress2-baseline-20260427192319/networks/base_s_10_elec_.nc --configfile C:\Users\Bogdan\Desktop\Projects\pypsa-eur\config\adversarial\generated\romania-winter     
+  Details                                                                                                                                                                                                                                                                                                                                        
+  jobs                                                                                                                                                                                                                                                                                                                                           
+
+● Let me re-check the state file and compare with what the API returns:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && node -e "
+      const data = require('./vizualizer/.data/planui-state.json');…)
+  ⎿  Disk state file has 12 jobs:
+       059af193-e56 r2023 failed
+       47a1ee3e-db9 r2023 failed
+     … +10 lines (ctrl+o to expand)
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && curl -s -m 5
+      http://localhost:3000/api/runs/jobs 2>&1 | node -e "
+      let raw = ''; process.stdin.on('data', d =>…)
+  ⎿  API returns 7 jobs:
+       059af193-e56 r2023 failed
+       47a1ee3e-db9 r2023 failed
+     … +5 lines (ctrl+o to expand)
+
+  Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● Let me check if there's a duplicated server or check the scenario by examining
+   processes and last write time:
+
+● Bash(cd "C:/Users/Bogdan/Desktop/Projects/pypsa-eur" && stat -c "%y %n"
+      vizualizer/.data/planui-state.json 2>&1; ls -la
+      vizualizer/.data/planui-state.json 2>&1)
+  ⎿  2026-04-27 22:53:59.002421200 +0300 vizualizer/.data/planui-state.json
+     -rw-r--r-- 1 Bogdan 197608 59499 Apr 27 22:53 vizualizer/.data/planui-
+     state.json
+  ⎿  You've hit your org's monthly usage limit
+     /upgrade to increase your usage limit.
+
+✻ Sautéed for 2m 29s
