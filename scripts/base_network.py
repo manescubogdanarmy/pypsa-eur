@@ -456,7 +456,9 @@ def _set_countries_and_substations(n, config, country_shapes, offshore_shapes):
         )
 
     countries = config["countries"]
-    country_shapes = gpd.read_file(country_shapes).set_index("name")["geometry"]
+    country_shapes = gpd.read_file(country_shapes).set_index("name")
+    country_shapes.index = country_shapes.index.astype(str)
+    country_shapes = country_shapes["geometry"]
     # reindexing necessary for supporting empty geo-dataframes
     offshore_shapes = gpd.read_file(offshore_shapes)
     offshore_shapes = offshore_shapes.reindex(columns=["name", "geometry"]).set_index(

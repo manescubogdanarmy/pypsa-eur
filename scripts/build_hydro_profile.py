@@ -180,7 +180,7 @@ if __name__ == "__main__":
     )
     # Force plain object dtype: pandas StringDtype propagates to xarray coords
     # and breaks np.issubdtype checks during inflow.to_netcdf() encoding.
-    country_shapes.index = country_shapes.index.astype(object)
+    country_shapes.index = country_shapes.index.astype(str)
     country_shapes.index.name = "countries"
 
     fn = snakemake.input.eia_hydro_generation

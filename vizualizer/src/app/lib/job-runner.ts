@@ -77,16 +77,26 @@ export class JobRunner {
     this.loadState();
   }
 
-  private loadState(): void {
+  private loadState(isInitial = false): void {
     const statePath = stateFilePath();
     try {
+      if (!fs.existsSync(statePath)) {
+        this.jobs = [];
+        return;
+      }
       const content = fs.readFileSync(statePath, "utf-8");
       const parsed = safeJsonParse(content);
-      this.jobs = normalizeJobs(parsed?.jobs || []);
-    } catch {
-      this.jobs = [];
+      let loadedJobs = parsed?.jobs || [];
+      if (isInitial) {
+        loadedJobs = normalizeJobs(loadedJobs);
+      }
+      this.jobs = loadedJobs;
+    } catch (err) {
+      console.error("Failed to load state:", err);
+      if (isInitial) {
+        this.jobs = [];
+      }
     }
-    this.saveState();
   }
 
   private saveState(): void {
@@ -97,10 +107,12 @@ export class JobRunner {
   }
 
   getJobs(): JobRecord[] {
+    this.loadState();
     return structuredClone(this.jobs);
   }
 
   enqueue(spec: JobSpec): JobRecord {
+    this.loadState();
     const record: JobRecord = {
       spec,
       status: "queued",
@@ -158,6 +170,7 @@ export class JobRunner {
     if (this.isRunning) {
       return;
     }
+    this.loadState();
     const next = this.jobs.find((job) => job.status === "queued");
     if (!next) {
       return;
