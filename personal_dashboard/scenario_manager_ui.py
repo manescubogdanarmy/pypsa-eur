@@ -33,8 +33,8 @@ class ScenarioManagerUI:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.repo_root = Path(__file__).resolve().parents[1]
-        self.template_path = self.repo_root / "1_piele_docs" / "scenario_template.yaml"
-        self.state_path = self.repo_root / "1_piele_dashboard" / "scenario_manager_state.json"
+        self.template_path = self.repo_root / "personal_docs" / "scenario_template.yaml"
+        self.state_path = self.repo_root / "personal_dashboard" / "scenario_manager_state.json"
         self.logs_dir = self.repo_root / "logs" / "planui"
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         self.state = load_state(self.state_path)

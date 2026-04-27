@@ -3,7 +3,7 @@
 
 
 ---
-# Source: 1_piele_docs\README.md
+# Source: personal_docs\README.md
 
 ==================================================================
 # 📚 Documentation - Project Guides & References
@@ -353,7 +353,7 @@ For questions or issues:
 
 
 ---
-# Source: 1_piele_docs\README2.md
+# Source: personal_docs\README2.md
 
 ==================================================================
 # PyPSA-Eur Romania Analysis - Project Documentation
@@ -698,7 +698,7 @@ Acest scenariu ("Sibiu Regional Crisis") a simulat o situație extremă constân
 
 
 ---
-# Source: 1_piele_docs\README3.md
+# Source: personal_docs\README3.md
 
 ==================================================================
 # PyPSA-Eur Romania - Scenariu Stres de Iarna 2020
@@ -2631,12 +2631,12 @@ graph TD
     B --> F[Data Processing Scripts]
     B --> G[Optimization Rules]
     
-    C --> H[1_piele_analysis/]
-    C --> I[1_piele_dashboard/]
-    C --> J[1_piele_runners/]
-    C --> K[1_piele_diagnostics/]
-    C --> L[1_piele_data_download/]
-    C --> M[1_piele_docs/]
+    C --> H[personal_analysis/]
+    C --> I[personal_dashboard/]
+    C --> J[personal_runners/]
+    C --> K[personal_diagnostics/]
+    C --> L[personal_data_download/]
+    C --> M[personal_docs/]
     
     H --> N[Configuration Generation]
     H --> O[Results Processing]
@@ -2675,7 +2675,7 @@ graph TD
 
 ### Custom Romania Extensions
 
-#### 📈 Analysis Module (`1_piele_analysis/`)
+#### 📈 Analysis Module (`personal_analysis/`)
 **Purpose**: Results processing, scenario generation, and reporting
 
 | Component | Description | Key Functions |
@@ -2685,7 +2685,7 @@ graph TD
 | Scenario Management | Discovers and manages scenarios | `explore_scenarios.py` |
 | Batch Processing | Automated analysis workflows | `run_summary.py` |
 
-#### 📊 Dashboard Module (`1_piele_dashboard/`)
+#### 📊 Dashboard Module (`personal_dashboard/`)
 **Purpose**: Interactive visualization and scenario comparison
 
 | Component | Description | Key Functions |
@@ -2695,7 +2695,7 @@ graph TD
 | Data Validation | Legacy data testing | `test_legacy_display.py` |
 | Documentation | User guides and technical specs | `documentation.md`, `README.md` |
 
-#### 🚀 Runners Module (`1_piele_runners/`)
+#### 🚀 Runners Module (`personal_runners/`)
 **Purpose**: Automated scenario execution and batch processing
 
 | Component | Description | Key Functions |
@@ -2705,7 +2705,7 @@ graph TD
 | Windows Automation | Batch execution scripts | `*.bat` files |
 | Direct Execution | Alternative execution paths | `run_romania_winter_stress_direct.py` |
 
-#### 🔍 Diagnostics Module (`1_piele_diagnostics/`)
+#### 🔍 Diagnostics Module (`personal_diagnostics/`)
 **Purpose**: Testing, validation, and troubleshooting
 
 | Component | Description | Key Functions |
@@ -2715,7 +2715,7 @@ graph TD
 | Connectivity Testing | Test external data sources | `check_url.py` |
 | Workflow Testing | Verify Snakemake DAG | `test_snakemake.ps1` |
 
-#### 📥 Data Download Module (`1_piele_data_download/`)
+#### 📥 Data Download Module (`personal_data_download/`)
 **Purpose**: External data acquisition and management
 
 | Component | Description | Key Functions |
@@ -2723,7 +2723,7 @@ graph TD
 | Weather Data | Download climate/weather datasets | `download_cutout.py` |
 | Research Datasets | Download from Zenodo repositories | `download_zenodo_files.py` |
 
-#### 📚 Documentation Module (`1_piele_docs/`)
+#### 📚 Documentation Module (`personal_docs/`)
 **Purpose**: Comprehensive project documentation
 
 | Component | Description | Content |
@@ -2738,21 +2738,21 @@ graph TD
 
 ```mermaid
 flowchart LR
-    A[External Data Sources] --> B[1_piele_data_download]
+    A[External Data Sources] --> B[personal_data_download]
     B --> C[scripts/retrieve_*.py]
     C --> D[scripts/build_*.py]
     D --> E[scripts/add_*.py]
     E --> F[PyPSA Network]
     F --> G[Optimization Solving]
     G --> H[results/]
-    H --> I[1_piele_analysis]
-    I --> J[1_piele_dashboard]
+    H --> I[personal_analysis]
+    I --> J[personal_dashboard]
     
-    K[config/] --> L[1_piele_runners]
+    K[config/] --> L[personal_runners]
     L --> M[Snakemake Execution]
     M --> G
     
-    N[1_piele_diagnostics] --> O[Validation & Testing]
+    N[personal_diagnostics] --> O[Validation & Testing]
     O --> C
     O --> D
     O --> E
@@ -2764,12 +2764,12 @@ flowchart LR
 - **Base Config**: `config/config.default.yaml` - Framework defaults
 - **Romania Configs**: `config/romania*.yaml` - Seasonal scenarios
 - **Adversarial Configs**: `config/adversarial/` - Stress test scenarios
-- **Generated Configs**: Created by `1_piele_analysis/generate_*.py`
+- **Generated Configs**: Created by `personal_analysis/generate_*.py`
 
 ### Execution Pathways
 1. **Manual Execution**: Direct `snakemake` commands
-2. **Batch Execution**: Via `1_piele_runners/` scripts
-3. **Interactive Execution**: Through `1_piele_dashboard/` interfaces
+2. **Batch Execution**: Via `personal_runners/` scripts
+3. **Interactive Execution**: Through `personal_dashboard/` interfaces
 
 ### Data Dependencies
 - **Weather Data**: ERA5 climate data via Atlite
@@ -2779,8 +2779,8 @@ flowchart LR
 
 ### Results Pipeline
 1. **Raw Results**: `results/` directory with PyPSA network files
-2. **Processed Results**: Via `1_piele_analysis/` interpretation scripts
-3. **Visualized Results**: Through `1_piele_dashboard/` interfaces
+2. **Processed Results**: Via `personal_analysis/` interpretation scripts
+3. **Visualized Results**: Through `personal_dashboard/` interfaces
 4. **Exported Results**: Summaries and reports for external use
 
 ## Development Workflow Integration
@@ -2791,16 +2791,16 @@ graph TD
     A --> C[Update Scripts]
     A --> D[Enhance Dashboard]
     
-    B --> E[1_piele_diagnostics Validation]
+    B --> E[personal_diagnostics Validation]
     C --> E
     D --> E
     
-    E --> F[1_piele_runners Testing]
-    F --> G[1_piele_analysis Processing]
-    G --> H[1_piele_dashboard Visualization]
+    E --> F[personal_runners Testing]
+    F --> G[personal_analysis Processing]
+    G --> H[personal_dashboard Visualization]
     
     H --> I[Documentation Update]
-    I --> J[1_piele_docs]
+    I --> J[personal_docs]
 ```
 
 This structure enables:
@@ -2808,7 +2808,7 @@ This structure enables:
 - **Parallel Workflows**: Multiple scenarios can run simultaneously
 - **Quality Assurance**: Built-in testing and validation at each stage
 - **User-Friendly Access**: Multiple interfaces for different user needs
-- **Comprehensive Documentation**: All aspects covered in `1_piele_docs/`
+- **Comprehensive Documentation**: All aspects covered in `personal_docs/`
 
 
 

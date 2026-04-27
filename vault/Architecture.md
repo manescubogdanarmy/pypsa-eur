@@ -3,7 +3,7 @@
 
 
 ---
-# Source: 1_piele_docs\PLAN.md
+# Source: personal_docs\PLAN.md
 
 ==================================================================
 ## Romania Winter 2019 Stress Scenario (Baseline + Shocked) in PyPSA-Eur
@@ -198,7 +198,7 @@ No full optimization run in tests.
 
 
 ---
-# Source: 1_piele_docs\romania_config_explanation.md
+# Source: personal_docs\romania_config_explanation.md
 
 ==================================================================
 # Explanation of `config/romania.yaml`
@@ -254,7 +254,7 @@ This config creates a **miniature simulation** of the Romanian power system. It 
 
 
 ---
-# Source: 1_piele_docs\romania_config_explanation_ro.md
+# Source: personal_docs\romania_config_explanation_ro.md
 
 ==================================================================
 # Explicarea fișierului `config/romania.yaml`
@@ -310,7 +310,7 @@ Această configurație creează o **simulare miniaturală** a sistemului energet
 
 
 ---
-# Source: 1_piele_docs\TEMPLATE_ARCHITECTURE.md
+# Source: personal_docs\TEMPLATE_ARCHITECTURE.md
 
 ==================================================================
 # Year-Specific YAML Template Architecture
@@ -328,7 +328,7 @@ The scenario manager now supports **intelligent template selection** based on th
 | `scenario_template.yaml` | Default template for 2020 cutout year | Cutout year = 2020 (default) |
 | `scenario_template_2023.yaml` | Optimized template for 2023 cutout year | Cutout year = 2023 |
 
-Both templates reside in: `1_piele_docs/`
+Both templates reside in: `personal_docs/`
 
 ### Template Selection Logic
 
@@ -382,7 +382,7 @@ atlite:
 ### Step-by-Step Flow
 
 1. **User Opens Scenario Manager UI**
-   - Loads default template path: `1_piele_docs/scenario_template.yaml`
+   - Loads default template path: `personal_docs/scenario_template.yaml`
 
 2. **User Selects Cutout Year**
    - Dropdown shows: [2020, 2023]
@@ -425,7 +425,7 @@ atlite:
 
 ### resolve_template_path() Function
 
-Location: `1_piele_dashboard/scenario_manager/config_builder.py`
+Location: `personal_dashboard/scenario_manager/config_builder.py`
 
 ```python
 def resolve_template_path(base_template_path: Path, cutout_year: str = "2020") -> Path:
@@ -492,7 +492,7 @@ To add support for year 2024 or later:
 
 ### 1. Create Template File
 ```bash
-cp 1_piele_docs/scenario_template_2023.yaml 1_piele_docs/scenario_template_2024.yaml
+cp personal_docs/scenario_template_2023.yaml personal_docs/scenario_template_2024.yaml
 ```
 
 ### 2. Update Contents
@@ -540,10 +540,10 @@ That's it! The `resolve_template_path()` function will automatically detect and 
 If system falls back to default template:
 ```bash
 # Check file exists
-ls -la 1_piele_docs/scenario_template_2023.yaml
+ls -la personal_docs/scenario_template_2023.yaml
 
 # Check file permissions (must be readable)
-chmod 644 1_piele_docs/scenario_template_2023.yaml
+chmod 644 personal_docs/scenario_template_2023.yaml
 ```
 
 ### Wrong Template Loaded
@@ -562,17 +562,17 @@ def resolve_template_path(...):
 ### Snapshot Dates Wrong
 If defaults are not from selected year:
 - Check `scenario_template_2023.yaml` has correct snapshots section
-- Verify YAML syntax is valid: `yamllint 1_piele_docs/scenario_template_2023.yaml`
+- Verify YAML syntax is valid: `yamllint personal_docs/scenario_template_2023.yaml`
 
 ## File Locations
 
 ```
 pypsa-eur/
-├── 1_piele_dashboard/
+├── personal_dashboard/
 │   ├── scenario_manager_ui.py          # UI dropdown (lines ~60, ~133)
 │   └── scenario_manager/
 │       └── config_builder.py            # resolve_template_path() function
-├── 1_piele_docs/
+├── personal_docs/
 │   ├── scenario_template.yaml           # Default (2020)
 │   ├── scenario_template_2023.yaml      # Year-specific (2023)
 │   └── CUTOUT_CONFIG.md                 # User documentation
@@ -657,22 +657,22 @@ For issues with year-specific templates:
 
 ## Summary
 Build a new Tkinter desktop application that lets you create scenarios via guided controls or advanced YAML editing, enqueue and run Snakemake workflows without blocking navigation, and view only the new report-format outputs (like `results/romania-2020-winter-stress-comparison`) from a self-updating results list.  
-The implementation will also add a read-only canonical template in docs and produce implementation documentation at `1_piele_docs/planui.md`.
+The implementation will also add a read-only canonical template in docs and produce implementation documentation at `personal_docs/planui.md`.
 
 ## Scope
 - In scope: new Python app, config generation, queue-based run execution, spinner/status UI, always-available page navigation, self-updating new-format results page, bilingual toggle (EN/RO), persistent run/history state.
 - Out of scope: auto-reattach to already-running OS processes after app restart, legacy-format results rendering, overwrite behavior for existing output names.
 
 ## Target Files
-- `1_piele_docs/planui.md`
-- `1_piele_docs/scenario_template.yaml`
-- `1_piele_dashboard/scenario_manager_ui.py`
-- `1_piele_dashboard/scenario_manager/types.py`
-- `1_piele_dashboard/scenario_manager/config_builder.py`
-- `1_piele_dashboard/scenario_manager/run_manager.py`
-- `1_piele_dashboard/scenario_manager/results_index.py`
-- `1_piele_dashboard/scenario_manager/state_store.py`
-- `1_piele_dashboard/scenario_manager/i18n.py`
+- `personal_docs/planui.md`
+- `personal_docs/scenario_template.yaml`
+- `personal_dashboard/scenario_manager_ui.py`
+- `personal_dashboard/scenario_manager/types.py`
+- `personal_dashboard/scenario_manager/config_builder.py`
+- `personal_dashboard/scenario_manager/run_manager.py`
+- `personal_dashboard/scenario_manager/results_index.py`
+- `personal_dashboard/scenario_manager/state_store.py`
+- `personal_dashboard/scenario_manager/i18n.py`
 
 ## App Architecture
 1. Navigation shell:
@@ -685,7 +685,7 @@ The implementation will also add a read-only canonical template in docs and prod
 - Two editing modes:
 - `Core + Stress Controls`: structured form fields update an in-memory working config.
 - `Advanced YAML`: editable working YAML panel plus read-only canonical template panel.
-- Template source is fixed: `1_piele_docs/scenario_template.yaml`.
+- Template source is fixed: `personal_docs/scenario_template.yaml`.
 - Template file is never modified.
 
 3. Runs page:
@@ -777,14 +777,14 @@ The implementation will also add a read-only canonical template in docs and prod
 - Spinner appears only when any job is active.
 
 ## Implementation Sequence
-1. Create `1_piele_docs/scenario_template.yaml` and `1_piele_docs/planui.md`.
+1. Create `personal_docs/scenario_template.yaml` and `personal_docs/planui.md`.
 2. Implement shared types, i18n map, and state store.
 3. Implement config builder with immutable-template workflow.
 4. Implement run manager queue and subprocess orchestration.
 5. Implement results indexer and parser for required new-format files.
 6. Build Tkinter shell + 3 pages + always-available navigation.
 7. Add persistence/reload behavior and polling loops.
-8. Add tests and a short usage section in `1_piele_docs/planui.md`.
+8. Add tests and a short usage section in `personal_docs/planui.md`.
 
 ## Assumptions and Defaults
 - App runs in already-activated environment and uses plain `snakemake`/`python`.
@@ -1011,7 +1011,7 @@ The scenario manager now supports **intelligent template selection** based on th
 | `scenario_template.yaml` | Default template for 2020 cutout year | Cutout year = 2020 (default) |
 | `scenario_template_2023.yaml` | Optimized template for 2023 cutout year | Cutout year = 2023 |
 
-Both templates reside in: `1_piele_docs/`
+Both templates reside in: `personal_docs/`
 
 ### Template Selection Logic
 
@@ -1065,7 +1065,7 @@ atlite:
 ### Step-by-Step Flow
 
 1. **User Opens Scenario Manager UI**
-   - Loads default template path: `1_piele_docs/scenario_template.yaml`
+   - Loads default template path: `personal_docs/scenario_template.yaml`
 
 2. **User Selects Cutout Year**
    - Dropdown shows: [2020, 2023]
@@ -1108,7 +1108,7 @@ atlite:
 
 ### resolve_template_path() Function
 
-Location: `1_piele_dashboard/scenario_manager/config_builder.py`
+Location: `personal_dashboard/scenario_manager/config_builder.py`
 
 ```python
 def resolve_template_path(base_template_path: Path, cutout_year: str = "2020") -> Path:
@@ -1175,7 +1175,7 @@ To add support for year 2024 or later:
 
 ### 1. Create Template File
 ```bash
-cp 1_piele_docs/scenario_template_2023.yaml 1_piele_docs/scenario_template_2024.yaml
+cp personal_docs/scenario_template_2023.yaml personal_docs/scenario_template_2024.yaml
 ```
 
 ### 2. Update Contents
@@ -1223,10 +1223,10 @@ That's it! The `resolve_template_path()` function will automatically detect and 
 If system falls back to default template:
 ```bash
 # Check file exists
-ls -la 1_piele_docs/scenario_template_2023.yaml
+ls -la personal_docs/scenario_template_2023.yaml
 
 # Check file permissions (must be readable)
-chmod 644 1_piele_docs/scenario_template_2023.yaml
+chmod 644 personal_docs/scenario_template_2023.yaml
 ```
 
 ### Wrong Template Loaded
@@ -1245,17 +1245,17 @@ def resolve_template_path(...):
 ### Snapshot Dates Wrong
 If defaults are not from selected year:
 - Check `scenario_template_2023.yaml` has correct snapshots section
-- Verify YAML syntax is valid: `yamllint 1_piele_docs/scenario_template_2023.yaml`
+- Verify YAML syntax is valid: `yamllint personal_docs/scenario_template_2023.yaml`
 
 ## File Locations
 
 ```
 pypsa-eur/
-├── 1_piele_dashboard/
+├── personal_dashboard/
 │   ├── scenario_manager_ui.py          # UI dropdown (lines ~60, ~133)
 │   └── scenario_manager/
 │       └── config_builder.py            # resolve_template_path() function
-├── 1_piele_docs/
+├── personal_docs/
 │   ├── scenario_template.yaml           # Default (2020)
 │   ├── scenario_template_2023.yaml      # Year-specific (2023)
 │   └── CUTOUT_CONFIG.md                 # User documentation
@@ -1340,22 +1340,22 @@ For issues with year-specific templates:
 
 ## Summary
 Build a new Tkinter desktop application that lets you create scenarios via guided controls or advanced YAML editing, enqueue and run Snakemake workflows without blocking navigation, and view only the new report-format outputs (like `results/romania-2020-winter-stress-comparison`) from a self-updating results list.  
-The implementation will also add a read-only canonical template in docs and produce implementation documentation at `1_piele_docs/planui.md`.
+The implementation will also add a read-only canonical template in docs and produce implementation documentation at `personal_docs/planui.md`.
 
 ## Scope
 - In scope: new Python app, config generation, queue-based run execution, spinner/status UI, always-available page navigation, self-updating new-format results page, bilingual toggle (EN/RO), persistent run/history state.
 - Out of scope: auto-reattach to already-running OS processes after app restart, legacy-format results rendering, overwrite behavior for existing output names.
 
 ## Target Files
-- `1_piele_docs/planui.md`
-- `1_piele_docs/scenario_template.yaml`
-- `1_piele_dashboard/scenario_manager_ui.py`
-- `1_piele_dashboard/scenario_manager/types.py`
-- `1_piele_dashboard/scenario_manager/config_builder.py`
-- `1_piele_dashboard/scenario_manager/run_manager.py`
-- `1_piele_dashboard/scenario_manager/results_index.py`
-- `1_piele_dashboard/scenario_manager/state_store.py`
-- `1_piele_dashboard/scenario_manager/i18n.py`
+- `personal_docs/planui.md`
+- `personal_docs/scenario_template.yaml`
+- `personal_dashboard/scenario_manager_ui.py`
+- `personal_dashboard/scenario_manager/types.py`
+- `personal_dashboard/scenario_manager/config_builder.py`
+- `personal_dashboard/scenario_manager/run_manager.py`
+- `personal_dashboard/scenario_manager/results_index.py`
+- `personal_dashboard/scenario_manager/state_store.py`
+- `personal_dashboard/scenario_manager/i18n.py`
 
 ## App Architecture
 1. Navigation shell:
@@ -1368,7 +1368,7 @@ The implementation will also add a read-only canonical template in docs and prod
 - Two editing modes:
 - `Core + Stress Controls`: structured form fields update an in-memory working config.
 - `Advanced YAML`: editable working YAML panel plus read-only canonical template panel.
-- Template source is fixed: `1_piele_docs/scenario_template.yaml`.
+- Template source is fixed: `personal_docs/scenario_template.yaml`.
 - Template file is never modified.
 
 3. Runs page:
@@ -1460,14 +1460,14 @@ The implementation will also add a read-only canonical template in docs and prod
 - Spinner appears only when any job is active.
 
 ## Implementation Sequence
-1. Create `1_piele_docs/scenario_template.yaml` and `1_piele_docs/planui.md`.
+1. Create `personal_docs/scenario_template.yaml` and `personal_docs/planui.md`.
 2. Implement shared types, i18n map, and state store.
 3. Implement config builder with immutable-template workflow.
 4. Implement run manager queue and subprocess orchestration.
 5. Implement results indexer and parser for required new-format files.
 6. Build Tkinter shell + 3 pages + always-available navigation.
 7. Add persistence/reload behavior and polling loops.
-8. Add tests and a short usage section in `1_piele_docs/planui.md`.
+8. Add tests and a short usage section in `personal_docs/planui.md`.
 
 ## Assumptions and Defaults
 - App runs in already-activated environment and uses plain `snakemake`/`python`.
@@ -1493,13 +1493,13 @@ Welcome to the PyPSA-Eur Romania Analysis project! This guide explains the new f
 ```
 pypsa-eur/
 │
-├── 📊 1_piele_dashboard/            → Interactive visualization dashboards
+├── 📊 personal_dashboard/            → Interactive visualization dashboards
 │   ├── visualize_scenarios_ui_v2.py    (v1 - baseline vs. stress)
 │   ├── visualize_scenarios_ui_v2.py (v2 - dynamic scenarios)
 │   ├── test_legacy_display.py       (data validation)
 │   └── README.md                    (full guide)
 │
-├── 🚀 1_piele_runners/              → Scenario execution scripts
+├── 🚀 personal_runners/              → Scenario execution scripts
 │   ├── run_all_scenarios.py         (execute all 5 seasons)
 │   ├── run_remaining_scenarios.py   (execute 3 seasons)
 │   ├── run_romania_winter_stress.py (baseline + stress)
@@ -1507,7 +1507,7 @@ pypsa-eur/
 │   ├── *.bat files                  (Windows batch runners)
 │   └── README.md                    (full guide)
 │
-├── 📈 1_piele_analysis/             → Results processing & reporting
+├── 📈 personal_analysis/             → Results processing & reporting
 │   ├── generate_configs.py          (create scenario configs)
 │   ├── generate_adversarial_configs.py (create 10 stress tests)
 │   ├── interpret_results.py         (analyze network results)
@@ -1517,19 +1517,19 @@ pypsa-eur/
 │   ├── analyze_scenario_11.py       (failure analysis)
 │   └── README.md                    (full guide)
 │
-├── 🔍 1_piele_diagnostics/          → Testing & validation tools
+├── 🔍 personal_diagnostics/          → Testing & validation tools
 │   ├── check_csv.py                 (validate CSV data)
 │   ├── check_romania.py             (validate configs)
 │   ├── check_url.py                 (test data sources)
 │   ├── test_snakemake.ps1           (test workflow DAG)
 │   └── README.md                    (full guide)
 │
-├── 📥 1_piele_data_download/        → External data acquisition
+├── 📥 personal_data_download/        → External data acquisition
 │   ├── download_cutout.py           (download weather data)
 │   ├── download_zenodo_files.py     (download datasets)
 │   └── README.md                    (full guide)
 │
-├── 📚 1_piele_docs/                 → Project documentation
+├── 📚 personal_docs/                 → Project documentation
 │   ├── PLAN.md                      (original project plan)
 │   ├── DASHBOARD_README.md          (v1 guide)
 │   ├── VISUALIZER_COMPARISON.md     (v1 vs v2)
@@ -1569,7 +1569,7 @@ pypsa-eur/
 
 ```bash
 # Navigate to dashboard folder and run v2
-cd 1_piele_dashboard
+cd personal_dashboard
 python visualize_scenarios_ui_v2.py
 
 # Tips:
@@ -1578,7 +1578,7 @@ python visualize_scenarios_ui_v2.py
 # 3. Use "Browse" for custom folder selection
 ```
 
-**See:** [1_piele_dashboard/README.md](1_piele_dashboard/README.md)
+**See:** [personal_dashboard/README.md](personal_dashboard/README.md)
 
 ---
 
@@ -1587,19 +1587,19 @@ python visualize_scenarios_ui_v2.py
 
 ```bash
 # 1. Validate environment
-cd 1_piele_diagnostics
+cd personal_diagnostics
 python check_romania.py
 
 # 2. Run baseline scenario only (quick test)
-cd ../1_piele_runners
+cd ../personal_runners
 run_baseline_only.bat
 
 # 3. View results with dashboard
-cd ../1_piele_dashboard
+cd ../personal_dashboard
 python visualize_scenarios_ui_v2.py
 ```
 
-**See:** [1_piele_runners/README.md](1_piele_runners/README.md)
+**See:** [personal_runners/README.md](personal_runners/README.md)
 
 ---
 
@@ -1608,7 +1608,7 @@ python visualize_scenarios_ui_v2.py
 
 ```bash
 # 1. Generate scenario summaries
-cd 1_piele_analysis
+cd personal_analysis
 python run_summary.py
 
 # 2. Explore available scenarios
@@ -1618,11 +1618,11 @@ python explore_scenarios.py
 python interpret_results.py
 
 # 4. Visualize outputs
-cd ../1_piele_dashboard
+cd ../personal_dashboard
 python visualize_scenarios_ui_v2.py
 ```
 
-**See:** [1_piele_analysis/README.md](1_piele_analysis/README.md)
+**See:** [personal_analysis/README.md](personal_analysis/README.md)
 
 ---
 
@@ -1631,19 +1631,19 @@ python visualize_scenarios_ui_v2.py
 
 ```bash
 # 1. Generate adversarial configs
-cd 1_piele_analysis
+cd personal_analysis
 python generate_adversarial_configs.py
 
 # 2. Run specific scenario via runners
-cd ../1_piele_runners
+cd ../personal_runners
 python run_romania_winter_stress.py
 
 # 3. Analyze failure cases
-cd ../1_piele_analysis
+cd ../personal_analysis
 python analyze_scenario_11.py
 ```
 
-**See:** [1_piele_analysis/README.md](1_piele_analysis/README.md)
+**See:** [personal_analysis/README.md](personal_analysis/README.md)
 
 ---
 
@@ -1652,7 +1652,7 @@ python analyze_scenario_11.py
 
 ```bash
 # 1. Check data sources
-cd 1_piele_diagnostics
+cd personal_diagnostics
 python check_url.py
 
 # 2. Validate configurations
@@ -1665,7 +1665,7 @@ python check_csv.py
 .\test_snakemake.ps1
 ```
 
-**See:** [1_piele_diagnostics/README.md](1_piele_diagnostics/README.md)
+**See:** [personal_diagnostics/README.md](personal_diagnostics/README.md)
 
 ---
 
@@ -1674,28 +1674,28 @@ python check_csv.py
 ### I want to...
 
 **View existing simulation results**
-→ See [1_piele_dashboard/README.md](1_piele_dashboard/README.md)
+→ See [personal_dashboard/README.md](personal_dashboard/README.md)
 
 **Run a new scenario**
-→ See [1_piele_runners/README.md](1_piele_runners/README.md)
+→ See [personal_runners/README.md](personal_runners/README.md)
 
 **Generate reports & analysis**
-→ See [1_piele_analysis/README.md](1_piele_analysis/README.md)
+→ See [personal_analysis/README.md](personal_analysis/README.md)
 
 **Validate data or configuration**
-→ See [1_piele_diagnostics/README.md](1_piele_diagnostics/README.md)
+→ See [personal_diagnostics/README.md](personal_diagnostics/README.md)
 
 **Download missing datasets**
-→ See [1_piele_data_download/README.md](1_piele_data_download/README.md)
+→ See [personal_data_download/README.md](personal_data_download/README.md)
 
 **Understand the project**
-→ See [1_piele_docs/README.md](1_piele_docs/README.md)
+→ See [personal_docs/README.md](personal_docs/README.md)
 
 **Configure a scenario**
-→ See [1_piele_docs/romania_config_explanation.md](1_piele_docs/romania_config_explanation.md)
+→ See [personal_docs/romania_config_explanation.md](personal_docs/romania_config_explanation.md)
 
 **Understand data formats**
-→ See [1_piele_docs/FORMAT_SUPPORT.md](1_piele_docs/FORMAT_SUPPORT.md)
+→ See [personal_docs/FORMAT_SUPPORT.md](personal_docs/FORMAT_SUPPORT.md)
 
 ---
 
@@ -1706,7 +1706,7 @@ python check_csv.py
 User: "I just want to see the results"
 
 Steps:
-1. cd 1_piele_dashboard
+1. cd personal_dashboard
 2. python visualize_scenarios_ui_v2.py
 3. Select scenario → Explore tabs
 
@@ -1722,11 +1722,11 @@ Result: Interactive dashboard open
 User: "I want to run a scenario and see results"
 
 Steps:
-1. cd 1_piele_runners
+1. cd personal_runners
 2. run_baseline_only.bat (quick test)
-3. cd ../1_piele_analysis
+3. cd ../personal_analysis
 4. python run_summary.py
-5. cd ../1_piele_dashboard
+5. cd ../personal_dashboard
 6. python visualize_scenarios_ui_v2.py
 
 Time: 1-2 hours
@@ -1741,13 +1741,13 @@ Result: New scenario results visualized
 User: "I want to do everything"
 
 Steps:
-1. cd 1_piele_diagnostics
+1. cd personal_diagnostics
    python check_romania.py    (validate)
-2. cd ../1_piele_runners
+2. cd ../personal_runners
    run_all_scenarios.py       (run all 5)
-3. cd ../1_piele_analysis
+3. cd ../personal_analysis
    python run_summary.py      (analyze)
-4. cd ../1_piele_dashboard
+4. cd ../personal_dashboard
    python visualize_scenarios_ui_v2.py (view)
 
 Time: 6-8 hours
@@ -1762,13 +1762,13 @@ Result: Complete analysis suite
 User: "Something failed, help!"
 
 Steps:
-1. cd 1_piele_diagnostics
+1. cd personal_diagnostics
    python check_url.py        (data sources?)
    python check_romania.py    (config?)
    python check_csv.py        (data integrity?)
    .\test_snakemake.ps1       (workflow?)
 2. Check error logs in logs/
-3. Consult 1_piele_docs/scenario_11_failure_log.md
+3. Consult personal_docs/scenario_11_failure_log.md
 
 Time: 15-45 minutes
 Skills: Debugging
@@ -1781,12 +1781,12 @@ Result: Issue identified & resolved
 
 | Document | Purpose | Link |
 |----------|---------|------|
-| **Getting Started** | New users intro | [1_piele_docs/PLAN.md](1_piele_docs/PLAN.md) |
-| **Dashboard Guide** | UI walkthrough | [1_piele_docs/DASHBOARD_README.md](1_piele_docs/DASHBOARD_README.md) |
-| **Data Formats** | Understand data structure | [1_piele_docs/FORMAT_SUPPORT.md](1_piele_docs/FORMAT_SUPPORT.md) |
-| **Config Guide** | Modify scenarios | [1_piele_docs/romania_config_explanation.md](1_piele_docs/romania_config_explanation.md) |
-| **v2 Technical** | Implementation details | [1_piele_docs/DASHBOARD_V2_IMPLEMENTATION.md](1_piele_docs/DASHBOARD_V2_IMPLEMENTATION.md) |
-| **Failures** | Known issues | [1_piele_docs/scenario_11_failure_log.md](1_piele_docs/scenario_11_failure_log.md) |
+| **Getting Started** | New users intro | [personal_docs/PLAN.md](personal_docs/PLAN.md) |
+| **Dashboard Guide** | UI walkthrough | [personal_docs/DASHBOARD_README.md](personal_docs/DASHBOARD_README.md) |
+| **Data Formats** | Understand data structure | [personal_docs/FORMAT_SUPPORT.md](personal_docs/FORMAT_SUPPORT.md) |
+| **Config Guide** | Modify scenarios | [personal_docs/romania_config_explanation.md](personal_docs/romania_config_explanation.md) |
+| **v2 Technical** | Implementation details | [personal_docs/DASHBOARD_V2_IMPLEMENTATION.md](personal_docs/DASHBOARD_V2_IMPLEMENTATION.md) |
+| **Failures** | Known issues | [personal_docs/scenario_11_failure_log.md](personal_docs/scenario_11_failure_log.md) |
 
 ---
 
@@ -1794,12 +1794,12 @@ Result: Issue identified & resolved
 
 | Folder | Features | Status |
 |--------|----------|--------|
-| **1_piele_dashboard/** | v1+v2 visualization, 6 taburi, live data | ✅ Production |
-| **1_piele_runners/** | 7 execution scripts, batch+Python | ✅ Tested |
-| **1_piele_analysis/** | Config generation, summaries, reporting | ✅ Ready |
-| **1_piele_diagnostics/** | Validation, testing, troubleshooting | ✅ Ready |
-| **1_piele_data_download/** | ERA5 weather, Zenodo datasets | ✅ Ready |
-| **1_piele_docs/** | Comprehensive guides (EN/RO) | ✅ Complete |
+| **personal_dashboard/** | v1+v2 visualization, 6 taburi, live data | ✅ Production |
+| **personal_runners/** | 7 execution scripts, batch+Python | ✅ Tested |
+| **personal_analysis/** | Config generation, summaries, reporting | ✅ Ready |
+| **personal_diagnostics/** | Validation, testing, troubleshooting | ✅ Ready |
+| **personal_data_download/** | ERA5 weather, Zenodo datasets | ✅ Ready |
+| **personal_docs/** | Comprehensive guides (EN/RO) | ✅ Complete |
 
 ---
 
@@ -1824,12 +1824,12 @@ pypsa-eur/
 **After (Organized Structure):**
 ```
 pypsa-eur/
-├── 📊 1_piele_dashboard/        → All visualization (3 files)
-├── 🚀 1_piele_runners/          → All runners (7 files)
-├── 📈 1_piele_analysis/         → All analysis (6 files)
-├── 🔍 1_piele_diagnostics/      → All validation (4 files)
-├── 📥 1_piele_data_download/    → All downloads (2 files)
-└── 📚 1_piele_docs/             → All documentation (12+ files)
+├── 📊 personal_dashboard/        → All visualization (3 files)
+├── 🚀 personal_runners/          → All runners (7 files)
+├── 📈 personal_analysis/         → All analysis (6 files)
+├── 🔍 personal_diagnostics/      → All validation (4 files)
+├── 📥 personal_data_download/    → All downloads (2 files)
+└── 📚 personal_docs/             → All documentation (12+ files)
 ```
 **Benefit:** Clear purpose, easy to find, logical workflow at top
 
@@ -1840,22 +1840,22 @@ pypsa-eur/
 ```
 workflow: data → run → analyze → visualize → understand
 
-1. Data Download (1_piele_data_download/)
-   └─→ Check with 1_piele_diagnostics/check_url.py
+1. Data Download (personal_data_download/)
+   └─→ Check with personal_diagnostics/check_url.py
    
 2. Configuration (config/)
-   └─→ Validate with 1_piele_diagnostics/check_romania.py
+   └─→ Validate with personal_diagnostics/check_romania.py
    
-3. Scenario Execution (1_piele_runners/)
-   └─→ Check with 1_piele_diagnostics/check_csv.py
+3. Scenario Execution (personal_runners/)
+   └─→ Check with personal_diagnostics/check_csv.py
    
-4. Analysis (1_piele_analysis/)
+4. Analysis (personal_analysis/)
    └─→ Generate summaries
    
-5. Visualization (1_piele_dashboard/)
+5. Visualization (personal_dashboard/)
    └─→ v2 auto-detects format & renders
    
-6. Understanding (1_piele_docs/)
+6. Understanding (personal_docs/)
    └─→ Reference throughout
 ```
 
@@ -1865,12 +1865,12 @@ workflow: data → run → analyze → visualize → understand
 
 After organizing, verify:
 
-- [x] **1_piele_dashboard/** - Contains 3 .py files + README
-- [x] **1_piele_runners/** - Contains 7 script files + README
-- [x] **1_piele_analysis/** - Contains 6 .py files + README
-- [x] **1_piele_diagnostics/** - Contains 4 validation files + README
-- [x] **1_piele_data_download/** - Contains 2 .py files + README
-- [x] **1_piele_docs/** - Contains 12+ .md files + README
+- [x] **personal_dashboard/** - Contains 3 .py files + README
+- [x] **personal_runners/** - Contains 7 script files + README
+- [x] **personal_analysis/** - Contains 6 .py files + README
+- [x] **personal_diagnostics/** - Contains 4 validation files + README
+- [x] **personal_data_download/** - Contains 2 .py files + README
+- [x] **personal_docs/** - Contains 12+ .md files + README
 - [x] All READMEs created with clear purposes
 - [x] Cross-references between folders working
 - [x] Original PyPSA-Eur structure preserved
@@ -1880,23 +1880,23 @@ After organizing, verify:
 ## 🎓 Learning Path
 
 **Beginner (Want to view results):**
-1. Read: [1_piele_dashboard/README.md](1_piele_dashboard/README.md)
-2. Run: `python 1_piele_dashboard/visualize_scenarios_ui_v2.py`
+1. Read: [personal_dashboard/README.md](personal_dashboard/README.md)
+2. Run: `python personal_dashboard/visualize_scenarios_ui_v2.py`
 3. Explore: Click through tabs
 
 **Intermediate (Want to run scenarios):**
-1. Read: [1_piele_runners/README.md](1_piele_runners/README.md)
-2. Run: `python 1_piele_runners/run_baseline_only.bat`
-3. Analyze: See [1_piele_analysis/README.md](1_piele_analysis/README.md)
+1. Read: [personal_runners/README.md](personal_runners/README.md)
+2. Run: `python personal_runners/run_baseline_only.bat`
+3. Analyze: See [personal_analysis/README.md](personal_analysis/README.md)
 4. Visualize: Use dashboard
 
 **Advanced (Want to modify everything):**
-1. Read: [1_piele_docs/README.md](1_piele_docs/README.md)
-2. Understand: [1_piele_docs/PLAN.md](1_piele_docs/PLAN.md)
+1. Read: [personal_docs/README.md](personal_docs/README.md)
+2. Understand: [personal_docs/PLAN.md](personal_docs/PLAN.md)
 3. Configure: Edit `config/*.yaml`
-4. Generate: Use [1_piele_analysis/generate_adversarial_configs.py](1_piele_analysis/generate_adversarial_configs.py)
-5. Run: Use [1_piele_runners/](1_piele_runners/)
-6. Analyze: Use [1_piele_analysis/](1_piele_analysis/)
+4. Generate: Use [personal_analysis/generate_adversarial_configs.py](personal_analysis/generate_adversarial_configs.py)
+5. Run: Use [personal_runners/](personal_runners/)
+6. Analyze: Use [personal_analysis/](personal_analysis/)
 
 ---
 
@@ -1911,23 +1911,23 @@ After organizing, verify:
 
 ## 🆘 Need Help?
 
-1. **Can't find a file?** → Check [1_piele_docs/README.md](1_piele_docs/README.md) (file index)
-2. **How to use dashboard?** → See [1_piele_dashboard/README.md](1_piele_dashboard/README.md)
-3. **How to run scenarios?** → See [1_piele_runners/README.md](1_piele_runners/README.md)
-4. **Data validation?** → See [1_piele_diagnostics/README.md](1_piele_diagnostics/README.md)
-5. **Results analysis?** → See [1_piele_analysis/README.md](1_piele_analysis/README.md)
-6. **Understand project?** → See [1_piele_docs/PLAN.md](1_piele_docs/PLAN.md)
+1. **Can't find a file?** → Check [personal_docs/README.md](personal_docs/README.md) (file index)
+2. **How to use dashboard?** → See [personal_dashboard/README.md](personal_dashboard/README.md)
+3. **How to run scenarios?** → See [personal_runners/README.md](personal_runners/README.md)
+4. **Data validation?** → See [personal_diagnostics/README.md](personal_diagnostics/README.md)
+5. **Results analysis?** → See [personal_analysis/README.md](personal_analysis/README.md)
+6. **Understand project?** → See [personal_docs/PLAN.md](personal_docs/PLAN.md)
 
 ---
 
 ## 🌟 Quick Links
 
-- **Main Dashboard:** `python 1_piele_dashboard/visualize_scenarios_ui_v2.py`
-- **Run All Scenarios:** `python 1_piele_runners/run_all_scenarios.py`
-- **Quick Test:** `python 1_piele_runners/run_baseline_only.bat`
-- **Analyze Results:** `python 1_piele_analysis/explorer_scenarios.py`
-- **Generate Reports:** `python 1_piele_analysis/run_summary.py`
-- **Validate Data:** `python 1_piele_diagnostics/check_csv.py`
+- **Main Dashboard:** `python personal_dashboard/visualize_scenarios_ui_v2.py`
+- **Run All Scenarios:** `python personal_runners/run_all_scenarios.py`
+- **Quick Test:** `python personal_runners/run_baseline_only.bat`
+- **Analyze Results:** `python personal_analysis/explorer_scenarios.py`
+- **Generate Reports:** `python personal_analysis/run_summary.py`
+- **Validate Data:** `python personal_diagnostics/check_csv.py`
 
 ---
 
@@ -1955,7 +1955,7 @@ The scenario manager now intelligently selects **year-specific YAML templates** 
 ## New Files Created
 
 ### 1. `scenario_template_2023.yaml`
-- **Location:** `1_piele_docs/scenario_template_2023.yaml`
+- **Location:** `personal_docs/scenario_template_2023.yaml`
 - **Purpose:** Optimized template for 2023 cutout year
 - **Key Differences from 2020 template:**
   - `snapshots.start`: "2023-01-15" (vs 2020-12-01)
@@ -1965,7 +1965,7 @@ The scenario manager now intelligently selects **year-specific YAML templates** 
 - **Status:** ✅ Valid YAML syntax verified
 
 ### 2. `TEMPLATE_ARCHITECTURE.md`
-- **Location:** `1_piele_docs/TEMPLATE_ARCHITECTURE.md`
+- **Location:** `personal_docs/TEMPLATE_ARCHITECTURE.md`
 - **Purpose:** Complete technical documentation of template system
 - **Contents:** 400+ lines covering:
   - Template selection logic
@@ -1980,7 +1980,7 @@ The scenario manager now intelligently selects **year-specific YAML templates** 
 
 ### 1. `config_builder.py` - New Function `resolve_template_path()`
 
-**Location:** `1_piele_dashboard/scenario_manager/config_builder.py`
+**Location:** `personal_dashboard/scenario_manager/config_builder.py`
 
 **What it does:**
 ```python
@@ -2048,7 +2048,7 @@ def build_working_config(*, inputs, template_path):
 | `scenario_template.yaml` | 2020 cutout year (default) | 2020-12-01 to 2020-12-08 |
 | `scenario_template_2023.yaml` | 2023 cutout year | 2023-01-15 to 2023-01-22 |
 
-**Both located in:** `1_piele_docs/`
+**Both located in:** `personal_docs/`
 
 ---
 
@@ -2121,7 +2121,7 @@ To support 2024, 2025, etc:
 
 ### 1. Copy Template
 ```bash
-cp 1_piele_docs/scenario_template_2023.yaml 1_piele_docs/scenario_template_2024.yaml
+cp personal_docs/scenario_template_2023.yaml personal_docs/scenario_template_2024.yaml
 ```
 
 ### 2. Update Year
@@ -2198,11 +2198,11 @@ atlite:
 ## Documentation
 
 **For End Users:**
-- See `1_piele_docs/CUTOUT_CONFIG.md` → "Intelligent Template Selection" section
+- See `personal_docs/CUTOUT_CONFIG.md` → "Intelligent Template Selection" section
 - Templates auto-selected, no manual action needed
 
 **For Developers:**
-- See `1_piele_docs/TEMPLATE_ARCHITECTURE.md` → Complete technical guide
+- See `personal_docs/TEMPLATE_ARCHITECTURE.md` → Complete technical guide
 - How to add new templates, debug issues, customize behavior
 
 ---

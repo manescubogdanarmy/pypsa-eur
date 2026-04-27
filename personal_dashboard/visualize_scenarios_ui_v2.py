@@ -187,16 +187,10 @@ class DashboardRomania_v2:
             self.status_var.set(f"❌ Eroare: {str(e)[:50]}")
     
     def detect_data_format(self):
-        """Detectează formatul datelor (NEW vs OLD)"""
-        # Formatul NEW: are system_cost_comparison.csv  
+        """Detectează formatul datelor (doar NEW)"""
         if 'system_cost_comparison' in self.data:
             return "FORMAT NOU (Report)"
-        
-        # Formatul OLD: are costs.csv, energy.csv, etc.
-        if 'costs' in self.data and 'energy' in self.data:
-            return "FORMAT LEGACY (Rezultate native)"
-        
-        return "FORMAT NERECUNOSCUT"
+        return "INVALID (Necesită cele 7 fișiere CSV raportate)"
     
     def refresh_all_tabs(self):
         """Reîncarcă conținutul tuturor tabulelor"""
@@ -274,60 +268,7 @@ class DashboardRomania_v2:
                             ttk.Label(row, text=label, width=20, font=("Arial", 10)).pack(side=tk.LEFT)
                             ttk.Label(row, text=value, font=("Arial", 11, "bold")).pack(side=tk.LEFT)
             else:
-                # FORMAT OLD - Extract and display available metrics
-                ttk.Label(metrics_frame, text="Format Legacy - Metrici Disponibile:", 
-                         font=("Arial", 10, "bold")).pack(anchor=tk.W, pady=10)
-                
-                # Extract metrics from legacy format
-                try:
-                    # Total energy
-                    if 'energy' in self.data:
-                        total_energy = self.data['energy']['0'].sum() / 1e6
-                        row = ttk.Frame(metrics_frame)
-                        row.pack(fill=tk.X, pady=5)
-                        ttk.Label(row, text="⚡ Energie Totală", width=20, font=("Arial", 10, "bold")).pack(side=tk.LEFT)
-                        ttk.Label(row, text=f"{total_energy:.2f} TWh", font=("Arial", 11, "bold"), 
-                                 foreground="darkblue").pack(side=tk.LEFT)
-                    
-                    # Total costs
-                    if 'costs' in self.data:
-                        total_costs = self.data['costs']['0'].sum() / 1e9
-                        row = ttk.Frame(metrics_frame)
-                        row.pack(fill=tk.X, pady=5)
-                        ttk.Label(row, text="💶 Cost Total", width=20, font=("Arial", 10, "bold")).pack(side=tk.LEFT)
-                        ttk.Label(row, text=f"€{total_costs:.2f}B", font=("Arial", 11, "bold"), 
-                                 foreground="darkblue").pack(side=tk.LEFT)
-                    
-                    # Average price
-                    if 'prices' in self.data:
-                        avg_price = self.data['prices']['0'].mean()
-                        row = ttk.Frame(metrics_frame)
-                        row.pack(fill=tk.X, pady=5)
-                        ttk.Label(row, text="💹 Preț Mediu", width=20, font=("Arial", 10, "bold")).pack(side=tk.LEFT)
-                        ttk.Label(row, text=f"{avg_price:.2f} EUR/MWh", font=("Arial", 11, "bold")).pack(side=tk.LEFT)
-                    
-                    # Capacity factors
-                    if 'capacity_factors' in self.data:
-                        avg_cf = self.data['capacity_factors']['0'].mean()
-                        row = ttk.Frame(metrics_frame)
-                        row.pack(fill=tk.X, pady=5)
-                        ttk.Label(row, text="📊 Factor Cap. Mediu", width=20, font=("Arial", 10, "bold")).pack(side=tk.LEFT)
-                        ttk.Label(row, text=f"{avg_cf*100:.1f}%", font=("Arial", 11, "bold")).pack(side=tk.LEFT)
-                    
-                    ttk.Separator(metrics_frame, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=10)
-                    
-                    # List all available files
-                    ttk.Label(metrics_frame, text="Fișiere Disponibile:", 
-                             font=("Arial", 9, "bold")).pack(anchor=tk.W, pady=5)
-                    
-                    available_files = sorted(self.data.keys())
-                    for fname in available_files:
-                        row = ttk.Frame(metrics_frame)
-                        row.pack(fill=tk.X, pady=2)
-                        ttk.Label(row, text=f"  📄 {fname}", width=30, font=("Arial", 8)).pack(side=tk.LEFT)
-                
-                except Exception as e:
-                    ttk.Label(metrics_frame, text=f"Eroare extragere metrici: {e}", foreground="red").pack()
+                ttk.Label(metrics_frame, text="Format invalid. Se acceptă doar noul format (Report).", foreground="red", font=("Arial", 10, "bold")).pack(pady=10)
         
         except Exception as e:
             ttk.Label(metrics_frame, text=f"Eroare: {e}", foreground="red").pack()
@@ -377,39 +318,6 @@ class DashboardRomania_v2:
         
         data_format = self.detect_data_format()
         
-        if "LEGACY" in data_format:
-            # Format Legacy - Extract costs from costs.csv
-            try:
-                costs_data = self.data.get('costs')
-                if costs_data is not None and len(costs_data) > 0:
-                    # Pivot to get total cost
-                    total_cost = costs_data[['0']].sum().values[0] if '0' in costs_data.columns else 0
-                    
-                    fig = Figure(figsize=(10, 6), dpi=80)
-                    ax = fig.add_subplot(111)
-                    
-                    # Get costs by component
-                    if 'component' in costs_data.columns:
-                        costs_by_comp = costs_data.groupby('component')['0'].sum().sort_values(ascending=False)
-                        
-                        ax.barh(range(len(costs_by_comp)), costs_by_comp.values / 1e9, color='#3498db', alpha=0.8)
-                        ax.set_yticks(range(len(costs_by_comp)))
-                        ax.set_yticklabels(costs_by_comp.index, fontsize=11)
-                        ax.set_xlabel('Cost (Miliarde EUR)', fontsize=12)
-                        ax.set_title(f'Cost pe Componentă - {self.scenario_name}', fontsize=14, fontweight='bold')
-                        ax.grid(True, alpha=0.3, axis='x')
-                        
-                        # Add values on bars
-                        for i, v in enumerate(costs_by_comp.values / 1e9):
-                            ax.text(v, i, f' €{v:.3f}B', va='center', fontsize=10)
-                    
-                    fig.tight_layout()
-                    canvas = FigureCanvasTkAgg(fig, master=frame)
-                    canvas.draw()
-                    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-            except Exception as e:
-                ttk.Label(frame, text=f"Eroare: {e}", foreground="red").pack()
-            return
         
         try:
             cost_data = self.data.get('system_cost_comparison')
@@ -502,39 +410,6 @@ class DashboardRomania_v2:
         
         data_format = self.detect_data_format()
         
-        if "LEGACY" in data_format:
-            # Format Legacy - Use energy.csv
-            try:
-                energy_data = self.data.get('energy')
-                if energy_data is not None and len(energy_data) > 0:
-                    fig = Figure(figsize=(10, 6), dpi=80)
-                    ax = fig.add_subplot(111)
-                    
-                    # Parse energy data by carrier
-                    if 'carrier' in energy_data.columns:
-                        energy_by_carrier = energy_data.groupby('carrier')['0'].sum().sort_values(ascending=False)
-                        
-                        colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c']
-                        ax.bar(range(len(energy_by_carrier)), energy_by_carrier.values / 1e6, 
-                              color=colors[:len(energy_by_carrier)], alpha=0.8, edgecolor='black')
-                        ax.set_xticks(range(len(energy_by_carrier)))
-                        ax.set_xticklabels(energy_by_carrier.index, rotation=45, ha='right', fontsize=11)
-                        ax.set_ylabel('Energie (TWh)', fontsize=12)
-                        ax.set_title(f'Producție Energetică pe Tehnologie - {self.scenario_name}', 
-                                    fontsize=14, fontweight='bold')
-                        ax.grid(True, alpha=0.3, axis='y')
-                        
-                        # Add values on bars
-                        for i, v in enumerate(energy_by_carrier.values / 1e6):
-                            ax.text(i, v, f'{v:.2f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
-                    
-                    fig.tight_layout()
-                    canvas = FigureCanvasTkAgg(fig, master=frame)
-                    canvas.draw()
-                    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-            except Exception as e:
-                ttk.Label(frame, text=f"Eroare: {e}", foreground="red").pack()
-            return
         
         try:
             gen_data = self.data.get('generation_mix_mwh')
@@ -605,12 +480,6 @@ class DashboardRomania_v2:
         
         data_format = self.detect_data_format()
         
-        if "LEGACY" in data_format:
-            ttk.Label(frame, text="\n⚠️ Format Legacy - Date Indisponibile\n\n"
-                     "Dimensionarea liniilor nu este disponibilă în\nformatul Legacy (rezultate native).\n\n"
-                     "Fișierele disponibile:\n" + ", ".join(sorted(self.data.keys())[:8]),
-                     font=("Arial", 11), justify=tk.CENTER, foreground="orange").pack(pady=50)
-            return
         
         try:
             cong_data = self.data.get('interconnector_flow_congestion')
@@ -654,47 +523,6 @@ class DashboardRomania_v2:
         
         data_format = self.detect_data_format()
         
-        if "LEGACY" in data_format:
-            # Format Legacy - Use prices.csv or weighted_prices.csv
-            try:
-                prices_data = self.data.get('prices') or self.data.get('weighted_prices')
-                if prices_data is not None and len(prices_data) > 0:
-                    fig = Figure(figsize=(10, 6), dpi=80)
-                    ax = fig.add_subplot(111)
-                    
-                    # Extract price statistics
-                    if '0' in prices_data.columns:
-                        price_values = prices_data['0'].dropna()
-                        
-                        stats = {
-                            'Medie': price_values.mean(),
-                            'Mediana': price_values.median(),
-                            'Min': price_values.min(),
-                            'Max': price_values.max(),
-                            'P95': price_values.quantile(0.95)
-                        }
-                        
-                        ax.bar(stats.keys(), stats.values(), color='#3498db', alpha=0.8, edgecolor='black', linewidth=2)
-                        ax.set_ylabel('Preț (EUR/MWh)', fontsize=12)
-                        ax.set_title(f'Statistici Preț Marginal - {self.scenario_name}', 
-                                    fontsize=14, fontweight='bold')
-                        ax.grid(True, alpha=0.3, axis='y')
-                        
-                        # Add values on bars
-                        for i, (k, v) in enumerate(stats.items()):
-                            ax.text(i, v, f'{v:.2f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
-                    
-                    fig.tight_layout()
-                    canvas = FigureCanvasTkAgg(fig, master=frame)
-                    canvas.draw()
-                    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-                else:
-                    ttk.Label(frame, text="\n⚠️ Fișier preț indisponibil\n\n"
-                             f"Fișierele disponibile:\n" + ", ".join(sorted(self.data.keys())[:8]),
-                             font=("Arial", 11), justify=tk.CENTER, foreground="orange").pack(pady=50)
-            except Exception as e:
-                ttk.Label(frame, text=f"Eroare: {e}", foreground="red").pack()
-            return
         
         try:
             price_data = self.data.get('lmp_summary_ro')

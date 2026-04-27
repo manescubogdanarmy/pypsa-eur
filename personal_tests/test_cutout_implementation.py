@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 # Add scenario_manager to path for imports
-scenario_manager_path = Path(__file__).resolve().parent / "1_piele_dashboard"
+scenario_manager_path = Path(__file__).resolve().parent / "personal_dashboard"
 sys.path.insert(0, str(scenario_manager_path))
 
 from scenario_manager.types import ScenarioInputs, StressParams

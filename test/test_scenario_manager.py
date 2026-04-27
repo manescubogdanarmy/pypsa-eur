@@ -10,7 +10,7 @@ import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "1_piele_dashboard"))
+sys.path.insert(0, str(ROOT / "personal_dashboard"))
 
 from scenario_manager import config_builder
 from scenario_manager.config_builder import build_commands, build_configs
@@ -45,8 +45,8 @@ def _inputs(run_mode: str = "paired", baseline: str | None = None) -> ScenarioIn
 
 
 def test_build_configs_template_immutable_and_paired(tmp_path: Path) -> None:
-    template_src = ROOT / "1_piele_docs" / "scenario_template.yaml"
-    template_path = tmp_path / "1_piele_docs" / "scenario_template.yaml"
+    template_src = ROOT / "personal_docs" / "scenario_template.yaml"
+    template_path = tmp_path / "personal_docs" / "scenario_template.yaml"
     template_path.parent.mkdir(parents=True)
     template_path.write_text(template_src.read_text(encoding="utf-8"), encoding="utf-8")
     before = template_path.read_text(encoding="utf-8")
@@ -64,8 +64,8 @@ def test_build_configs_template_immutable_and_paired(tmp_path: Path) -> None:
 
 
 def test_build_configs_single_requires_reference_baseline(tmp_path: Path) -> None:
-    template_src = ROOT / "1_piele_docs" / "scenario_template.yaml"
-    template_path = tmp_path / "1_piele_docs" / "scenario_template.yaml"
+    template_src = ROOT / "personal_docs" / "scenario_template.yaml"
+    template_path = tmp_path / "personal_docs" / "scenario_template.yaml"
     template_path.parent.mkdir(parents=True)
     template_path.write_text(template_src.read_text(encoding="utf-8"), encoding="utf-8")
     (tmp_path / "results").mkdir()

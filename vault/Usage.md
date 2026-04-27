@@ -3,7 +3,7 @@
 
 
 ---
-# Source: 1_piele_analysis\README.md
+# Source: personal_analysis\README.md
 
 ==================================================================
 # 📈 Analysis - Results Processing & Reporting
@@ -328,12 +328,12 @@ python generate_adversarial_configs.py
 
 
 ---
-# Source: 1_piele_dashboard\scenario_manager\README.md
+# Source: personal_dashboard\scenario_manager\README.md
 
 ==================================================================
 # Scenario Manager
 
-`scenario_manager` provides the backend modules used by `1_piele_dashboard/scenario_manager_ui.py`.
+`scenario_manager` provides the backend modules used by `personal_dashboard/scenario_manager_ui.py`.
 
 ## What It Does
 - Builds scenario configs from a read-only template.
@@ -352,16 +352,16 @@ python generate_adversarial_configs.py
 - `i18n.py`: translation keys and helper function.
 
 ## Related Files
-- UI entrypoint: `1_piele_dashboard/scenario_manager_ui.py`
-- Canonical template: `1_piele_docs/scenario_template.yaml`
-- Implementation notes: `1_piele_docs/planui.md`
+- UI entrypoint: `personal_dashboard/scenario_manager_ui.py`
+- Canonical template: `personal_docs/scenario_template.yaml`
+- Implementation notes: `personal_docs/planui.md`
 - Tests: `test/test_scenario_manager.py`
 
 ## Run
 From repository root:
 
 ```bash
-python 1_piele_dashboard/scenario_manager_ui.py
+python personal_dashboard/scenario_manager_ui.py
 ```
 
 The app assumes the active environment already has `snakemake`, `python`, and required project dependencies.
@@ -382,7 +382,7 @@ You can force a specific env path or env name with:
 - `PLANUI_CONDA_ENV`
 
 ## State and Logs
-- State file: `1_piele_dashboard/scenario_manager_state.json`
+- State file: `personal_dashboard/scenario_manager_state.json`
 - Job logs: `logs/planui/*.log`
 
 ## Proxy Behavior
@@ -415,7 +415,7 @@ The results page includes only folders containing all required report CSVs:
 
 
 ---
-# Source: 1_piele_dashboard\documentation.md
+# Source: personal_dashboard\documentation.md
 
 ==================================================================
 # Ghid de Utilizare - Scenario Manager UI și Instrumente de Vizualizare
@@ -449,7 +449,7 @@ Acști parametri simulează condiții critice:
 
 ## 2. Instrumente de Vizualizare (Dashboard-uri)
 
-În folderul `1_piele_dashboard/` există două versiuni ale vizualizatorului.
+În folderul `personal_dashboard/` există două versiuni ale vizualizatorului.
 
 ### `visualize_scenarios_ui_v2.py` (Versiunea 1)
 - **Ce face**: Este o versiune fixă, configurată să citească automat datele din folderul `results/romania-2020-winter-stress-comparison/`.
@@ -495,7 +495,7 @@ Iată o listă cu principalele scripturi utilizate în acest proiect:
 
 
 ---
-# Source: 1_piele_dashboard\README.md
+# Source: personal_dashboard\README.md
 
 ==================================================================
 # 📊 Dashboard - Interactive Visualization Tools
@@ -641,7 +641,7 @@ python visualize_scenarios_ui_v2.py
 
 
 ---
-# Source: 1_piele_diagnostics\README.md
+# Source: personal_diagnostics\README.md
 
 ==================================================================
 # 🔍 Diagnostics - Testing & Validation Tools
@@ -895,7 +895,7 @@ logs/
 
 
 ---
-# Source: 1_piele_docs\DASHBOARD_README.md
+# Source: personal_docs\DASHBOARD_README.md
 
 ==================================================================
 # Dashboard de Vizualizare Scenarii Energie - România
@@ -1103,7 +1103,7 @@ Pentru sugestii de îmbunătățire ale dashboard-ului:
 
 
 ---
-# Source: 1_piele_docs\DASHBOARD_V2_IMPLEMENTATION.md
+# Source: personal_docs\DASHBOARD_V2_IMPLEMENTATION.md
 
 ==================================================================
 # Dashboard v2 - Implementation Summary
@@ -1251,7 +1251,7 @@ python visualize_scenarios_ui_v2.py
 
 
 ---
-# Source: 1_piele_docs\planui.md
+# Source: personal_docs\planui.md
 
 ==================================================================
 # PlanUI Implementation Notes
@@ -1267,13 +1267,13 @@ python visualize_scenarios_ui_v2.py
 - Persistent state for language, UI selections, and queue/history
 
 Main entrypoint:
-- `1_piele_dashboard/scenario_manager_ui.py`
+- `personal_dashboard/scenario_manager_ui.py`
 
 Core package:
-- `1_piele_dashboard/scenario_manager/`
+- `personal_dashboard/scenario_manager/`
 
 Canonical template:
-- `1_piele_docs/scenario_template.yaml`
+- `personal_docs/scenario_template.yaml`
 
 ## Run Modes
 ## 1. Paired
@@ -1301,7 +1301,7 @@ The results page lists only folders containing all files:
 
 ## State Persistence
 State file:
-- `1_piele_dashboard/scenario_manager_state.json`
+- `personal_dashboard/scenario_manager_state.json`
 
 Persisted data:
 - language
@@ -1320,7 +1320,7 @@ Commands run in the active environment:
 ## Quick Usage
 1. Launch:
 ```bash
-python 1_piele_dashboard/scenario_manager_ui.py
+python personal_dashboard/scenario_manager_ui.py
 ```
 2. In `Scenario Builder`, set controls or edit YAML.
 3. In `Runs`, enqueue one or more jobs.
@@ -1344,7 +1344,7 @@ Covered:
 
 
 ---
-# Source: 1_piele_docs\VISUALIZER_COMPARISON.md
+# Source: personal_docs\VISUALIZER_COMPARISON.md
 
 ==================================================================
 # Dashboard Visualizare Scenarii - Versiuni v1 vs v2
@@ -2006,7 +2006,7 @@ Acști parametri simulează condiții critice:
 
 ## 2. Instrumente de Vizualizare (Dashboard-uri)
 
-În folderul `1_piele_dashboard/` există două versiuni ale vizualizatorului.
+În folderul `personal_dashboard/` există două versiuni ale vizualizatorului.
 
 ### `visualize_scenarios_ui_v2.py` (Versiunea 1)
 - **Ce face**: Este o versiune fixă, configurată să citească automat datele din folderul `results/romania-2020-winter-stress-comparison/`.
@@ -2203,7 +2203,7 @@ python visualize_scenarios_ui_v2.py
 ==================================================================
 # Scenario Manager
 
-`scenario_manager` provides the backend modules used by `1_piele_dashboard/scenario_manager_ui.py`.
+`scenario_manager` provides the backend modules used by `personal_dashboard/scenario_manager_ui.py`.
 
 ## What It Does
 - Builds scenario configs from a read-only template.
@@ -2222,16 +2222,16 @@ python visualize_scenarios_ui_v2.py
 - `i18n.py`: translation keys and helper function.
 
 ## Related Files
-- UI entrypoint: `1_piele_dashboard/scenario_manager_ui.py`
-- Canonical template: `1_piele_docs/scenario_template.yaml`
-- Implementation notes: `1_piele_docs/planui.md`
+- UI entrypoint: `personal_dashboard/scenario_manager_ui.py`
+- Canonical template: `personal_docs/scenario_template.yaml`
+- Implementation notes: `personal_docs/planui.md`
 - Tests: `test/test_scenario_manager.py`
 
 ## Run
 From repository root:
 
 ```bash
-python 1_piele_dashboard/scenario_manager_ui.py
+python personal_dashboard/scenario_manager_ui.py
 ```
 
 The app assumes the active environment already has `snakemake`, `python`, and required project dependencies.
@@ -2252,7 +2252,7 @@ You can force a specific env path or env name with:
 - `PLANUI_CONDA_ENV`
 
 ## State and Logs
-- State file: `1_piele_dashboard/scenario_manager_state.json`
+- State file: `personal_dashboard/scenario_manager_state.json`
 - Job logs: `logs/planui/*.log`
 
 ## Proxy Behavior
@@ -2911,13 +2911,13 @@ python visualize_scenarios_ui_v2.py
 - Persistent state for language, UI selections, and queue/history
 
 Main entrypoint:
-- `1_piele_dashboard/scenario_manager_ui.py`
+- `personal_dashboard/scenario_manager_ui.py`
 
 Core package:
-- `1_piele_dashboard/scenario_manager/`
+- `personal_dashboard/scenario_manager/`
 
 Canonical template:
-- `1_piele_docs/scenario_template.yaml`
+- `personal_docs/scenario_template.yaml`
 
 ## Run Modes
 ## 1. Paired
@@ -2945,7 +2945,7 @@ The results page lists only folders containing all files:
 
 ## State Persistence
 State file:
-- `1_piele_dashboard/scenario_manager_state.json`
+- `personal_dashboard/scenario_manager_state.json`
 
 Persisted data:
 - language
@@ -2964,7 +2964,7 @@ Commands run in the active environment:
 ## Quick Usage
 1. Launch:
 ```bash
-python 1_piele_dashboard/scenario_manager_ui.py
+python personal_dashboard/scenario_manager_ui.py
 ```
 2. In `Scenario Builder`, set controls or edit YAML.
 3. In `Runs`, enqueue one or more jobs.

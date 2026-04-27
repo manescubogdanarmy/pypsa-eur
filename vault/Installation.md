@@ -3,7 +3,7 @@
 
 
 ---
-# Source: 1_piele_data_download\README.md
+# Source: personal_data_download\README.md
 
 ==================================================================
 # 📥 Data Download - External Data Acquisition
@@ -331,7 +331,7 @@ ZENODO_RECORDS = [
 
 
 ---
-# Source: 1_piele_docs\CUTOUT_CONFIG.md
+# Source: personal_docs\CUTOUT_CONFIG.md
 
 ==================================================================
 # Cutout Year Configuration Guide
@@ -344,13 +344,13 @@ The PyPSA-EUR scenario manager now supports multiple years of weather data (cuto
 
 - **2020** (Default) - Original cutout used for all existing scenarios
   - File: `data/cutout/archive/v0.8/europe-2020-sarah3-era5.nc`
-  - Template: `1_piele_docs/scenario_template.yaml`
+  - Template: `personal_docs/scenario_template.yaml`
   - Default snapshots: 2020-12-01 to 2020-12-08 (winter stress period)
   - ERA5 reanalysis + SARAH-3 satellite radiation data
 
 - **2023** (New) - Additional year for comparison and stress testing
   - File: `data/cutout/archive/v0.8/europe-2023-sarah3-era5.nc`
-  - Template: `1_piele_docs/scenario_template_2023.yaml` (auto-selected when 2023 cutout year chosen)
+  - Template: `personal_docs/scenario_template_2023.yaml` (auto-selected when 2023 cutout year chosen)
   - Default snapshots: 2023-01-15 to 2023-01-22 (winter stress period)
   - ERA5 reanalysis + SARAH-3 satellite radiation data
 
@@ -373,11 +373,11 @@ The PyPSA-EUR scenario manager now supports multiple years of weather data (cuto
 
 The system **automatically selects the appropriate YAML template** based on your cutout year choice:
 
-- **Select 2020 cutout** → Uses `1_piele_docs/scenario_template.yaml`
+- **Select 2020 cutout** → Uses `personal_docs/scenario_template.yaml`
   - Default snapshots: 2020-12-01 to 2020-12-08
   - Electricity year: 2020
 
-- **Select 2023 cutout** → Uses `1_piele_docs/scenario_template_2023.yaml`
+- **Select 2023 cutout** → Uses `personal_docs/scenario_template_2023.yaml`
   - Default snapshots: 2023-01-15 to 2023-01-22
   - Electricity year: 2023
   - Pre-configured with 2023 weather data
@@ -393,7 +393,7 @@ atlite:
   default_cutout: "europe-2020-sarah3-era5"  # or "europe-2023-sarah3-era5"
 ```
 
-Both cutout definitions are available in `1_piele_docs/scenario_template.yaml`:
+Both cutout definitions are available in `personal_docs/scenario_template.yaml`:
 
 ```yaml
 atlite:
@@ -464,7 +464,7 @@ Cutout year must match snapshot year.
 - Example: If you select 2023, use dates like 2023-MM-DD, not 2020-MM-DD
 
 ### Error: "Cutout X not defined in template"
-- Verify `1_piele_docs/scenario_template.yaml` contains both cutout definitions
+- Verify `personal_docs/scenario_template.yaml` contains both cutout definitions
 - Ensure the template file hasn't been modified or corrupted
 
 ### File not found: "europe-2023-sarah3-era5.nc"
@@ -499,7 +499,7 @@ from scenario_manager.config_builder import build_configs
 result = build_configs(
     repo_root=Path("."),
     inputs=inputs,
-    template_path=Path("1_piele_docs/scenario_template.yaml")
+    template_path=Path("personal_docs/scenario_template.yaml")
 )
 ```
 
@@ -517,14 +517,14 @@ result = build_configs(
 
 ```
 pypsa-eur/
-├── 1_piele_dashboard/
+├── personal_dashboard/
 │   ├── scenario_manager_ui.py          # UI with cutout_year dropdown
 │   ├── scenario_manager/
 │   │   ├── types.py                    # ScenarioInputs dataclass
 │   │   ├── config_builder.py           # _apply_cutout_to_config() function
 │   │   └── i18n.py                     # English/Romanian labels
 │   └── scenario_manager_state.json     # Persisted UI state (includes cutout_year)
-├── 1_piele_docs/
+├── personal_docs/
 │   └── scenario_template.yaml          # Cutout definitions for both years
 └── data/
     └── cutout/
@@ -577,7 +577,7 @@ For issues or questions:
 
 
 ---
-# Source: 1_piele_docs\FORMAT_SUPPORT.md
+# Source: personal_docs\FORMAT_SUPPORT.md
 
 ==================================================================
 # Suport Format Date - Dashboard v2
