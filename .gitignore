@@ -80,10 +80,11 @@ merger-todos.md
 dev/*
 
 # ai coding tools
-CLAUDE.md
 .claude/
-.github/copilot-instructions.md
+CLAUDE.md
 CLAUDE.local.md
+.claudeignore
+.github/copilot-instructions.md
 # pixi environments
 .pixi/*
 !.pixi/config.toml
