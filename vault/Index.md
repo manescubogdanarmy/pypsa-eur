@@ -10,4 +10,5 @@ Welcome to the consolidated PyPSA-Eur Romania Documentation Vault.
 - [[Architecture]]
 - [[General]]
 - [[FolderStructure]] (Directory map and descriptions)
+- [[Vizualizer]] (Web dashboard – Next.js scenario manager and results viewer)
 - [[Archival]] (Historical logs and checklists)

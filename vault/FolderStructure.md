@@ -22,5 +22,8 @@ Below is an overview of the directories within the PyPSA-Eur Romania project and
 - **`personal_docs/`**: Miscellaneous documents and templates that are distinct from the primary documentation vault (e.g., `scenario_template.yaml`, `results_summary.md`).
 
 
+## Web Dashboard
+- **`vizualizer/`**: Next.js 16 web application (scenario builder, run queue, results viewer). Runs at `http://localhost:3000` via `npm run dev`. Serves as the intended long-term replacement for the Tkinter UI. See [[Vizualizer]] for full documentation.
+
 ## Documentation
 - **`vault/`**: The consolidated Obsidian knowledge base containing installation, running, usage, architecture documentation, and historical archival logs.

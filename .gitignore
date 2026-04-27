@@ -81,7 +81,7 @@ dev/*
 
 # ai coding tools
 .claude/
-CLAUDE.md
+
 CLAUDE.local.md
 .claudeignore
 .github/copilot-instructions.md
