@@ -1,24 +1,24 @@
 {
   "main": {
-    "id": "378ea5fa9ef07f70",
+    "id": "48a7ec3667f7a13d",
     "type": "split",
     "children": [
       {
-        "id": "5c13227a9529c251",
+        "id": "92bd0c06542e2eec",
         "type": "tabs",
         "children": [
           {
-            "id": "84c4596eeb252d84",
+            "id": "6b86b489a5580ccf",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Usage.md",
+                "file": "General.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Usage"
+              "title": "General"
             }
           }
         ]
@@ -27,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "0871ca413b20709a",
+    "id": "0949dc22d7642f2b",
     "type": "split",
     "children": [
       {
-        "id": "1c3895681d1d5333",
+        "id": "ff0430851f6826c3",
         "type": "tabs",
         "children": [
           {
-            "id": "af880c35dae8fefd",
+            "id": "84036746d272df6b",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +48,7 @@
             }
           },
           {
-            "id": "209a55d6171bbc08",
+            "id": "f680aedada6c8e26",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +65,7 @@
             }
           },
           {
-            "id": "8772717ed2abc82b",
+            "id": "e5f11d18d3e816ff",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -81,20 +81,20 @@
     "width": 300
   },
   "right": {
-    "id": "74b1a7b36614316f",
+    "id": "e41fbd4fe41dd527",
     "type": "split",
     "children": [
       {
-        "id": "865f58f875bbd99b",
+        "id": "9acc8e26d0bb16df",
         "type": "tabs",
         "children": [
           {
-            "id": "689b17c7dc4d95cc",
+            "id": "5000767a0e1db440",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Usage.md",
+                "file": "General.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,25 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Usage"
+              "title": "Backlinks for General"
             }
           },
           {
-            "id": "172192d8f3804ab3",
+            "id": "7aaa86105cabdccd",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Usage.md",
+                "file": "General.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Usage"
+              "title": "Outgoing links from General"
             }
           },
           {
-            "id": "c7c0c386866febfb",
+            "id": "bbc6c19275da07e4",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -137,7 +137,7 @@
             }
           },
           {
-            "id": "8f019822d7c6e5db",
+            "id": "4cc9c3e3642bee17",
             "type": "leaf",
             "state": {
               "type": "all-properties",
@@ -151,18 +151,18 @@
             }
           },
           {
-            "id": "678cffd1ced0120d",
+            "id": "949312d3728c1f7a",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Usage.md",
+                "file": "General.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Usage"
+              "title": "Outline of General"
             }
           }
         ]
@@ -183,11 +183,9 @@
       "bases:Create new base": false
     }
   },
-  "active": "84c4596eeb252d84",
+  "active": "6b86b489a5580ccf",
   "lastOpenFiles": [
-    "Running.md",
-    "README.md",
-    "Installation.md",
+    "Architecture.md",
     "Index.md"
   ]
 }

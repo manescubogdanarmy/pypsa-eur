@@ -5,6 +5,7 @@
 ---
 # Source: 1_piele_data_download\README.md
 
+==================================================================
 # 📥 Data Download - External Data Acquisition
 
 Utilities for downloading required datasets from external sources. PyPSA-Eur needs environmental and geographic data for simulations.
@@ -326,9 +327,13 @@ ZENODO_RECORDS = [
 4. **For troubleshooting:** See diagnostics/ folder
 
 
+
+
+
 ---
 # Source: 1_piele_docs\CUTOUT_CONFIG.md
 
+==================================================================
 # Cutout Year Configuration Guide
 
 ## Overview
@@ -568,9 +573,13 @@ For issues or questions:
 - Contact: [project maintainers]
 
 
+
+
+
 ---
 # Source: 1_piele_docs\FORMAT_SUPPORT.md
 
+==================================================================
 # Suport Format Date - Dashboard v2
 
 ## 📊 Două Formate de Date Detectate
@@ -699,9 +708,50 @@ Aceasta va genera Format NOU cu toate tabelele compatible.
 Ambele formate sunt acum suportate cu mesaje clare pentru utilizator!
 
 
+
+
+
+---
+# Source: doc\requirements.txt
+
+==================================================================
+# SPDX-FileCopyrightText: Contributors to PyPSA-Eur <https://github.com/pypsa/pypsa-eur>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+setuptools
+sphinx
+sphinx_book_theme
+sphinxcontrib-bibtex
+myst-parser  # recommark is deprecated, https://stackoverflow.com/a/71660856/13573820
+
+pypsa
+powerplantmatching>=0.5.5
+atlite>=0.2.9
+dask[distributed]
+matplotlib>3.5.1,<3.6
+tabula-py
+
+# HTML map retrieval
+requests
+
+# cartopy
+scikit-learn
+pyyaml
+seaborn
+memory_profiler
+tables
+descartes
+fiona
+
+
+
+
+
 ---
 # Source: doc\romania_guide.md
 
+==================================================================
 # Romania Simulation Guide (Updated 2020 Scenarios)
 
 ## 1. Setup New Data
@@ -747,34 +797,191 @@ To run a specific scenario, use the standard Snakemake command pointing to the d
 - **Locked Directory**: If you see "Locked directory", always run the `--unlock` command for the **specific config file** you are using.
 - **Missing Data**: Ensure `data/cutout/archive/v0.8/europe-2020-sarah3-era5.nc` exists. If not, run checking/download scripts.
 
+
+
+
 ---
-# Source: doc\requirements.txt
+# Source: vault\Core\romania_guide.md
 
-# SPDX-FileCopyrightText: Contributors to PyPSA-Eur <https://github.com/pypsa/pypsa-eur>
-#
-# SPDX-License-Identifier: CC0-1.0
+==================================================================
+# Romania Simulation Guide (Updated 2020 Scenarios)
 
-setuptools
-sphinx
-sphinx_book_theme
-sphinxcontrib-bibtex
-myst-parser  # recommark is deprecated, https://stackoverflow.com/a/71660856/13573820
+## 1. Setup New Data
+We have added support for **2020 Scenarios**. Before running them, you must download the 2020 weather data (cutout).
 
-pypsa
-powerplantmatching>=0.5.5
-atlite>=0.2.9
-dask[distributed]
-matplotlib>3.5.1,<3.6
-tabula-py
+Run one of the following scripts:
+```bash
+# Downloads both 2013 and 2020 cutouts
+python download_cutout.py
+```
+*Alternatively, `python download_zenodo_files.py` now also includes the 2020 cutout.*
 
-# HTML map retrieval
-requests
+## 2. Available Scenarios (2020)
+We have created 5 new configuration files representing different periods in 2020:
 
-# cartopy
-scikit-learn
-pyyaml
-seaborn
-memory_profiler
-tables
-descartes
-fiona
+| Config File | Period | Season |
+|---|---|---|
+| `config/romania_2020_winter.yaml` | Jan 1 - Jan 8 | Winter |
+| `config/romania_2020_spring.yaml` | Apr 1 - Apr 8 | Spring |
+| `config/romania_2020_summer.yaml` | Jul 1 - Jul 8 | Summer |
+| `config/romania_2020_autumn.yaml` | Oct 1 - Oct 8 | Autumn |
+| `config/romania_2020_december.yaml`| Dec 1 - Dec 8 | Early Winter |
+
+## 3. How to Run a Scenario
+To run a specific scenario, use the standard Snakemake command pointing to the desired config file.
+
+**Example: Running the Summer 2020 Scenario**
+
+1. **Unlock directory** (if needed):
+   ```bash
+   conda run -n pypsa snakemake --unlock --configfile config/romania_2020_summer.yaml
+   ```
+
+2. **Run Simulation**:
+   ```bash
+   conda run -n pypsa snakemake -call results/romania-2020-summer/networks/base_s_5_elec_.nc --configfile config/romania_2020_summer.yaml
+   ```
+
+3. **Verify Results**:
+   You can manually inspect the results in `results/romania-2020-summer/`.
+
+## 4. Troubleshooting
+- **Locked Directory**: If you see "Locked directory", always run the `--unlock` command for the **specific config file** you are using.
+- **Missing Data**: Ensure `data/cutout/archive/v0.8/europe-2020-sarah3-era5.nc` exists. If not, run checking/download scripts.
+
+
+
+
+---
+# Source: vault\Piele-Docs\FORMAT_SUPPORT.md
+
+==================================================================
+# Suport Format Date - Dashboard v2
+
+## 📊 Două Formate de Date Detectate
+
+Dashboard v2 suportă acum **ambele formate** de date disponibile în proiect:
+
+### ✅ FORMAT NOU (Report)
+**Fișier:** `romania-2020-winter-stress-comparison/`
+
+**Fișiere CSV:**
+- `system_cost_comparison.csv` - Costuri totale bază vs. scenariu
+- `generation_mix_mwh.csv` - Mix energetic
+- `ens_summary.csv` - Energy not served (blackout)
+- `interconnector_flow_congestion.csv` - Congestie linii
+- `lmp_summary_ro.csv` - Preț marginal local
+- `curtailment_mwh.csv` - Energie curtată
+- `daily_net_imports_mwh.csv` - Importuri zilnice
+
+**Status:** ✅ **SUPORT COMPLET**
+- Toate 6 taburi funcționale
+- Grafice interactive cu date comparative
+- Metrici detaliate (bază vs. scenariu)
+
+---
+
+### 📋 FORMAT LEGACY (Rezultate Native)
+**Fișiere:** `romania-2020-summer/csvs`, `romania-2020-autumn/csvs`, etc.
+
+**Fișiere CSV disponibile:**
+- `capacities.csv` - Capacități instalate
+- `capacity_factors.csv` - Factori de capacitate
+- `costs.csv` - Costuri pe componentă
+- `curtailment.csv` - Energie curtată
+- `energy.csv` - Producție de energie
+- `energy_balance.csv` - Bilanț energetic
+- `market_values.csv` - Valori de piață
+- `metrics.csv` - Metrici aggregate
+- `nodal_capacities.csv`, `nodal_costs.csv`, etc. - Date pe nod
+- `prices.csv`, `weighted_prices.csv` - Preț
+
+**Status:** ⚠️ **SUPORT PARȚIAL**
+- Tab **Rezumat** arată fișierele disponibile
+- Taburi **Costuri**, **Generare**, **Congestie**, **Preț** → Mesaj informativ
+- Tab **Date Brute** → ✅ Funcțional (exploreaza orice CSV)
+
+---
+
+## 🔄 Cum Lucreaza Detectia
+
+Cand se incarca un scenariu, programul:
+
+1. **Cauta** `system_cost_comparison.csv`
+   - ✅ Gasit? → Format NOU, toate taburile active
+   - ❌ Nu?: Continua...
+
+2. **Cauta** `costs.csv` + `energy.csv`
+   - ✅ Ambele gasite? → Format LEGACY
+   - Afiseaza: "⚠️ Format Legacy - Date Disponibile"
+
+3. **Afiseaza status** in barra: `[FORMAT NOU (Report)]` sau `[FORMAT LEGACY (Rezultate native)]`
+
+---
+
+## 🎯 Cazuri de Utilizare
+
+### Cand folositi FORMAT NOU (Winter Stress):
+```bash
+python visualize_scenarios_ui_v2.py
+→ Select: romania-2020-winter-stress-comparison
+→ Toate taburile trabalhe perfect
+→ Grafice comparare Baza vs. Stres
+```
+
+### Cand folositi FORMAT LEGACY (Summer/Autumn/Spring/December):
+```bash
+python visualize_scenarios_ui_v2.py
+→ Select: romania-2020-summer/csvs
+→ Tab Rezumat: Arata fisierele disponibile
+→ Tab Date Brute: Exploreaza raw CSVs
+→ Alte taburi: Mesaj "Necesita format NOU"
+```
+
+---
+
+## 💡 Solutii
+
+### Pentru a folosi complet taburile cu date legacy:
+Ar fi nevoie de transformation datelor:
+- `costs.csv` → `system_cost_comparison.csv`
+- `energy.csv` → `generation_mix_mwh.csv`
+- etc.
+
+Aceasta ar necesita mapping coloane si agregare pe `case` (baza vs. scenariu).
+
+### Pentru o analiza completa:
+**Recomandare:** Rulati raport pe orice scenariu legacy:
+```bash
+python scripts/report_romania_winter_stress.py \
+  --baseline-net results/[scenariul]/networks/base_s_*_elec_.nc \
+  --scenario-net results/[scenariul]/networks/base_s_*_elec_.nc \
+  --country RO \
+  --outdir results/[scenariul]-comparison
+```
+
+Aceasta va genera Format NOU cu toate tabelele compatible.
+
+---
+
+## 📊 Tabel Suport
+
+| Tab | Format NOU | Format Legacy |
+|-----|----------|---|
+| 📊 Rezumat | ✅ Metrici comparative | ⚠️ Lista fișiere |
+| 💰 Costuri | ✅ Grafic bază vs. stres | ❌ Mesaj informativ |
+| ⚡ Generare | ✅ Mix energetic comparat | ❌ Mesaj informativ |
+| 🔌 Congestie | ✅ Linii congestionare | ❌ Mesaj informativ |
+| 💹 Preț | ✅ Preț marginal local | ❌ Mesaj informativ |
+| 📋 Date Brute | ✅ Toate CSVs + Export | ✅ Toate CSVs + Export |
+
+---
+
+**Versiune:** v2.1  
+**Data:** 18 februarie 2026  
+**Status:** ✅ Production Ready
+
+Ambele formate sunt acum suportate cu mesaje clare pentru utilizator!
+
+
+
