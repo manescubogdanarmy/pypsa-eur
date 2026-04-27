@@ -1,3 +1,10 @@
+# Running Documentation
+
+
+
+---
+# Source: 1_piele_runners\README.md
+
 # 🚀 Runners - Scenario Execution Scripts
 
 Command runners for PyPSA-Eur simulations. These scripts execute energy system scenarios and generate network solutions.

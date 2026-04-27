@@ -1,1 +1,193 @@
-{"main":{"id":"main","type":"split","children":[{"id":"tab-1","type":"tabs","children":[{"id":"readme-tab","type":"leaf","state":{"type":"markdown","state":{"file":"README.md","mode":"preview"}}}]}],"direction":"vertical"},"left":{"id":"left-sidebar","type":"split","children":[{"id":"file-explorer","type":"tabs","children":[{"id":"file-explorer-tab","type":"leaf","state":{"type":"file-explorer","state":{}}}]}],"direction":"horizontal","width":300},"right":{"id":"right-sidebar","type":"split","children":[{"id":"outline-tab","type":"tabs","children":[{"id":"outline","type":"leaf","state":{"type":"outline","state":{"file":"README.md"}}}]}],"direction":"horizontal","width":300},"active":"readme-tab","lastOpenFiles":["README.md","Project Structure Map.md"]}
+{
+  "main": {
+    "id": "378ea5fa9ef07f70",
+    "type": "split",
+    "children": [
+      {
+        "id": "5c13227a9529c251",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "84c4596eeb252d84",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Usage.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Usage"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0871ca413b20709a",
+    "type": "split",
+    "children": [
+      {
+        "id": "1c3895681d1d5333",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "af880c35dae8fefd",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "209a55d6171bbc08",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "8772717ed2abc82b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "74b1a7b36614316f",
+    "type": "split",
+    "children": [
+      {
+        "id": "865f58f875bbd99b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "689b17c7dc4d95cc",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Usage.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Usage"
+            }
+          },
+          {
+            "id": "172192d8f3804ab3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Usage.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Usage"
+            }
+          },
+          {
+            "id": "c7c0c386866febfb",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "8f019822d7c6e5db",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "678cffd1ced0120d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Usage.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Usage"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "84c4596eeb252d84",
+  "lastOpenFiles": [
+    "Running.md",
+    "README.md",
+    "Installation.md",
+    "Index.md"
+  ]
+}
