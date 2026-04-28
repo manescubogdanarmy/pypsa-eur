@@ -65,12 +65,32 @@ async function loadCsv(filePath) {
 
 // ── Formatting ───────────────────────────────────────────────────────────────
 
+const THEME = {
+  ink: "#1E2B3A",
+  muted: "#5D6A7B",
+  navy: "#0A3DA3",
+  navyDark: "#072A75",
+  sky: "#EDF5FF",
+  paper: "#F7FAFF",
+  line: "#C7D5EF",
+  baseline: "#0A3DA3",
+  scenario: "#F28C28",
+  positive: "#0F7B3B",
+  negative: "#C4372A",
+  track: "#E3ECFA",
+};
+
 function esc(s) {
   return String(s ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function num(value) {
+  const v = parseFloat(value);
+  return Number.isFinite(v) ? v : 0;
 }
 
 function fmtM(n, digits = 2) {
@@ -100,8 +120,8 @@ function fmtMwh(n) {
 
 function deltaColor(n) {
   const v = parseFloat(n);
-  if (isNaN(v) || v === 0) return "#444444";
-  return v > 0 ? "#BB2200" : "#006633";
+  if (isNaN(v) || v === 0) return THEME.muted;
+  return v > 0 ? THEME.negative : THEME.positive;
 }
 
 // ── mxGraph XML builder ──────────────────────────────────────────────────────
@@ -110,54 +130,65 @@ let _id = 0;
 const uid = () => `x${(++_id).toString(36)}`;
 
 function cell({ x, y, w, h, fill = "#FFFFFF", stroke = "#CCCCCC", label = "",
-                fontSize = 10, fontStyle = 0, fontColor = "#333333",
-                align = "left", vAlign = "middle", pad = 8, rounded = 0 }) {
+                fontSize = 10, fontStyle = 0, fontColor = THEME.ink,
+                align = "left", vAlign = "middle", pad = 8, rounded = 0,
+                shape = "text", fontFamily = "Helvetica" }) {
   const padL = align === "left" ? pad : 0;
   const padR = align === "right" ? pad : 0;
+  const shapeStyle = shape === "text" ? "text" : `shape=${shape}`;
   const style = [
-    "text", "html=1",
+    shapeStyle, "html=1",
     `strokeColor=${stroke}`, `fillColor=${fill}`,
     `align=${align}`, `verticalAlign=${vAlign}`,
     "whiteSpace=wrap", `rounded=${rounded}`,
     `fontSize=${fontSize}`, `fontStyle=${fontStyle}`,
     `fontColor=${fontColor}`,
     `spacingLeft=${padL}`, `spacingRight=${padR}`,
+    `fontFamily=${fontFamily}`,
   ].join(";");
   return `        <mxCell id="${uid()}" value="${esc(label)}" style="${style};" vertex="1" parent="1">`
     + `\n          <mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry" />`
     + `\n        </mxCell>`;
 }
 
+function rect({ x, y, w, h, fill = "#FFFFFF", stroke = "none", rounded = 0, opacity = 100 }) {
+  const style = [
+    "shape=rect", "html=1",
+    `strokeColor=${stroke}`,
+    `fillColor=${fill}`,
+    `rounded=${rounded}`,
+    `opacity=${opacity}`,
+  ].join(";");
+  return `        <mxCell id="${uid()}" value="" style="${style};" vertex="1" parent="1">`
+    + `\n          <mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry" />`
+    + `\n        </mxCell>`;
+}
+
 function banner(x, y, w, title, subtitle) {
   return [
-    cell({ x, y, w, h: 56, fill: "#001F3F", stroke: "#001F3F", label: title, fontSize: 18, fontStyle: 1, fontColor: "#FFFFFF", align: "center" }),
-    cell({ x, y: y + 56, w, h: 26, fill: "#003366", stroke: "#003366", label: subtitle, fontSize: 9, fontColor: "#AACCEE", align: "center" }),
+    cell({ x, y, w, h: 56, fill: THEME.navy, stroke: THEME.navy, label: title, fontSize: 18, fontStyle: 1, fontColor: "#FFFFFF", align: "center" }),
+    cell({ x, y: y + 56, w, h: 26, fill: THEME.navyDark, stroke: THEME.navyDark, label: subtitle, fontSize: 9, fontColor: "#C9D7F5", align: "center" }),
   ].join("\n");
 }
 
-// Table: header + rows
-// cols: [{label, width, align?}]
-// rows: array of arrays of {value, color?}
 function table(x, y, cols, dataRows, rowH = 28) {
   const cells = [];
   const hdrH = 34;
 
-  // Header
   let cx = x;
   for (const col of cols) {
-    cells.push(cell({ x: cx, y, w: col.width, h: hdrH, fill: "#003366", stroke: "#002147", label: col.label, fontSize: 10, fontStyle: 1, fontColor: "#FFFFFF", align: col.align ?? "center" }));
+    cells.push(cell({ x: cx, y, w: col.width, h: hdrH, fill: THEME.navyDark, stroke: THEME.navyDark, label: col.label, fontSize: 10, fontStyle: 1, fontColor: "#FFFFFF", align: col.align ?? "center" }));
     cx += col.width;
   }
 
-  // Rows
   dataRows.forEach((row, ri) => {
-    const bg = ri % 2 === 0 ? "#EEF4FB" : "#FFFFFF";
+    const bg = ri % 2 === 0 ? "#F3F7FF" : "#FFFFFF";
     cx = x;
     row.forEach((cell_, ci) => {
       const val = typeof cell_ === "object" ? cell_.value : cell_;
-      const fc = typeof cell_ === "object" && cell_.color ? cell_.color : "#333333";
+      const fc = typeof cell_ === "object" && cell_.color ? cell_.color : THEME.ink;
       const colDef = cols[ci];
-      cells.push(cell({ x: cx, y: y + hdrH + ri * rowH, w: colDef.width, h: rowH, fill: bg, stroke: "#DDDDDD", label: String(val ?? "—"), fontSize: 10, fontColor: fc, align: colDef.align ?? "center", pad: colDef.align === "left" ? 8 : 4 }));
+      cells.push(cell({ x: cx, y: y + hdrH + ri * rowH, w: colDef.width, h: rowH, fill: bg, stroke: THEME.line, label: String(val ?? "—"), fontSize: 10, fontColor: fc, align: colDef.align ?? "center", pad: colDef.align === "left" ? 8 : 4 }));
       cx += colDef.width;
     });
   });
@@ -165,18 +196,60 @@ function table(x, y, cols, dataRows, rowH = 28) {
   return cells.join("\n");
 }
 
-function metricCard(x, y, w, h, title, value, unit, accent = "#0055AA") {
+function metricCard(x, y, w, h, title, value, unit, accent = THEME.navy) {
   return [
-    cell({ x, y, w, h, fill: "#FFFFFF", stroke: "#CCDDEE", label: "", rounded: 1 }),
-    cell({ x, y, w, h: 5, fill: accent, stroke: accent, label: "", rounded: 0 }),
-    cell({ x: x + 6, y: y + 10, w: w - 12, h: 18, fill: "#FFFFFF", stroke: "none", label: title, fontSize: 9, fontColor: "#666666", align: "center" }),
-    cell({ x: x + 6, y: y + 30, w: w - 12, h: 38, fill: "#FFFFFF", stroke: "none", label: String(value), fontSize: 22, fontStyle: 1, fontColor: "#001F3F", align: "center" }),
-    cell({ x: x + 6, y: y + 68, w: w - 12, h: 18, fill: "#FFFFFF", stroke: "none", label: String(unit), fontSize: 9, fontColor: accent, align: "center" }),
+    rect({ x, y, w, h, fill: "#FFFFFF", stroke: THEME.line, rounded: 1 }),
+    rect({ x, y, w, h: 4, fill: accent, stroke: accent, rounded: 0 }),
+    cell({ x: x + 8, y: y + 8, w: w - 16, h: 14, fill: "none", stroke: "none", label: title, fontSize: 8, fontStyle: 1, fontColor: THEME.muted, align: "center" }),
+    cell({ x: x + 8, y: y + 24, w: w - 16, h: 30, fill: "none", stroke: "none", label: String(value), fontSize: 18, fontStyle: 1, fontColor: THEME.ink, align: "center" }),
+    cell({ x: x + 8, y: y + h - 18, w: w - 16, h: 14, fill: "none", stroke: "none", label: String(unit), fontSize: 8, fontColor: accent, align: "center" }),
   ].join("\n");
 }
 
-function sectionLabel(x, y, w, label) {
-  return cell({ x, y, w, h: 22, fill: "#E8EEF4", stroke: "#AABBCC", label, fontSize: 10, fontStyle: 1, fontColor: "#003366", align: "center" });
+function panel(x, y, w, h, title, accent = THEME.navy) {
+  const headerH = 26;
+  return [
+    rect({ x, y, w, h, fill: "#FFFFFF", stroke: THEME.line, rounded: 1 }),
+    rect({ x, y, w, h: headerH, fill: accent, stroke: accent, rounded: 1 }),
+    cell({ x: x + 10, y: y + 4, w: w - 20, h: 18, fill: "none", stroke: "none", label: title, fontSize: 9, fontStyle: 1, fontColor: "#FFFFFF", align: "left" }),
+  ].join("\n");
+}
+
+function legendPair(x, y, labelA, labelB, colorA, colorB) {
+  return [
+    rect({ x, y, w: 12, h: 12, fill: colorA, stroke: colorA, rounded: 1 }),
+    cell({ x: x + 16, y: y - 2, w: 80, h: 16, fill: "none", stroke: "none", label: labelA, fontSize: 8, fontColor: THEME.muted, align: "left" }),
+    rect({ x: x + 88, y, w: 12, h: 12, fill: colorB, stroke: colorB, rounded: 1 }),
+    cell({ x: x + 104, y: y - 2, w: 80, h: 16, fill: "none", stroke: "none", label: labelB, fontSize: 8, fontColor: THEME.muted, align: "left" }),
+  ].join("\n");
+}
+
+function barPairList({ x, y, w, labelWidth = 240, rowH = 42, barH = 10,
+                      rows, maxValue, baselineColor = THEME.baseline,
+                      scenarioColor = THEME.scenario, valueFormatter = fmtNum }) {
+  const valueWidth = 100;
+  const barX = x + labelWidth + 12;
+  const barW = Math.max(40, w - labelWidth - valueWidth - 20);
+  const max = maxValue > 0 ? maxValue : 1;
+  const cells = [];
+
+  rows.forEach((row, i) => {
+    const rowY = y + i * rowH;
+    const baseVal = num(row.baseline);
+    const scenVal = num(row.scenario);
+    const baseW = Math.max(4, (Math.abs(baseVal) / max) * barW);
+    const scenW = Math.max(4, (Math.abs(scenVal) / max) * barW);
+
+    cells.push(cell({ x, y: rowY + 4, w: labelWidth, h: rowH - 8, fill: "none", stroke: "none", label: row.label, fontSize: 9, fontColor: THEME.ink, align: "left" }));
+    cells.push(rect({ x: barX, y: rowY + 6, w: barW, h: barH, fill: THEME.track, stroke: "none", rounded: 1 }));
+    cells.push(rect({ x: barX, y: rowY + 22, w: barW, h: barH, fill: THEME.track, stroke: "none", rounded: 1 }));
+    cells.push(rect({ x: barX, y: rowY + 6, w: baseW, h: barH, fill: baselineColor, stroke: "none", rounded: 1 }));
+    cells.push(rect({ x: barX, y: rowY + 22, w: scenW, h: barH, fill: scenarioColor, stroke: "none", rounded: 1 }));
+    cells.push(cell({ x: barX + barW + 6, y: rowY + 2, w: valueWidth, h: 16, fill: "none", stroke: "none", label: `B: ${valueFormatter(baseVal)}`, fontSize: 8, fontColor: baselineColor, align: "left" }));
+    cells.push(cell({ x: barX + barW + 6, y: rowY + 20, w: valueWidth, h: 16, fill: "none", stroke: "none", label: `S: ${valueFormatter(scenVal)}`, fontSize: 8, fontColor: scenarioColor, align: "left" }));
+  });
+
+  return cells.join("\n");
 }
 
 function wrapDiagram(name, id, bodyXml, pageW = 1400, pageH = 850) {
@@ -201,45 +274,68 @@ ${bodyXml}
 function buildCostEns(cost, ens, resultName) {
   _id = 200;
   const parts = [];
-  const W = 1360, PAD = 20;
+  const pageW = 1400;
+  const pageH = 520;
+  const PAD = 20;
+  const contentW = 1360;
+  const panelY = 110;
+  const panelW = 660;
+  const panelH = 260;
 
-  // Banner
-  parts.push(banner(PAD, PAD, W, "SYSTEM COST &amp; ENERGY NOT SERVED", `Scenario: ${resultName}`));
+  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(banner(PAD, PAD, contentW, "SYSTEM COST &amp; ENERGY NOT SERVED", `Scenario: ${resultName}`));
 
-  // Cost table
   const crow = cost.rows[0] ?? {};
-  const baseC = parseFloat(crow.baseline_total_system_cost_eur ?? 0);
-  const scenC = parseFloat(crow.scenario_total_system_cost_eur ?? 0);
-  const deltaEur = parseFloat(crow.delta_eur ?? scenC - baseC);
-  const deltaPct = parseFloat(crow.delta_percent ?? 0);
+  const baseC = num(crow.baseline_total_system_cost_eur);
+  const scenC = num(crow.scenario_total_system_cost_eur);
+  const deltaEur = num(crow.delta_eur ?? (scenC - baseC));
+  const deltaPct = num(crow.delta_percent ?? (baseC ? ((scenC - baseC) / baseC) * 100 : 0));
+  const ratio = baseC ? (scenC / baseC) * 100 : 0;
 
-  parts.push(sectionLabel(PAD, 118, 680, "TOTAL SYSTEM COST"));
-  const costCols = [
-    { label: "Metric", width: 200, align: "left" },
-    { label: "Baseline", width: 160, align: "center" },
-    { label: "Stress Scenario", width: 160, align: "center" },
-    { label: "Delta (M€)", width: 160, align: "center" },
-  ];
-  const costRows = [
-    ["Total System Cost", fmtM(baseC), fmtM(scenC), { value: (deltaEur >= 0 ? "+" : "") + fmtM(deltaEur), color: deltaColor(deltaEur) }],
-    [`Delta (%)`, "", "", { value: fmtPct(deltaPct), color: deltaColor(deltaPct) }],
-  ];
-  parts.push(table(PAD, 140, costCols, costRows, 32));
+  parts.push(panel(PAD, panelY, panelW, panelH, "COST COMPARISON"));
+  parts.push(legendPair(PAD + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: PAD + 20,
+    y: panelY + 50,
+    w: panelW - 40,
+    labelWidth: 210,
+    rows: [{ label: "Total system cost", baseline: baseC, scenario: scenC }],
+    maxValue: Math.max(Math.abs(baseC), Math.abs(scenC), 1),
+    valueFormatter: (v) => fmtM(v),
+  }));
 
-  // ENS cards
-  parts.push(sectionLabel(PAD, 260, 680, "ENERGY NOT SERVED (ENS)"));
+  const cardY = panelY + 140;
+  const cardW = 200;
+  const cardGap = 12;
+  parts.push(metricCard(PAD + 20, cardY, cardW, 90, "Delta (M EUR)", fmtM(deltaEur), "scenario - baseline", deltaColor(deltaEur)));
+  parts.push(metricCard(PAD + 20 + cardW + cardGap, cardY, cardW, 90, "Delta (%)", fmtPct(deltaPct, 1), "percent change", deltaColor(deltaPct)));
+  parts.push(metricCard(PAD + 20 + (cardW + cardGap) * 2, cardY, cardW, 90, "Scenario / Baseline", baseC ? fmtNum(ratio, 1) + "%" : "—", "relative size", THEME.navy));
+
   const ensBase = ens.rows.find((r) => r.case === "baseline") ?? {};
   const ensScen = ens.rows.find((r) => r.case === "scenario") ?? {};
+  const ensBaseVal = num(ensBase.ens_mwh);
+  const ensScenVal = num(ensScen.ens_mwh);
+  const ensDelta = ensScenVal - ensBaseVal;
 
-  const cardW = 160, cardH = 100, cardY = 286;
-  parts.push(metricCard(PAD,       cardY, cardW, cardH, "ENS — Baseline",  fmtMwh(ensBase.ens_mwh ?? 0), `${fmtNum(ensBase.hours_with_shedding ?? 0, 0)} h shedding`, "#3377BB"));
-  parts.push(metricCard(PAD + 170, cardY, cardW, cardH, "ENS — Scenario",  fmtMwh(ensScen.ens_mwh ?? 0), `${fmtNum(ensScen.hours_with_shedding ?? 0, 0)} h shedding`, "#BB3300"));
-  parts.push(metricCard(PAD + 340, cardY, cardW, cardH, "Peak Shedding",   fmtNum(ensScen.max_shedding_mw ?? 0, 0) + " MW", "stress scenario peak", "#885500"));
-  parts.push(metricCard(PAD + 510, cardY, cardW, cardH, "Δ ENS",
-    fmtMwh((parseFloat(ensScen.ens_mwh ?? 0) - parseFloat(ensBase.ens_mwh ?? 0))),
-    "scenario − baseline", "#660066"));
+  const ensX = PAD + panelW + 20;
+  parts.push(panel(ensX, panelY, panelW, panelH, "ENS SNAPSHOT"));
+  parts.push(legendPair(ensX + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: ensX + 20,
+    y: panelY + 50,
+    w: panelW - 40,
+    labelWidth: 180,
+    rows: [{ label: "Energy not served", baseline: ensBaseVal, scenario: ensScenVal }],
+    maxValue: Math.max(Math.abs(ensBaseVal), Math.abs(ensScenVal), 1),
+    valueFormatter: (v) => fmtMwh(v),
+  }));
 
-  return wrapDiagram("Cost & ENS", "cost-ens", parts.join("\n"), 1400, 420);
+  const ensCardW = 190;
+  parts.push(metricCard(ensX + 20, cardY, ensCardW, 90, "Shedding hours", fmtNum(ensScen.hours_with_shedding ?? 0, 0), "scenario hours", THEME.scenario));
+  parts.push(metricCard(ensX + 20 + ensCardW + cardGap, cardY, ensCardW, 90, "Max shedding", fmtNum(ensScen.max_shedding_mw ?? 0, 0) + " MW", "scenario peak", THEME.scenario));
+  parts.push(metricCard(ensX + 20 + (ensCardW + cardGap) * 2, cardY, ensCardW, 90, "ENS delta", fmtMwh(ensDelta), "scenario - baseline", deltaColor(ensDelta)));
+
+  return wrapDiagram("Cost & ENS", "cost-ens", parts.join("\n"), pageW, pageH);
 }
 
 // ── Diagram 2: Generation Mix ────────────────────────────────────────────────
@@ -247,45 +343,57 @@ function buildCostEns(cost, ens, resultName) {
 function buildGenerationMix(mix, resultName) {
   _id = 400;
   const parts = [];
-  const W = 1360, PAD = 20;
+  const pageW = 1400;
+  const PAD = 20;
+  const contentW = 1360;
+  const panelY = 110;
+  const rowH = 44;
 
-  parts.push(banner(PAD, PAD, W, "GENERATION MIX — Romania", `Scenario: ${resultName}`));
-
-  // Pivot: carrier → {baseline, scenario}
   const byCarrier = {};
   for (const row of mix.rows) {
     const c = row.carrier ?? "unknown";
     if (!byCarrier[c]) byCarrier[c] = { baseline: 0, scenario: 0 };
-    byCarrier[c][row.case] = parseFloat(row.generation_mwh ?? 0);
+    byCarrier[c][row.case] = num(row.generation_mwh ?? 0);
   }
 
   const carriers = Object.entries(byCarrier)
-    .sort((a, b) => (b[1].baseline + b[1].scenario) - (a[1].baseline + a[1].scenario));
+    .sort((a, b) => (b[1].baseline + b[1].scenario) - (a[1].baseline + a[1].scenario))
+    .slice(0, 10);
 
-  const cols = [
-    { label: "Carrier / Technology", width: 220, align: "left" },
-    { label: "Baseline (MWh)", width: 180, align: "center" },
-    { label: "Scenario (MWh)", width: 180, align: "center" },
-    { label: "Δ MWh", width: 160, align: "center" },
-    { label: "Δ %", width: 120, align: "center" },
-  ];
+  const rows = carriers.map(([carrier, vals]) => ({
+    label: carrier,
+    baseline: vals.baseline,
+    scenario: vals.scenario,
+  }));
 
-  const dataRows = carriers.map(([carrier, vals]) => {
-    const delta = vals.scenario - vals.baseline;
-    const pct = vals.baseline !== 0 ? (delta / vals.baseline) * 100 : 0;
-    return [
-      carrier,
-      fmtMwh(vals.baseline),
-      fmtMwh(vals.scenario),
-      { value: (delta >= 0 ? "+" : "") + fmtMwh(delta), color: deltaColor(-delta) }, // more gen from RES = good
-      { value: fmtPct(pct), color: "#444444" },
-    ];
-  });
+  if (rows.length === 0) {
+    rows.push({ label: "No generation data", baseline: 0, scenario: 0 });
+  }
 
-  parts.push(table(PAD, 100, cols, dataRows, 28));
+  const maxValue = Math.max(
+    ...rows.map((row) => Math.max(Math.abs(num(row.baseline)), Math.abs(num(row.scenario)))),
+    1,
+  );
 
-  const tableH = 34 + dataRows.length * 28;
-  return wrapDiagram("Generation Mix", "gen-mix", parts.join("\n"), 1400, 120 + tableH);
+  const panelH = 80 + rowH * rows.length + 30;
+  const pageH = panelY + panelH + 20;
+
+  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(banner(PAD, PAD, contentW, "GENERATION MIX — Romania", `Scenario: ${resultName}`));
+  parts.push(panel(PAD, panelY, contentW, panelH, "GENERATION MIX BY CARRIER"));
+  parts.push(legendPair(PAD + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: PAD + 20,
+    y: panelY + 50,
+    w: contentW - 40,
+    labelWidth: 260,
+    rowH,
+    rows,
+    maxValue,
+    valueFormatter: (v) => fmtMwh(v),
+  }));
+
+  return wrapDiagram("Generation Mix", "gen-mix", parts.join("\n"), pageW, pageH);
 }
 
 // ── Diagram 3: Price + Curtailment ───────────────────────────────────────────
@@ -293,62 +401,96 @@ function buildGenerationMix(mix, resultName) {
 function buildPriceCurtail(lmp, curtail, resultName) {
   _id = 600;
   const parts = [];
+  const pageW = 1400;
   const PAD = 20;
+  const contentW = 1360;
+  const panelY = 110;
+  const panelW = 660;
+  const rowH = 44;
 
-  parts.push(banner(PAD, PAD, 1360, "PRICE (LMP) &amp; CURTAILMENT", `Scenario: ${resultName}`));
-
-  // LMP table
-  parts.push(sectionLabel(PAD, 100, 660, "LOCATIONAL MARGINAL PRICE — Romania Buses (avg)"));
   const lmpBase = lmp.rows.find((r) => r.case === "baseline") ?? {};
   const lmpScen = lmp.rows.find((r) => r.case === "scenario") ?? {};
-  const lmpCols = [
-    { label: "Metric", width: 220, align: "left" },
-    { label: "Baseline (€/MWh)", width: 200, align: "center" },
-    { label: "Scenario (€/MWh)", width: 200, align: "center" },
-    { label: "Δ €/MWh", width: 160, align: "center" },
-  ];
   const lmpRows = [
-    ["Mean LMP", fmtNum(lmpBase.mean_eur_per_mwh, 2), fmtNum(lmpScen.mean_eur_per_mwh, 2),
-      { value: (parseFloat(lmpScen.mean_eur_per_mwh ?? 0) >= parseFloat(lmpBase.mean_eur_per_mwh ?? 0) ? "+" : "") + fmtNum(parseFloat(lmpScen.mean_eur_per_mwh ?? 0) - parseFloat(lmpBase.mean_eur_per_mwh ?? 0), 2), color: deltaColor(parseFloat(lmpScen.mean_eur_per_mwh ?? 0) - parseFloat(lmpBase.mean_eur_per_mwh ?? 0)) }],
-    ["P95 LMP", fmtNum(lmpBase.p95_eur_per_mwh, 2), fmtNum(lmpScen.p95_eur_per_mwh, 2),
-      { value: "", color: "#444444" }],
-    ["Max LMP", fmtNum(lmpBase.max_eur_per_mwh, 2), fmtNum(lmpScen.max_eur_per_mwh, 2),
-      { value: "", color: "#444444" }],
+    {
+      label: "Mean LMP",
+      baseline: num(lmpBase.mean_eur_per_mwh ?? lmpBase.mean),
+      scenario: num(lmpScen.mean_eur_per_mwh ?? lmpScen.mean),
+    },
+    {
+      label: "P95 LMP",
+      baseline: num(lmpBase.p95_eur_per_mwh ?? lmpBase.p95),
+      scenario: num(lmpScen.p95_eur_per_mwh ?? lmpScen.p95),
+    },
+    {
+      label: "Max LMP",
+      baseline: num(lmpBase.max_eur_per_mwh ?? lmpBase.max),
+      scenario: num(lmpScen.max_eur_per_mwh ?? lmpScen.max),
+    },
   ];
-  parts.push(table(PAD, 122, lmpCols, lmpRows, 30));
+  const lmpMax = Math.max(
+    ...lmpRows.map((row) => Math.max(Math.abs(num(row.baseline)), Math.abs(num(row.scenario)))),
+    1,
+  );
 
-  // Curtailment table
   const byCarrier = {};
   for (const row of curtail.rows) {
     const c = row.carrier ?? "unknown";
     if (!byCarrier[c]) byCarrier[c] = { baseline: 0, scenario: 0 };
-    byCarrier[c][row.case] = parseFloat(row.curtailment_mwh ?? 0);
+    byCarrier[c][row.case] = num(row.curtailment_mwh ?? 0);
   }
-  const curtailCarriers = Object.entries(byCarrier)
-    .sort((a, b) => (b[1].baseline + b[1].scenario) - (a[1].baseline + a[1].scenario));
+  const curtailRows = Object.entries(byCarrier)
+    .sort((a, b) => (b[1].baseline + b[1].scenario) - (a[1].baseline + a[1].scenario))
+    .slice(0, 8)
+    .map(([carrier, vals]) => ({
+      label: carrier,
+      baseline: vals.baseline,
+      scenario: vals.scenario,
+    }));
 
-  parts.push(sectionLabel(680 + PAD, 100, 640, "CURTAILMENT BY CARRIER"));
-  const curtCols = [
-    { label: "Carrier", width: 200, align: "left" },
-    { label: "Baseline (MWh)", width: 180, align: "center" },
-    { label: "Scenario (MWh)", width: 180, align: "center" },
-    { label: "Δ MWh", width: 140, align: "center" },
-  ];
-  const curtRows = curtailCarriers.map(([carrier, vals]) => {
-    const delta = vals.scenario - vals.baseline;
-    return [carrier, fmtMwh(vals.baseline), fmtMwh(vals.scenario),
-      { value: (delta >= 0 ? "+" : "") + fmtMwh(delta), color: "#444444" }];
-  });
-
-  if (curtRows.length === 0) {
-    curtRows.push(["No curtailment data", "—", "—", "—"]);
+  if (curtailRows.length === 0) {
+    curtailRows.push({ label: "No curtailment data", baseline: 0, scenario: 0 });
   }
 
-  parts.push(table(680 + PAD, 122, curtCols, curtRows, 30));
+  const curtailMax = Math.max(
+    ...curtailRows.map((row) => Math.max(Math.abs(num(row.baseline)), Math.abs(num(row.scenario)))),
+    1,
+  );
 
-  const maxRows = Math.max(3, curtRows.length);
-  const tableH = 34 + maxRows * 30;
-  return wrapDiagram("Price & Curtailment", "price-curtail", parts.join("\n"), 1400, 140 + tableH);
+  const rowsCount = Math.max(lmpRows.length, curtailRows.length);
+  const panelH = 80 + rowH * rowsCount + 30;
+  const pageH = panelY + panelH + 20;
+
+  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(banner(PAD, PAD, contentW, "PRICE (LMP) &amp; CURTAILMENT", `Scenario: ${resultName}`));
+
+  parts.push(panel(PAD, panelY, panelW, panelH, "PRICE SIGNALS (€/MWh)"));
+  parts.push(legendPair(PAD + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: PAD + 20,
+    y: panelY + 50,
+    w: panelW - 40,
+    labelWidth: 200,
+    rowH,
+    rows: lmpRows,
+    maxValue: lmpMax,
+    valueFormatter: (v) => fmtNum(v, 2),
+  }));
+
+  const curtailX = PAD + panelW + 20;
+  parts.push(panel(curtailX, panelY, panelW, panelH, "CURTAILMENT BY CARRIER"));
+  parts.push(legendPair(curtailX + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: curtailX + 20,
+    y: panelY + 50,
+    w: panelW - 40,
+    labelWidth: 240,
+    rowH,
+    rows: curtailRows,
+    maxValue: curtailMax,
+    valueFormatter: (v) => fmtMwh(v),
+  }));
+
+  return wrapDiagram("Price & Curtailment", "price-curtail", parts.join("\n"), pageW, pageH);
 }
 
 // ── Diagram 4: Interconnectors ───────────────────────────────────────────────
@@ -356,11 +498,13 @@ function buildPriceCurtail(lmp, curtail, resultName) {
 function buildInterconnectors(flows, resultName) {
   _id = 800;
   const parts = [];
-  const W = 1360, PAD = 20;
+  const pageW = 1400;
+  const PAD = 20;
+  const contentW = 1360;
+  const panelY = 110;
+  const panelW = 660;
+  const rowH = 44;
 
-  parts.push(banner(PAD, PAD, W, "INTERCONNECTOR LOADING — Border Assets", `Scenario: ${resultName}`));
-
-  // Pivot by asset
   const byAsset = {};
   for (const row of flows.rows) {
     const key = row.asset ?? "unknown";
@@ -368,51 +512,76 @@ function buildInterconnectors(flows, resultName) {
     byAsset[key][row.case] = row;
   }
 
-  const assets = Object.entries(byAsset).sort((a, b) => a[0].localeCompare(b[0]));
-
-  const cols = [
-    { label: "Asset", width: 260, align: "left" },
-    { label: "Type", width: 80, align: "center" },
-    { label: "Mean Loading B", width: 140, align: "center" },
-    { label: "Mean Loading S", width: 140, align: "center" },
-    { label: "P95 Loading S", width: 130, align: "center" },
-    { label: "Congested h (B)", width: 130, align: "center" },
-    { label: "Congested h (S)", width: 130, align: "center" },
-    { label: "Flow B (MWh)", width: 140, align: "center" },
-    { label: "Flow S (MWh)", width: 140, align: "center" },
-  ];
-
-  const dataRows = assets.map(([asset, data]) => {
-    const b = data.baseline ?? {};
-    const s = data.scenario ?? {};
-    const bLoad = parseFloat(b.mean_loading ?? 0);
-    const sLoad = parseFloat(s.mean_loading ?? 0);
-    const loadDelta = sLoad - bLoad;
-    return [
+  const assets = Object.entries(byAsset)
+    .map(([asset, data]) => ({
       asset,
-      data.component,
-      { value: fmtNum(bLoad * 100, 1) + "%", color: bLoad > 0.9 ? "#CC2200" : "#333333" },
-      { value: fmtNum(sLoad * 100, 1) + "%", color: loadDelta > 0 ? "#BB3300" : "#006633" },
-      { value: fmtNum(parseFloat(s.p95_loading ?? 0) * 100, 1) + "%", color: parseFloat(s.p95_loading ?? 0) > 0.9 ? "#CC2200" : "#333333" },
-      fmtNum(b.congested_hours ?? 0, 0),
-      { value: fmtNum(s.congested_hours ?? 0, 0), color: parseInt(s.congested_hours ?? 0) > parseInt(b.congested_hours ?? 0) ? "#BB3300" : "#006633" },
-      fmtMwh(b.total_abs_flow_mwh ?? 0),
-      fmtMwh(s.total_abs_flow_mwh ?? 0),
-    ];
-  });
+      data,
+      scenarioLoad: num(data.scenario?.mean_loading ?? 0),
+    }))
+    .sort((a, b) => b.scenarioLoad - a.scenarioLoad)
+    .slice(0, 8);
 
-  if (dataRows.length === 0) {
-    dataRows.push(["No interconnector data available", "—", "—", "—", "—", "—", "—", "—", "—"]);
+  const rowsLoading = assets.map(({ asset, data }) => ({
+    label: asset,
+    baseline: num(data.baseline?.mean_loading ?? 0) * 100,
+    scenario: num(data.scenario?.mean_loading ?? 0) * 100,
+  }));
+
+  const rowsCongested = assets.map(({ asset, data }) => ({
+    label: asset,
+    baseline: num(data.baseline?.congested_hours ?? 0),
+    scenario: num(data.scenario?.congested_hours ?? 0),
+  }));
+
+  if (rowsLoading.length === 0) {
+    rowsLoading.push({ label: "No interconnector data", baseline: 0, scenario: 0 });
+    rowsCongested.push({ label: "No interconnector data", baseline: 0, scenario: 0 });
   }
 
-  parts.push(table(PAD, 100, cols, dataRows, 28));
+  const loadMax = Math.max(
+    ...rowsLoading.map((row) => Math.max(Math.abs(num(row.baseline)), Math.abs(num(row.scenario)))),
+    1,
+  );
+  const congMax = Math.max(
+    ...rowsCongested.map((row) => Math.max(Math.abs(num(row.baseline)), Math.abs(num(row.scenario)))),
+    1,
+  );
 
-  // Legend
-  const legendY = 100 + 34 + dataRows.length * 28 + 16;
-  parts.push(cell({ x: PAD, y: legendY, w: 800, h: 20, fill: "#F5F5F5", stroke: "#CCCCCC", label: "B = Baseline  |  S = Stress Scenario  |  Loading &gt; 90% shown in red  |  Congested = loading &gt; 95%", fontSize: 9, fontColor: "#666666", align: "center" }));
+  const rowsCount = Math.max(rowsLoading.length, rowsCongested.length);
+  const panelH = 80 + rowH * rowsCount + 30;
+  const pageH = panelY + panelH + 20;
 
-  const pageH = legendY + 36;
-  return wrapDiagram("Interconnectors", "interconnectors", parts.join("\n"), 1400, pageH);
+  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(banner(PAD, PAD, contentW, "INTERCONNECTOR LOADING — Border Assets", `Scenario: ${resultName}`));
+
+  parts.push(panel(PAD, panelY, panelW, panelH, "MEAN LOADING (%)"));
+  parts.push(legendPair(PAD + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: PAD + 20,
+    y: panelY + 50,
+    w: panelW - 40,
+    labelWidth: 220,
+    rowH,
+    rows: rowsLoading,
+    maxValue: loadMax,
+    valueFormatter: (v) => fmtNum(v, 1) + "%",
+  }));
+
+  const congX = PAD + panelW + 20;
+  parts.push(panel(congX, panelY, panelW, panelH, "CONGESTED HOURS"));
+  parts.push(legendPair(congX + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairList({
+    x: congX + 20,
+    y: panelY + 50,
+    w: panelW - 40,
+    labelWidth: 220,
+    rowH,
+    rows: rowsCongested,
+    maxValue: congMax,
+    valueFormatter: (v) => fmtNum(v, 0) + " h",
+  }));
+
+  return wrapDiagram("Interconnectors", "interconnectors", parts.join("\n"), pageW, pageH);
 }
 
 // ── draw.io CLI export ───────────────────────────────────────────────────────
