@@ -11,10 +11,14 @@
             "id": "096c3efeda8e16e0",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "vault/QuickStart.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "QuickStart"
             }
           }
         ]
@@ -176,16 +180,43 @@
       "bases:Create new base": false
     }
   },
-  "active": "096c3efeda8e16e0",
+  "active": "ae8246d53020c4c8",
   "lastOpenFiles": [
-    "vault/Piele-Data",
-    "vault/Piele-Diagnostics",
-    "vault/Piele-Docs",
-    "vault/Piele-Runners",
-    "vault/Piele-Dashboard",
-    "vault/Piele-Analysis",
-    "vault/Core",
-    "CLAUDE.md",
-    "CLAUDE.md.tmp.12004.1777031097628"
+    "vizualizer/node_modules/which/package.json",
+    "vizualizer/node_modules/tsconfig-paths/package.json",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/unescape.js.map",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/unescape.js",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/unescape.d.ts.map",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/unescape.d.ts",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/package.json",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/index.js.map",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/index.js",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/index.d.ts.map",
+    "vizualizer/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/dist/esm/index.d.ts",
+    "vizualizer/node_modules/array-buffer-byte-length/README.md",
+    "vizualizer/node_modules/array-buffer-byte-length/CHANGELOG.md",
+    "vizualizer/node_modules/call-bound/README.md",
+    "vizualizer/node_modules/call-bound/CHANGELOG.md",
+    "vizualizer/node_modules/arraybuffer.prototype.slice/README.md",
+    "vizualizer/node_modules/arraybuffer.prototype.slice/CHANGELOG.md",
+    "vizualizer/node_modules/hermes-parser/README.md",
+    "vizualizer/node_modules/get-intrinsic/README.md",
+    "vizualizer/node_modules/get-intrinsic/CHANGELOG.md",
+    "vizualizer/node_modules/graceful-fs/README.md",
+    "vizualizer/node_modules/get-symbol-description/README.md",
+    "vizualizer/node_modules/get-symbol-description/CHANGELOG.md",
+    "vizualizer/node_modules/generator-function/README.md",
+    "vizualizer/node_modules/generator-function/LICENSE.md",
+    "vizualizer/node_modules/generator-function/CHANGELOG.md",
+    "vizualizer/node_modules/has-flag/readme.md",
+    "vizualizer/node_modules/fast-glob/node_modules/glob-parent/CHANGELOG.md",
+    "vizualizer/node_modules/word-wrap/README.md",
+    "vizualizer/node_modules/yocto-queue/readme.md",
+    "vizualizer/node_modules/escape-string-regexp/readme.md",
+    "vizualizer/node_modules/data-view-buffer/README.md",
+    "vizualizer/node_modules/data-view-buffer/CHANGELOG.md",
+    "vizualizer/node_modules/es-set-tostringtag/README.md",
+    "vizualizer/node_modules/es-set-tostringtag/CHANGELOG.md",
+    "vizualizer/node_modules/es-errors/README.md"
   ]
 }
