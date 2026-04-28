@@ -230,11 +230,11 @@
         "country": "RO",
         "useProxy": false
       },
-      "status": "running",
-      "progressMessage": "Solve baseline scenario [conda-run]",
+      "status": "succeeded",
+      "progressMessage": "Completed successfully.",
       "startedAt": "2026-04-28T07:01:44.003Z",
-      "finishedAt": null,
-      "exitCode": null,
+      "finishedAt": "2026-04-28T07:41:01.853Z",
+      "exitCode": 0,
       "errorSummary": null,
       "cancelRequested": false
     }
