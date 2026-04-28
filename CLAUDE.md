@@ -146,42 +146,114 @@ New-format results (required for both dashboards):
 
 ## Common Development Tasks
 
-**Run scenario simulations:**
+### Running Scenario Simulations
+
+**Full workflow (recommended for most use cases):**
 ```bash
 cd personal_runners
 python run_romania_winter_stress.py          # Baseline + stress with comparison
-python run_baseline_only.bat                 # Quick baseline test
-python run_all_scenarios.py                  # All seasonal scenarios
 ```
+This runs both baseline and stress scenarios, generates comparison reports, and validates outputs automatically.
 
-**Validate environment and configuration:**
+**Quick baseline test (for validation):**
+```bash
+python run_baseline_only.bat                 # Quick baseline test
+```
+Use this to validate that the environment is working and network solves correctly without stress shocks.
+
+**All seasonal scenarios:**
+```bash
+python run_all_scenarios.py                  # All seasonal scenarios (spring, summer, autumn, winter, december)
+```
+Generates a full suite of baseline + stress pairs across all seasons. Runs sequentially; takes several hours.
+
+**Tips:**
+- Use the web dashboard (`vizualizer`) for interactive scenario building and monitoring
+- Check logs in `logs/planui-web/` for job-specific output
+- Results must contain all 7 required CSVs to appear in the Results tab (see below)
+
+### Validating Environment and Configuration
+
+**Before running scenarios, always validate:**
 ```bash
 cd personal_diagnostics
-python check_romania.py                      # Validate configs
-python check_csv.py                          # Validate result outputs
-python check_url.py                          # Verify data sources
+python check_romania.py                      # Validate scenario configs and dependencies
+python check_csv.py                          # Validate result output structure and data quality
+python check_url.py                          # Verify external data sources are reachable (ERA5, Zenodo)
 ```
 
-**Generate analysis and reports:**
+**What each check does:**
+- `check_romania.py` - Verifies YAML config syntax, cutout file references, network existence, and solver availability
+- `check_csv.py` - Validates that result CSVs match expected schema and contain valid numeric data
+- `check_url.py` - Tests connectivity to ERA5 MARS API and Zenodo dataset endpoints
+
+**Common issues and fixes:**
+- `FileNotFoundError: cutout not found` → Run `personal_data_download/download_cutout.py` to fetch weather data
+- `ModuleNotFoundError: pkg_resources` → Install fix: `conda run -n pypsa pip install "google-cloud-storage>=2.10"`
+- `SCIP solver not found` → Ensure `scip` is in the conda environment; check `conda list | grep scip`
+
+### Generating Analysis and Reports
+
+**Post-processing and insights:**
 ```bash
 cd personal_analysis
-python run_summary.py                        # Generate scenario summaries
-python interpret_results.py                  # Analyze network results
-python explore_scenarios.py                  # Discover available scenarios
+python run_summary.py                        # Generate summary statistics and tables from results
+python interpret_results.py                  # Analyze network results (flows, LMPs, congestion)
+python explore_scenarios.py                  # Discover and list all available scenario configurations
 ```
 
-**View results with dashboard:**
+**What each script produces:**
+- `run_summary.py` - Creates `summary_*.csv` with cost, ENS, shedding, and import metrics
+- `interpret_results.py` - Generates flow analysis, LMP heatmaps, and congestion reports
+- `explore_scenarios.py` - Lists scenario templates, year options, and cutout availability
+
+**Typical workflow:**
+1. Run scenarios via the web dashboard
+2. Verify results appear in the Results tab with all 7 required CSVs
+3. Run analysis scripts to generate additional insights
+4. Use outputs for reporting or further investigation
+
+### Viewing and Analyzing Results
+
+**Primary method: Web Dashboard (recommended)**
 ```bash
-cd vizualizer && npm run dev                 # Web dashboard (http://localhost:3000) — recommended
-# or
-python personal_dashboard/visualize_scenarios_ui_v2.py   # Legacy Tkinter UI
+cd vizualizer && npm run dev                 # http://localhost:3000
+```
+Features: scenario builder, live job monitoring, results browser with CSV previews and figures, live log tailing.
+
+**Legacy Tkinter UI (stable fallback):**
+```bash
+python personal_dashboard/visualize_scenarios_ui_v2.py
+```
+Use if the web dashboard has issues; features are mostly equivalent but less polished.
+
+**Manual inspection:**
+```bash
+ls results/                                   # List all result folders
+# Results must contain all 7 CSVs to be valid (see "Result Contract" below)
 ```
 
-**Add new year support (e.g., 2024):**
+### Adding Support for a New Year (e.g., 2024)
+
+The system auto-detects new year templates. No manual UI updates needed.
+
+**Steps:**
 1. Create `personal_docs/scenario_template_2024.yaml` (copy from 2023, update year references)
-2. Update UI dropdown in `scenario_manager_ui.py` to include "2024"
-3. Ensure cutout file exists: `data/cutout/archive/v0.8/europe-2024-sarah3-era5.nc`
-4. Function `resolve_template_path()` in `config_builder.py` automatically detects and uses new template
+   ```yaml
+   # At top of file, update:
+   cutout: europe-2024-sarah3-era5
+   # Update any references to 2023 → 2024 in comments
+   ```
+2. Verify cutout file exists: `data/cutout/archive/v0.8/europe-2024-sarah3-era5.nc`
+   - If missing, run: `cd personal_data_download && python download_cutout.py`
+3. No further changes needed; `resolve_template_path()` in `config_builder.py` auto-detects the new template
+4. Restart the web dashboard; the year should appear in the Cutout Year dropdown
+
+**Verification:**
+```bash
+cd personal_diagnostics
+python check_romania.py  # Should not raise errors about missing cutouts
+```
 
 ## Key Architectural Decisions
 
@@ -205,22 +277,95 @@ vizualizer/ writes → config/adversarial/generated/   (newly generated configs)
                    → vizualizer/.data/               (job state JSON)
 ```
 
-## Testing
+## Testing and Validation
+
+### Automated Testing
 
 **Unit tests for stress logic:**
 ```bash
-pytest test/test_romania_winter_stress.py
+pytest test/test_romania_winter_stress.py -v  # Run with verbose output to see each test
 ```
+Tests cover shock application, constraint generation, and result validation.
 
-**Manual validation (before large runs):**
-1. Verify config: `python personal_diagnostics/check_romania.py`
-2. Run baseline test: `python personal_runners/run_baseline_only.bat`
-3. Check outputs: `python personal_diagnostics/check_csv.py`
+### Manual Pre-Run Validation Checklist
+
+Before running large scenario suites, verify all prerequisites:
+
+1. **Check config validity:**
+   ```bash
+   python personal_diagnostics/check_romania.py
+   ```
+   Should show no errors about YAML syntax, missing cutouts, or invalid settings.
+
+2. **Run a quick baseline test:**
+   ```bash
+   python personal_runners/run_baseline_only.bat
+   ```
+   Should complete in 30-60 seconds; verifies solver and network loading.
+
+3. **Validate result structure:**
+   ```bash
+   python personal_diagnostics/check_csv.py
+   ```
+   Run after a scenario completes; ensures all 7 required CSVs are present and valid.
+
+4. **Verify data sources:**
+   ```bash
+   python personal_diagnostics/check_url.py
+   ```
+   Tests external API connectivity; if any fail, downloads may fail during future runs.
+
+**Typical troubleshooting flow:**
+```
+Check fails → Review error message → Fix (e.g., download cutout) → Re-check → Proceed
+```
 
 ## Notes for Future Development
 
-- **Bilingual Expansion**: Web dashboard bilingual support (EN/RO) is planned; Tkinter UI already has it via `scenario_manager/i18n.py`
-- **Tkinter Consolidation**: Once web dashboard reaches feature parity (bilingual toggle, all result tabs), the Tkinter UI can be retired
-- **Cutout Management**: Weather data (ERA5 cutouts) is heavy; `personal_data_download/download_cutout.py` pre-caches to `data/cutout/archive/v0.8/`
-- **Template Versioning**: As new years are added, keep all templates in sync for consistency; document breaking changes in `personal_docs/`
-- **Performance**: Large networks solve slowly; clustering and temporal resolution settings in config significantly impact runtime
+### Planned Enhancements
+
+**Bilingual Dashboard Support**
+- Web dashboard (Next.js) will soon support English/Romanian toggle similar to legacy Tkinter UI
+- Translations managed in `vizualizer/src/app/lib/i18n.ts` (structure mirrors `personal_dashboard/scenario_manager/i18n.py`)
+- Expected in next release
+
+**Tkinter UI Consolidation**
+- Legacy Tkinter UI (`personal_dashboard/`) will be retired once web dashboard achieves feature parity
+- Current status: web dashboard covers all core workflows; Tkinter remains as stable fallback
+
+### System Maintenance
+
+**Cutout and Data Management**
+- Weather data (ERA5 cutouts) is large (~2GB per year)
+- `personal_data_download/download_cutout.py` caches to `data/cutout/archive/v0.8/` for offline use
+- Zenodo datasets auto-cached during first scenario run
+- Delete `data/cutout/archive/` to force re-download if corruption suspected
+
+**Template Versioning Strategy**
+- Keep all year-specific templates in sync with each other
+- Document breaking changes in `personal_docs/TEMPLATE_ARCHITECTURE.md`
+- When updating stress test defaults, update all templates (not just 2023)
+- Use git history to track template evolution
+
+**Performance Tuning**
+- Network solve time scales with:
+  - **Cluster count**: Higher = slower but more spatially refined. Start with 5-10 for testing.
+  - **Temporal resolution**: Daily is much faster than hourly. Use for sensitivity studies.
+  - **Solver options**: `solver_logfile=false` and `min_iterations=1` can speed up test runs.
+- Typical baseline solve: 5-15 min (10 clusters, hourly). Stress solves usually ±10% due to shock magnitude.
+
+### Extensibility
+
+**Adding new stress types:**
+1. Define new shock parameters in template YAML under `stress_test.`
+2. Implement shock application logic in `scripts/romania_winter_stress.py`
+3. Add constraint generation in same script
+4. Update form controls in `vizualizer/src/app/components/ScenarioBuilder.tsx`
+5. Add new result metrics to reporting script
+
+**Supporting new geographic regions:**
+1. Extend PyPSA-Eur config scope (e.g., EU-wide instead of Balkans)
+2. Create region-specific template: `personal_docs/scenario_template_<region>.yaml`
+3. Update shock logic to apply only to target countries
+4. Add region-specific result visualizations
+5. Document in `personal_docs/REGION_GUIDE.md`

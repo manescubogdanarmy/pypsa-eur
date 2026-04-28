@@ -1,490 +1,318 @@
 # Running Documentation
 
+This note describes how runs move through the current Next.js dashboard from start to finish.
 
+## Start the dashboard
 
----
-# Source: personal_runners\README.md
-
-==================================================================
-# 🚀 Runners - Scenario Execution Scripts
-
-Command runners for PyPSA-Eur simulations. These scripts execute energy system scenarios and generate network solutions.
-
-## Python Runners
-
-### **run_all_scenarios.py**
-Executes all seasonal Romania scenarios.
-
-**Scenarios Run:**
-```
-config/romania_2020_winter.yaml    → results/romania-2020-winter/
-config/romania_2020_spring.yaml    → results/romania-2020-spring/
-config/romania_2020_summer.yaml    → results/romania-2020-summer/
-config/romania_2020_autumn.yaml    → results/romania-2020-autumn/
-config/romania_2020_december.yaml  → results/romania-2020-december/
-```
-
-**How to Run:**
 ```bash
-conda activate pypsa-eur
-python run_all_scenarios.py
+cd vizualizer
+npm run dev
 ```
 
-**Output:** Network files (*.nc) and CSV exports in results/
+The app opens on http://localhost:3000. You should see three tabs: Scenario Builder, Run Queue, Results.
 
----
-
-### **run_remaining_scenarios.py**
-Executes a specific subset of seasonal scenarios (winter, spring, summer).
-
-**Scenarios Run:**
-```
-config/romania_2020_winter.yaml    → results/romania-2020-winter/
-config/romania_2020_spring.yaml    → results/romania-2020-spring/
-config/romania_2020_summer.yaml    → results/romania-2020-summer/
-```
-
-**How to Run:**
+**Environment setup (if needed):**
+If the dashboard doesn't detect the correct conda environment:
 ```bash
-conda activate pypsa-eur
-python run_remaining_scenarios.py
+PLANUI_CONDA_ENV=pypsa npm run dev
 ```
-
-**Use Case:** Run specific subset without waiting for all 5 scenarios
 
 ---
 
-### **run_romania_winter_stress.py**
-Executes baseline + stress winter 2019 scenarios and generates comparison report.
+## How runs are executed (detailed)
 
-**Scenarios Run:**
-```
-Baseline:  config/adversarial/romania_2019_winter_baseline.yaml
-Stress:    config/adversarial/romania_2019_winter_stress.yaml
-Report:    Generates CSV comparison outputs
-```
+### Step 1: User Enqueues a Scenario
 
-**Output:**
-```
-results/romania-2020-winter-baseline/networks/base_s_10_elec_.nc
-results/romania-2020-winter-stress/networks/base_s_10_elec_.nc
-results/romania-2020-winter-stress-comparison/  (7 CSV files)
-```
+1. User fills form or edits YAML in Scenario Builder
+2. Clicks "Enqueue Run"
+3. `POST /api/runs/enqueue` is called with form data
 
-**How to Run:**
+### Step 2: Job Preparation
+
+1. Scenario inputs are validated (dates, paths, formats)
+2. In **paired mode**: Two YAML files are generated
+   - `<slug>_baseline.yaml` (no stress)
+   - `<slug>_scenario.yaml` (with stress shocks)
+3. In **single mode**: One YAML file generated; uses existing baseline network
+4. YAML files written to `config/adversarial/generated/`
+5. Job record created with unique ID: `job-<timestamp>`
+6. Job persisted to `vizualizer/.data/planui-state.json`
+7. **Status**: `queued`
+
+### Step 3: Runner Dequeues
+
+The job runner runs in the background and checks the queue:
+1. If another job is running, wait
+2. Otherwise, move first queued job to `running` state
+3. Save updated state to `planui-state.json`
+
+### Step 4: Environment Detection
+
+Before launching commands, detect Python/Snakemake location:
+1. Check `PLANUI_CONDA_ENV` env var (if set, use named env)
+2. Check `PLANUI_CONDA_PREFIX` env var (if set, use prefix path)
+3. Try active conda prefix (`$CONDA_PREFIX` if not `base`)
+4. Try `CONDA_DEFAULT_ENV` (if not `base`)
+5. Try named candidates: `pypsa`, then `pypsa-eur`
+6. Fallback to system Python
+
+Result: Command prefix like `conda run -n pypsa` or `conda run --prefix /path/to/env`
+
+### Step 5: Command Construction
+
+Snakemake and Python commands are assembled based on mode:
+
+**Paired mode (baseline + scenario):**
 ```bash
-conda activate pypsa-eur
-python run_romania_winter_stress.py
+conda run -n pypsa snakemake \
+  --unlock \
+  --configfile config/adversarial/generated/<slug>_baseline.yaml
+
+conda run -n pypsa snakemake \
+  --solve \
+  --configfile config/adversarial/generated/<slug>_baseline.yaml
+
+conda run -n pypsa snakemake \
+  --solve \
+  --configfile config/adversarial/generated/<slug>_scenario.yaml
+
+conda run -n pypsa python scripts/report_romania_winter_stress.py \
+  --baseline results/.../<slug>_baseline/ \
+  --scenario results/.../<slug>_scenario/ \
+  --output results/.../<slug>/
 ```
 
-**Status:** ✅ WORKING - Generates winter stress comparison outputs
-
----
-
-### **run_romania_winter_stress_direct.py**
-Direct execution version of winter stress runner (alternative implementation).
-
-**Scenarios Run:** Same as `run_romania_winter_stress.py`
-
-**How to Run:**
+**Single mode (scenario only, with reference baseline):**
 ```bash
-conda activate pypsa-eur
-python run_romania_winter_stress_direct.py
+conda run -n pypsa snakemake \
+  --solve \
+  --configfile config/adversarial/generated/<slug>_scenario.yaml
+  
+conda run -n pypsa python scripts/report_romania_winter_stress.py \
+  --baseline <reference-baseline-path> \
+  --scenario results/.../<slug>_scenario/ \
+  --output results/.../<slug>/
 ```
 
-**Use Case:** Alternative if main version has issues; includes direct subprocess handling
+### Step 6: Process Spawning and Monitoring
+
+1. Log file created: `logs/planui-web/<jobId>.log`
+2. Child process spawned with stdout/stderr captured
+3. Real-time log tailing begins
+4. Progress text extracted and updated in UI (e.g., "Step 2/3: Solving...")
+5. **Status**: `running`
+
+### Step 7: Process Completion
+
+**Success path (exit code 0):**
+- Job status → `succeeded`
+- UI shows "✓ Succeeded"
+- Log file finalized
+
+**Failure path (exit code non-zero):**
+- Job status → `failed`
+- UI shows error indicator
+- Log file contains error output for debugging
+
+**Cancellation (user clicks Cancel):**
+- SIGTERM signal sent to process
+- Process terminates (normally exits within seconds)
+- Job status → `cancelled`
+- Log file shows termination message
+
+**Restart/interruption (app restarts while running):**
+- App reads persisted job list from `planui-state.json`
+- Any job with status `running` is reset to `interrupted`
+- UI shows "⚠ Interrupted"
+
+### Step 8: Result Discovery
+
+Once job completes successfully:
+1. Dashboard scans `results/` directory
+2. Looks for folders with all 7 required CSVs
+3. Valid results appear in Results tab
+4. Summary metrics parsed and displayed
 
 ---
 
-## Batch/PowerShell Runners
+## Job states (complete reference)
 
-### **run_scenario.bat** 
-Windows batch script executing baseline + stress scenarios.
+| State | Meaning | Can transition to | Notes |
+|---|---|---|---|
+| `queued` | Waiting for runner | `running`, `cancelled` | User can cancel before start |
+| `running` | Currently executing | `succeeded`, `failed`, `cancelled`, `interrupted` | Only one job running at a time |
+| `succeeded` | Completed successfully (exit code 0) | (terminal) | Results should be discoverable |
+| `failed` | Failed with non-zero exit code | (terminal) | Check log for error details |
+| `cancelled` | User requested cancellation | (terminal) | SIGTERM was sent to process |
+| `interrupted` | App restarted while running | (terminal) | Job was not cleaned up; consider manual re-run |
 
-**Features:**
-- Conda environment activation for Windows batch
-- Snakemake workflow unlock before execution
-- Multiple scenario solves with resource constraints
-
-**How to Run:**
-```cmd
-cd c:\Users\Administrator\Desktop\newPyPSA\pypsa-eur
-run_scenario.bat
+**State transitions:**
 ```
-
-**Resources:** `mem_mb=32000` (32 GB RAM), `runtime=360` minutes
-
----
-
-### **run_scenario_v2.bat**
-Enhanced batch runner with improved error handling.
-
-**Improvements:**
-- Better error checking between steps
-- Cleaner output structure
-- More descriptive logging
-
-**How to Run:**
-```cmd
-cd c:\Users\Administrator\Desktop\newPyPSA\pypsa-eur
-run_scenario_v2.bat
+queued → (immediately) → running
+running → (on completion) → succeeded / failed / cancelled
+running → (app restart) → interrupted
 ```
 
 ---
 
-### **run_baseline_only.bat**
-Simplified batch runner for baseline scenario only (no stress).
+## Result discovery process
 
-**Scenarios Run:**
-```
-config/adversarial/romania_2019_winter_baseline.yaml
-```
+The Results tab actively scans `results/` for new output:
 
-**Output:**
-```
-results/romania-2020-winter-baseline/networks/
-```
+1. **Scan timing**: Triggered when user opens Results tab or every 5 seconds
+2. **Validation**: For each subfolder, check for all 7 required CSVs:
+   - `system_cost_comparison.csv`
+   - `generation_mix_mwh.csv`
+   - `lmp_summary_ro.csv`
+   - `ens_summary.csv`
+   - `curtailment_mwh.csv`
+   - `daily_net_imports_mwh.csv`
+   - `interconnector_flow_congestion.csv`
 
-**How to Run:**
-```cmd
-cd c:\Users\Administrator\Desktop\newPyPSA\pypsa-eur
-run_baseline_only.bat
-```
+3. **Result ranking**: Valid results sorted by modification time (newest first)
 
-**Use Case:** Quick test without full stress scenario overhead
-
----
-
-## Quick Reference
-
-| Script | Scenarios | Duration | Status |
-|--------|-----------|----------|--------|
-| `run_all_scenarios.py` | All 5 seasonal | ~5-6 hours | ✅ WORKING |
-| `run_remaining_scenarios.py` | 3 seasonal | ~3 hours | ✅ WORKING |
-| `run_romania_winter_stress.py` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_romania_winter_stress_direct.py` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_scenario.bat` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_scenario_v2.bat` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_baseline_only.bat` | Baseline only | ~1 hour | ✅ WORKING |
+4. **Summary extraction**: For each valid result:
+   - Parse CSVs to extract metrics (cost delta, ENS, LMP stats, etc.)
+   - Detect figures (PNG, SVG, Drawio files)
+   - Check for `assumptions_limitations.md`
+   - Return complete result metadata
 
 ---
 
-## Resource Requirements
+## When a run is considered complete
 
-**Minimum:**
-- RAM: 16 GB (will be slow)
-- Disk: 20 GB for results
-- Time: 1-2 hours per scenario
+A run is complete when:
 
-**Recommended:**
-- RAM: 32 GB
-- Disk: 50+ GB for full results
-- CPU: 8+ cores
-- Time: 30 minutes per scenario with resources
+1. **Paired mode**: 
+   - Baseline solve finishes ✓
+   - Scenario solve finishes ✓
+   - Report script generates CSVs and figures ✓
 
----
+2. **Single mode**:
+   - Scenario solve finishes ✓
+   - Report script generates CSVs and figures ✓
 
-## Configuration Files
-
-All runners use config files from `config/`:
-```
-config/
-├── romania_2020_winter.yaml        (Winter scenario)
-├── romania_2020_spring.yaml        (Spring scenario)
-├── romania_2020_summer.yaml        (Summer scenario)
-├── romania_2020_autumn.yaml        (Autumn scenario)
-├── romania_2020_december.yaml      (December scenario)
-└── adversarial/
-    ├── romania_2019_winter_baseline.yaml
-    └── romania_2019_winter_stress.yaml
-```
-
-Edit these configs to modify scenario parameters like:
-- Temporal resolution (hourly snapshots)
-- Spatial resolution (clustering)
-- Technology constraints
-- Solver parameters
+3. **Result validation**:
+   - All 7 required CSVs present ✓
+   - CSVs contain valid numeric data ✓
+   - Result folder appears in Results tab ✓
 
 ---
 
-## Troubleshooting
+## Practical notes and common scenarios
 
-**"Solver scip does not support quadratic problems"**
-- Try different solver (gurobi, cbc)
-- Modify clustering algorithm in config
+### Scenario: Network solver is slow
 
-**"Out of memory"**
-- Reduce spatial resolution (increase clustering)
-- Close other applications
-- Use `run_baseline_only.bat` for smaller run
+**Typical solve times:**
+- Baseline solve: 5-15 min (10 clusters, hourly resolution)
+- Stress scenario solve: Usually ±10% slower due to constraint additions
+- Report generation: 1-2 min
 
-**"Snakemake lock"**
-- Run `snakemake --unlock` before executing
-- Delete `.snakemake/locks/` folder if persistent
+**If solve is taking very long:**
+- Check Snakemake logs for solver progress: `tail -f logs/planui-web/<jobId>.log`
+- Network size (clusters, temporal resolution) significantly impacts solve time
+- SCIP solver can be slower on first run; subsequent runs may be faster
 
----
+### Scenario: Run failed with a solver error
 
-## Next Steps
+**Common causes:**
+- Infeasible constraint combination (too much stress)
+- Missing solver (SCIP not installed)
+- Corrupt network file
+- Insufficient system memory
 
-After running scenarios:
-1. View results with dashboard: `../dashboard/visualize_scenarios_ui_v2.py`
-2. Analyze outputs in `results/` folder
-3. Generate reports: See `../analysis/` folder
-4. Check diagnostics: See `../diagnostics/` folder
+**Debug steps:**
+1. Open Run Queue tab → select failed job → view log tail
+2. Look for "Infeasible" or "SCIP not found" messages
+3. Check `personal_diagnostics/check_romania.py` for config validation
+4. Try a simpler scenario (less stress, fewer clusters) to isolate issue
 
----
+### Scenario: App restarted while job was running
 
-## Additional Troubleshooting
+**What happens:**
+1. App loads persisted job list from `vizualizer/.data/planui-state.json`
+2. Any job with status `running` is marked as `interrupted`
+3. UI shows "⚠ Interrupted" indicator
+4. Manual action needed: cancel the interrupted job or retry
 
-**`No module named snakemake` in web dashboard (conda-run-prefix mode)**
-- Symptom: log shows `conda run -p C:\...\anaconda3 python -m snakemake` → `No module named snakemake`
-- Cause: dev server started while the **base** conda env was active; `CONDA_PREFIX` resolved to the Anaconda root which has no Snakemake
-- Fix: activate the `pypsa` env before starting the server (`conda activate pypsa && npm run dev`), or set `PLANUI_CONDA_ENV=pypsa` before running
-- The base-env guard in `runtime.ts` (added 2026-04-28) handles this automatically and falls through to the `pypsa`/`pypsa-eur` named-env candidates
+**To clean up:**
+1. Click "Delete" in Run Queue to remove the interrupted job record
+2. If Snakemake process is still running on system, kill manually:
+   ```bash
+   pkill -f snakemake
+   ```
+3. Enqueue the run again to retry
 
-**`add_electricity` rule fails: `ParserError: Error tokenizing data. C error: Expected 1 fields in line 8, saw 2`**
-- Cause: the IRENASTAT CSV cached by `powerplantmatching` is a Zenodo **403 Forbidden HTML page** — written when Zenodo rate-limited the initial download
-- File location: `C:\Users\<user>\AppData\Roaming\powerplantmatching\data\in\IRENASTAT_capacities_2000-2023.csv`
-- Detection: `head -3` the file — if it starts with `<html>` or `403 Forbidden`, it is corrupted
-- Fix: delete and re-download:
-  ```powershell
-  Remove-Item "$env:APPDATA\powerplantmatching\data\in\IRENASTAT_capacities_2000-2023.csv"
-  curl -L -o "$env:APPDATA\powerplantmatching\data\in\IRENASTAT_capacities_2000-2023.csv" `
-    "https://zenodo.org/records/10952917/files/IRENASTAT_capacities_2000-2023.csv"
-  ```
-- If Zenodo still rate-limits: set `estimate_renewable_capacities.enable: false` in the scenario YAML to skip the IRENA step (GEM data from `from_gem: true` is the primary capacity source anyway)
+### Scenario: Using custom conda environment
 
+**If you have a different Python environment:**
 
-
----
-# Source: vault\Piele-Runners\README.md
-
-==================================================================
-# 🚀 Runners - Scenario Execution Scripts
-
-Command runners for PyPSA-Eur simulations. These scripts execute energy system scenarios and generate network solutions.
-
-## Python Runners
-
-### **run_all_scenarios.py**
-Executes all seasonal Romania scenarios.
-
-**Scenarios Run:**
-```
-config/romania_2020_winter.yaml    → results/romania-2020-winter/
-config/romania_2020_spring.yaml    → results/romania-2020-spring/
-config/romania_2020_summer.yaml    → results/romania-2020-summer/
-config/romania_2020_autumn.yaml    → results/romania-2020-autumn/
-config/romania_2020_december.yaml  → results/romania-2020-december/
-```
-
-**How to Run:**
 ```bash
-conda activate pypsa-eur
-python run_all_scenarios.py
+export PLANUI_CONDA_ENV=my-custom-env
+cd vizualizer && npm run dev
 ```
 
-**Output:** Network files (*.nc) and CSV exports in results/
-
----
-
-### **run_remaining_scenarios.py**
-Executes a specific subset of seasonal scenarios (winter, spring, summer).
-
-**Scenarios Run:**
-```
-config/romania_2020_winter.yaml    → results/romania-2020-winter/
-config/romania_2020_spring.yaml    → results/romania-2020-spring/
-config/romania_2020_summer.yaml    → results/romania-2020-summer/
-```
-
-**How to Run:**
+Or directly specify prefix:
 ```bash
-conda activate pypsa-eur
-python run_remaining_scenarios.py
+export PLANUI_CONDA_PREFIX=/path/to/my/env
+cd vizualizer && npm run dev
 ```
 
-**Use Case:** Run specific subset without waiting for all 5 scenarios
+The dashboard will use that environment for all Snakemake and Python calls.
 
----
+### Scenario: Proxy environment interference
 
-### **run_romania_winter_stress.py**
-Executes baseline + stress winter 2019 scenarios and generates comparison report.
+**If you're behind a corporate proxy and experiencing network errors:**
 
-**Scenarios Run:**
-```
-Baseline:  config/adversarial/romania_2019_winter_baseline.yaml
-Stress:    config/adversarial/romania_2019_winter_stress.yaml
-Report:    Generates CSV comparison outputs
-```
+By default, the dashboard strips proxy variables to avoid Conda/Snakemake issues. If you need proxy variables passed through:
 
-**Output:**
-```
-results/romania-2020-winter-baseline/networks/base_s_10_elec_.nc
-results/romania-2020-winter-stress/networks/base_s_10_elec_.nc
-results/romania-2020-winter-stress-comparison/  (7 CSV files)
-```
-
-**How to Run:**
 ```bash
-conda activate pypsa-eur
-python run_romania_winter_stress.py
+export PLANUI_USE_SYSTEM_PROXY=1
+npm run dev
 ```
-
-**Status:** ✅ WORKING - Generates winter stress comparison outputs
 
 ---
 
-### **run_romania_winter_stress_direct.py**
-Direct execution version of winter stress runner (alternative implementation).
+## Monitoring and debugging
 
-**Scenarios Run:** Same as `run_romania_winter_stress.py`
+### Viewing job logs
 
-**How to Run:**
+**From the UI:**
+1. Open Run Queue tab
+2. Click the job you want to inspect
+3. Log tail appears in details panel on the right
+4. Scroll to see full output
+
+**From the filesystem:**
 ```bash
-conda activate pypsa-eur
-python run_romania_winter_stress_direct.py
+tail -f logs/planui-web/<jobId>.log    # Watch in real time
+cat logs/planui-web/<jobId>.log        # View complete log
+grep -i error logs/planui-web/*.log    # Find errors across all jobs
 ```
 
-**Use Case:** Alternative if main version has issues; includes direct subprocess handling
+### Common log messages
 
----
+| Message | Meaning |
+|---|---|
+| `Unlocking workflow` | Removing Snakemake locks (normal) |
+| `Building DAG of jobs` | Planning workflow (normal, can take ~30 sec) |
+| `Step X/Y` | Progress indicator |
+| `Solving network` | Running optimization (longest step) |
+| `[INFEASIBLE]` | Solver found no solution (too much stress?) |
+| `SCIP not found` | Solver missing (install: `conda install scip`) |
+| `Generating report` | Creating CSVs and figures (1-2 min) |
 
-## Batch/PowerShell Runners
+### Job state persistence
 
-### **run_scenario.bat** 
-Windows batch script executing baseline + stress scenarios.
+Queue state is saved to `vizualizer/.data/planui-state.json`:
 
-**Features:**
-- Conda environment activation for Windows batch
-- Snakemake workflow unlock before execution
-- Multiple scenario solves with resource constraints
-
-**How to Run:**
-```cmd
-cd c:\Users\Administrator\Desktop\newPyPSA\pypsa-eur
-run_scenario.bat
+```bash
+cat vizualizer/.data/planui-state.json | jq .
 ```
 
-**Resources:** `mem_mb=32000` (32 GB RAM), `runtime=360` minutes
+This JSON file is updated:
+- Every 1-2 seconds during job execution
+- Immediately when state changes (queued → running, etc.)
+- On app startup to detect unfinished jobs
 
----
-
-### **run_scenario_v2.bat**
-Enhanced batch runner with improved error handling.
-
-**Improvements:**
-- Better error checking between steps
-- Cleaner output structure
-- More descriptive logging
-
-**How to Run:**
-```cmd
-cd c:\Users\Administrator\Desktop\newPyPSA\pypsa-eur
-run_scenario_v2.bat
-```
-
----
-
-### **run_baseline_only.bat**
-Simplified batch runner for baseline scenario only (no stress).
-
-**Scenarios Run:**
-```
-config/adversarial/romania_2019_winter_baseline.yaml
-```
-
-**Output:**
-```
-results/romania-2020-winter-baseline/networks/
-```
-
-**How to Run:**
-```cmd
-cd c:\Users\Administrator\Desktop\newPyPSA\pypsa-eur
-run_baseline_only.bat
-```
-
-**Use Case:** Quick test without full stress scenario overhead
-
----
-
-## Quick Reference
-
-| Script | Scenarios | Duration | Status |
-|--------|-----------|----------|--------|
-| `run_all_scenarios.py` | All 5 seasonal | ~5-6 hours | ✅ WORKING |
-| `run_remaining_scenarios.py` | 3 seasonal | ~3 hours | ✅ WORKING |
-| `run_romania_winter_stress.py` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_romania_winter_stress_direct.py` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_scenario.bat` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_scenario_v2.bat` | Baseline + Stress | ~2 hours | ✅ WORKING |
-| `run_baseline_only.bat` | Baseline only | ~1 hour | ✅ WORKING |
-
----
-
-## Resource Requirements
-
-**Minimum:**
-- RAM: 16 GB (will be slow)
-- Disk: 20 GB for results
-- Time: 1-2 hours per scenario
-
-**Recommended:**
-- RAM: 32 GB
-- Disk: 50+ GB for full results
-- CPU: 8+ cores
-- Time: 30 minutes per scenario with resources
-
----
-
-## Configuration Files
-
-All runners use config files from `config/`:
-```
-config/
-├── romania_2020_winter.yaml        (Winter scenario)
-├── romania_2020_spring.yaml        (Spring scenario)
-├── romania_2020_summer.yaml        (Summer scenario)
-├── romania_2020_autumn.yaml        (Autumn scenario)
-├── romania_2020_december.yaml      (December scenario)
-└── adversarial/
-    ├── romania_2019_winter_baseline.yaml
-    └── romania_2019_winter_stress.yaml
-```
-
-Edit these configs to modify scenario parameters like:
-- Temporal resolution (hourly snapshots)
-- Spatial resolution (clustering)
-- Technology constraints
-- Solver parameters
-
----
-
-## Troubleshooting
-
-**"Solver scip does not support quadratic problems"**
-- Try different solver (gurobi, cbc)
-- Modify clustering algorithm in config
-
-**"Out of memory"**
-- Reduce spatial resolution (increase clustering)
-- Close other applications
-- Use `run_baseline_only.bat` for smaller run
-
-**"Snakemake lock"**
-- Run `snakemake --unlock` before executing
-- Delete `.snakemake/locks/` folder if persistent
-
----
-
-## Next Steps
-
-After running scenarios:
-1. View results with dashboard: `../dashboard/visualize_scenarios_ui_v2.py`
-2. Analyze outputs in `results/` folder
-3. Generate reports: See `../analysis/` folder
-4. Check diagnostics: See `../diagnostics/` folder
-
-
-
+Queue survives app restarts; running jobs marked as `interrupted`.

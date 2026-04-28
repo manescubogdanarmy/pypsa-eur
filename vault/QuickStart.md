@@ -1,106 +1,169 @@
 # Quick Start Guide
 
-This guide covers everything needed to set up a fresh machine and run the PyPSA-Eur Romania project end-to-end.
+This guide covers the shortest path from a fresh clone to the current browser dashboard running locally.
 
 ---
 
-## Prerequisites (install once, system-level)
+## Prerequisites (5 minutes to verify)
 
-| Tool | Why | Install |
+| Tool | Check | Install |
 |---|---|---|
-| [Miniconda or Anaconda](https://docs.conda.io/en/latest/miniconda.html) | Python environment manager | Download installer |
-| [Node.js ≥ 20 LTS](https://nodejs.org/) | Required for the vizualizer web dashboard | Download installer or `winget install OpenJS.NodeJS.LTS` |
+| Miniconda/Anaconda | `conda --version` | [conda-forge.org](https://conda-forge.org) |
+| Node.js 20 LTS+ | `node --version` | [nodejs.org](https://nodejs.org) or `winget install OpenJS.NodeJS.LTS` |
 
 ---
 
-## 1. Create and Activate the Conda Environment
+## 1. Create the Conda Environment (3-5 minutes)
+
+From the repo root:
 
 ```bash
-# From the repo root — creates environment named "pypsa" (overrides the name in the yaml)
 conda env create -f envs/environment.yaml -n pypsa
-
-# Activate it
 conda activate pypsa
 ```
 
-> [!NOTE]
-> The environment file (`envs/environment.yaml`) installs all Python packages, Snakemake, and solvers (HiGHS, GLPK, SCIP, Gurobi). This step takes 5–15 minutes.
+**What this does:**
+- Creates a new conda environment named `pypsa`
+- Installs Python 3.11/3.12, PyPSA, Snakemake, SCIP solver, and all dependencies
+- Activates the environment for your current terminal session
 
-### Fix for Python 3.13+ (linopy / pkg_resources)
+**Verification:**
+```bash
+python --version          # Should show 3.11 or 3.12
+snakemake --version       # Should show 8.0 or newer
+```
 
-If conda resolves Python 3.13 or newer, run this after environment creation:
+**If Python 3.13 is selected**, apply this fix after environment creation:
 
 ```bash
 conda run -n pypsa pip install "google-cloud-storage>=2.10"
 ```
 
-**Symptom without fix:** `ModuleNotFoundError: No module named 'pkg_resources'` when Snakemake starts. See [[Vizualizer#Known Environment Issue]] for details.
-
 ---
 
-## 2. Download Required Data
+## 2. Download Required Data (5-10 minutes, depending on internet)
 
-The `data/` folder is not in the repo (~5–10 GB). Download it before running any scenario:
+The repo does not ship the large weather and cost datasets. Download them before running scenarios:
 
 ```bash
 cd personal_data_download
-
-# 1. Weather cutout (ERA5 + SARAH-3, ~1.2 GB) — takes 10–30 min
-python download_cutout.py
-
-# 2. Zenodo datasets (power plants, grid, costs, boundaries, ~5–10 GB) — takes 30–120 min
-python download_zenodo_files.py
+python download_cutout.py              # ~2GB ERA5 weather data
+python download_zenodo_files.py        # ~500MB cost/capacity data
 ```
 
-> [!WARNING]
-> Zenodo occasionally rate-limits downloads and returns a 403 HTML page instead of the actual file. If a later pipeline step fails with a CSV parse error on a file in `AppData\Roaming\powerplantmatching\`, that file is a corrupted 403 page — delete it and re-download. See [[Running#Additional Troubleshooting]] for the full fix.
+**What this does:**
+- `download_cutout.py` - Fetches ERA5 weather cutouts via ECMWF MARS API; caches to `data/cutout/archive/v0.8/`
+- `download_zenodo_files.py` - Downloads from Zenodo; auto-decompresses to `data/`
+
+**Verification:**
+```bash
+ls data/cutout/archive/v0.8/ | head    # Should list .nc files
+ls data/                       # Should list cost_*.csv, etc.
+```
+
+**If download is slow:**
+- Check internet connection: `python check_url.py` (from `personal_diagnostics/`)
+- On corporate networks, proxy settings may need configuration
+- Downloads are cached; subsequent runs use local files
 
 ---
 
-## 3. Install Web Dashboard Dependencies
-
-`node_modules` is not committed to the repo. Run once after cloning:
+## 3. Install the Vizualizer Dependencies (2-3 minutes)
 
 ```bash
 cd vizualizer
 npm install
 ```
 
+**What this does:**
+- Reads `package.json` and `package-lock.json`
+- Downloads and installs React, Next.js, TypeScript, and all UI dependencies
+- Caches to `node_modules/` (~500 MB)
+
+**Verification:**
+```bash
+ls node_modules/@next             # Should list many packages
+```
+
 ---
 
-## 4. Launch the Web Dashboard (recommended)
+## 4. Start the Web Dashboard (1 minute)
 
 ```bash
 cd vizualizer
-npm run dev        # http://localhost:3000
+npm run dev
 ```
 
-> [!NOTE]
-> The dashboard auto-discovers the `pypsa` conda environment. If detection fails (e.g. you started the server while `base` was active), set `PLANUI_CONDA_ENV=pypsa` before running. See [[Vizualizer]] for full documentation.
+**Expected output:**
+```
+> next dev
+  ▲ Next.js 16.2.4
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+Ready in 3.2s
+```
+
+Open http://localhost:3000 in your browser.
 
 ---
 
-## 5. (Optional) Legacy Tkinter UI
+## 5. Verify the Dashboard Works (2-5 minutes)
 
-The Tkinter dashboard is still functional as a fallback:
+### Step 5a: Scenario Builder
+- The **Scenario Builder** tab should load a YAML template
+- Form fields should be visible: Scenario Slug, Countries, Snapshot Window, etc.
+- YAML editor on the right should show a valid YAML config
 
+### Step 5b: Configuration Validation
+Open a new terminal and run:
 ```bash
-# From the repo root
-python personal_dashboard/visualize_scenarios_ui_v2.py
+cd personal_diagnostics
+python check_romania.py
 ```
 
-> [!NOTE]
-> The dashboard auto-scans `results/` and shows only folders with the 7 required new-format CSVs. Legacy formats are not displayed.
+**Expected result:** No errors. Output should list valid scenario templates and settings.
+
+### Step 5c: Quick Test Run (optional, ~30-60 seconds)
+If you want to verify everything can run:
+```bash
+cd personal_runners
+python run_baseline_only.bat
+```
+
+This solves a quick baseline network without stress shocks. Should complete with "SUCCESS" message.
 
 ---
 
-## Summary Checklist (new machine)
+## 6. First Things to Verify
 
-- [ ] Miniconda / Anaconda installed
-- [ ] Node.js ≥ 20 LTS installed
-- [ ] `conda env create -f envs/environment.yaml -n pypsa`
-- [ ] `google-cloud-storage>=2.10` fix applied (if Python 3.13+)
-- [ ] `python personal_data_download/download_cutout.py`
-- [ ] `python personal_data_download/download_zenodo_files.py`
-- [ ] `cd vizualizer && npm install`
-- [ ] `npm run dev` → open http://localhost:3000
+✅ **Scenario Builder loads a template** and allows form edits
+✅ **Form → YAML sync works** (toggle "Sync to YAML" button)
+✅ **"Check Romania" validation passes** with no errors
+✅ **Quick baseline test completes** (optional, but recommended)
+
+If all checks pass, you're ready to build and run scenarios!
+
+---
+
+## Next Steps
+
+- **[[Usage]]** - How to build scenarios, enqueue runs, and view results
+- **[[Running]]** - Understanding job states and queue behavior
+- **[[Vizualizer]]** - API documentation and configuration details
+- **[[CLAUDE.md]]** - Common workflows and troubleshooting
+
+---
+
+## Troubleshooting Quick Start
+
+| Issue | Fix |
+|---|---|
+| `conda: command not found` | Reinstall Miniconda or add conda to PATH |
+| `node: command not found` | Reinstall Node.js or add to PATH |
+| Download fails (429, 403) | Check internet connection or try `check_url.py` |
+| Port 3000 in use | Use different port: `PORT=3001 npm run dev` |
+| Blank dashboard page | Check browser console for errors; try hard refresh (Ctrl+F5) |
+| SCIP solver not found | Run `conda install -c conda-forge scip` |
+
+For more help, see [[Installation]] or [[Running]].

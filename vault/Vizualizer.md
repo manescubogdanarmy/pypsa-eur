@@ -1,200 +1,359 @@
-# Vizualizer – Web Dashboard
+# Vizualizer - Web Dashboard
 
-The `vizualizer/` folder contains a Next.js web application that replaces and extends the legacy Tkinter UI. It provides scenario management, run orchestration, and results browsing through a browser at `http://localhost:3000`.
+The `vizualizer/` folder contains the current Next.js dashboard for scenario creation, run orchestration, and result exploration.
 
 > [!NOTE]
-> The intentional spelling is **vizualizer** (with a z), matching the folder name.
+> The spelling is intentionally `vizualizer` with a z, matching the folder name.
 
----
+## Stack and Technology
 
-## Stack
-
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16.2.4 (App Router) |
-| UI | React 19.2.4, Tailwind CSS 4 |
-| Language | TypeScript 5 |
-| CSV parsing | papaparse 5 |
-| YAML parsing | yaml 2 |
-| Runtime | Node.js (server-side API routes) |
-
----
-
-## Starting the Dashboard
-
-```bash
-cd vizualizer
-npm install       # only needed once
-npm run dev       # starts dev server at http://localhost:3000
-```
-
-Production build:
-```bash
-npm run build
-npm start
-```
-
----
-
-## Pages
-
-### Scenario Builder
-- **Run mode selector:** `Paired (baseline + scenario)` or `Single scenario with reference baseline`
-- **Form controls** for all scenario parameters: countries, snapshot window, cutout year, clusters, solver, stress-test shocks
-- **YAML editor** — shows generated working YAML, editable before enqueue
-- Template is read-only (`personal_docs/scenario_template.yaml`); the editor edits a working copy only
-
-### Runs
-- Enqueue jobs into a sequential queue (one active at a time)
-- Per-job status: `queued` → `running` → `succeeded` / `failed` / `cancelled` / `interrupted`
-- Live progress message (last stdout/stderr line)
-- Log file viewer (last 200 lines from `logs/planui-web/<jobId>.log`)
-- Cancel button (immediate for queued; kills process for running)
-- On restart, any job that was `running` is marked `interrupted`
-
-### Results
-- Auto-scans `results/` for comparison output folders
-- Only shows folders that contain all 7 required CSVs (see below)
-- Tabs per result:
-  - **Summary** – parsed cost delta, ENS, imports, price stats
-  - **CSV Data** – dropdown + table preview for each required CSV
-  - **Figures** – PNG viewer with file picker
-  - **Assumptions** – renders `assumptions_limitations.md`
-
----
-
-## API Endpoints
-
-All endpoints are Next.js Route Handlers under `src/app/api/`.
-
-| Method | Path | Purpose |
+| Layer | Technology | Version |
 |---|---|---|
-| `GET` | `/api/scenario/template` | Load canonical YAML template |
-| `POST` | `/api/scenario/build` | Build working YAML from form inputs |
-| `POST` | `/api/runs/enqueue` | Generate configs + enqueue job |
-| `GET` | `/api/runs/jobs` | List all job records |
-| `POST` | `/api/runs/cancel` | Cancel a job by ID |
-| `GET` | `/api/runs/log` | Tail job log (`?jobId=…`) |
-| `GET` | `/api/runs/baselines` | List solved baseline network files |
-| `GET` | `/api/results` | Scan and list valid result entries |
-| `GET` | `/api/results/summary` | Parsed summary + file list (`?name=…`) |
-| `GET` | `/api/results/csv` | CSV preview (`?name=…&file=…`) |
-| `GET` | `/api/results/figure` | Serve figure PNG (`?name=…&file=…`) |
-| `GET` | `/api/results/assumptions` | Assumptions markdown (`?name=…`) |
+| Framework | Next.js App Router | 16.2.4 |
+| UI Library | React | 19.2.4 |
+| Language | TypeScript | 5 |
+| Styling | Tailwind CSS | 4 |
+| CSV Parsing | papaparse | 5 |
+| YAML Parsing | yaml | 2 |
+| Runtime | Node.js server-side routes | (no Edge Runtime) |
 
----
+**Browser support:**
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+- Bilingual support: English (default) and Romanian
 
-## File Paths Used
+## Main UI Structure
 
-All paths are resolved relative to the repo root (one level up from `vizualizer/`).
+The landing page (`src/app/page.tsx`) is a three-tab control room:
 
-| Purpose | Path |
-|---|---|
-| Results output | `results/` |
-| Generated configs | `config/adversarial/generated/` |
-| Scenario templates | `personal_docs/` |
-| Job logs | `logs/planui-web/<jobId>.log` |
-| State persistence | `vizualizer/.data/planui-state.json` |
+### Tab 1: Scenario Builder
+- Form with fields for slug, countries, dates, cluster count, solver options
+- Stress test controls: load multiplier, hydro reduction, gas reduction, SCADA, import caps
+- Working YAML editor with real-time syntax highlighting
+- Form ↔ YAML synchronization buttons
+- Enqueue button to submit completed scenario
 
----
+### Tab 2: Run Queue
+- Table of queued and historical jobs
+- Live progress indicators and status badges
+- Details panel showing job spec and log tail
+- Cancel button for running/queued jobs
+- Delete button for completed jobs
+- Reset button for queue maintenance
 
-## Runtime Detection (Conda Auto-Discovery)
+### Tab 3: Results and Vizualizer
+- List of valid result folders (with all 7 required CSVs)
+- Summary metrics display (cost, ENS, LMP, etc.)
+- Tabbed result details: Summary, CSV Data, Figures, Assumptions, Drawio/SVG
+- CSV preview (first 20 rows) and download
+- PNG figures rendered inline
+- Markdown rendering for assumptions
 
-On startup, `src/app/lib/runtime.ts` auto-detects how to run Snakemake and Python. Priority order (first match wins):
+The UI supports English and Romanian labels via language toggle, a theme toggle (light/dark mode), and responsive layout styling in `src/app/globals.css`.
 
-1. **`PLANUI_CONDA_ENV`** env var — use named env directly (`conda run -n <name>`) — highest priority
-2. **`PLANUI_CONDA_PREFIX`** env var — use prefix path directly (`conda run -p <prefix>`)
-3. **`CONDA_PREFIX`** env var — active conda prefix, **only if `CONDA_DEFAULT_ENV` is not `base`** (guards against using the base environment when the dev server is launched without activating the project env)
-4. **`CONDA_DEFAULT_ENV`** — currently active named env (skipped if `base`)
-5. **Candidates:** `pypsa`, `pypsa-eur` — first one found in `conda env list` wins
-6. **Fallback:** plain `python` / `python -m snakemake` (system Python)
+## Scenario Builder Details
 
-> [!WARNING]
-> If you start `npm run dev` from a terminal where the **base** conda environment is active, `CONDA_PREFIX` points to the Anaconda root (no Snakemake). The base-env guard (step 3) catches this and falls through to the named-env candidates. Still, the safest practice is to activate the `pypsa` environment before starting the server, or set `PLANUI_CONDA_ENV` explicitly.
+### Supported modes
 
-To override, set the env var before starting the dev server:
+**Paired mode** (default)
+- Generates `<slug>_baseline.yaml` and `<slug>_scenario.yaml`
+- Runs baseline first (no stress), then scenario (with stress)
+- Report script compares baseline vs. scenario
+- Best for stress test analysis
+
+**Single mode**
+- Generates only `<slug>_scenario.yaml`
+- Uses existing baseline network for comparison
+- Baseline solve skipped; saves time if reference already exists
+- Use when comparing multiple scenarios against same baseline
+
+### Form fields
+
+| Field | Purpose | Example |
+|---|---|---|
+| **Scenario Slug** | Short name for this scenario (alphanumeric + underscore) | `winter_stress_v2` |
+| **Countries** | Comma-separated country codes to include | `RO,BG,HU,RS` |
+| **Cutout Year** | Year for weather data (must match available cutout) | `2023` |
+| **Snapshot Start** | Start date in YYYY-MM-DD format | `2023-01-15` |
+| **Snapshot End** | End date (must be ≥ start date) | `2023-01-22` |
+| **Cluster Count** | Number of nodes in network clustering | `10` |
+| **Solver Name** | Linear/integer solver to use | `scip` |
+| **Solver Options** | Additional solver flags (pipe-delimited) | `solver_logfile=false` |
+
+### Stress test parameters
+
+When stress testing enabled:
+
+| Parameter | Range | Default | Effect |
+|---|---|---|---|
+| **Load Multiplier** | 0.5 - 2.0 | 1.0 | Demand scaling (1.2 = +20%) |
+| **Hydro Reduction** | 0.0 - 1.0 | 0.0 | Hydro availability cut (0.3 = -70%) |
+| **Gas Capacity Reduction** | 0.0 - 1.0 | 0.0 | Gas plant capacity cut (0.5 = -50%) |
+| **SCADA Proxy Enabled** | yes/no | no | Enable ramp rate constraints |
+| **Import Cap Enabled** | yes/no | no | Enable flow directional caps |
+
+### Template system
+
+**Template loading:**
+- Year-specific templates auto-detected: `personal_docs/scenario_template_<year>.yaml`
+- Falls back to `personal_docs/scenario_template.yaml` if year not found
+- Templates contain all default values and stress test structure
+
+## Run Queue
+
+The queue is sequential. One job runs at a time.
+
+**Job states:**
+- `queued` - Waiting in queue
+- `running` - Currently executing
+- `succeeded` - Completed successfully (exit code 0)
+- `failed` - Failed with non-zero exit code
+- `cancelled` - User requested cancellation (SIGTERM sent)
+- `interrupted` - App restarted while job was running
+
+**Features:**
+- Real-time progress tracking with log tailing from `logs/planui-web/<jobId>.log`
+- Cancel button for queued/running jobs (stops before start or sends SIGTERM)
+- Delete button to remove completed job records
+- Reset button to clear runner state if queue appears stuck
+- Job history persisted to `vizualizer/.data/planui-state.json` (survives app restarts)
+
+## Results Viewer
+
+The Results tab scans `results/` and only shows folders that contain all seven comparison CSVs:
+
+1. `system_cost_comparison.csv` - Total cost, generation costs, etc.
+2. `generation_mix_mwh.csv` - MWh by technology (wind, solar, hydro, gas, coal, nuclear)
+3. `lmp_summary_ro.csv` - Locational marginal prices for Romania regions
+4. `ens_summary.csv` - Energy not served (unmet demand) by country
+5. `curtailment_mwh.csv` - Curtailed renewable generation
+6. `daily_net_imports_mwh.csv` - Daily net imports by country
+7. `interconnector_flow_congestion.csv` - Congestion hours per interconnector line
+
+**For each valid result folder the UI shows:**
+- Parsed summary metrics (cost delta, ENS, shedding, LMP stats)
+- CSV previews (first 20 rows, with full download)
+- PNG figures rendered inline
+- Drawio diagram files for export
+- SVG files for export
+- `assumptions_limitations.md` when present (markdown rendering)
+
+## API Routes (Complete Reference)
+
+All endpoints live under `src/app/api/`. Complete documentation for each:
+
+### Scenario Management
+
+**`GET /api/scenario/template`**
+- Load YAML template for selected cutout year
+- Query params: `?year=2023`
+- Response: `{ yaml: string }`
+- Used by Builder tab to initialize form
+
+**`POST /api/scenario/build`**
+- Build YAML from form inputs
+- Request body: `{ mode: "paired"|"single", slug: string, countries: string, ... }`
+- Response: `{ yaml: string, errors?: string[] }`
+- Validates inputs and merges with template defaults
+
+### Job Management
+
+**`GET /api/runs/jobs`**
+- List all queued and historical jobs
+- Response: `{ jobs: JobRecord[] }`
+- Used by Run Queue tab
+
+**`POST /api/runs/enqueue`**
+- Generate configs and queue a job
+- Request body: scenario inputs
+- Response: `{ jobId: string, status: "queued" }`
+
+**`POST /api/runs/cancel`**
+- Cancel a queued or running job
+- Request body: `{ jobId: string }`
+- Response: `{ status: "cancelled" }`
+
+**`POST /api/runs/delete`**
+- Delete a job record (does NOT delete results/configs)
+- Request body: `{ jobId: string }`
+- Response: `{ status: "deleted" }`
+
+**`POST /api/runs/reset`**
+- Reset runner state and recheck queue
+- Response: `{ status: "reset" }`
+
+**`GET /api/runs/log`**
+- Tail a job log by ID
+- Query params: `?jobId=<id>&lines=50`
+- Response: `{ log: string }`
+
+**`GET /api/runs/baselines`**
+- List available baseline network files
+- Response: `{ baselines: string[] }`
+
+### Results Management
+
+**`GET /api/results`**
+- Scan and list valid result folders
+- Response: `{ results: { name: string, timestamp: number }[] }`
+- Only returns folders with all 7 required CSVs
+
+**`GET /api/results/summary`**
+- Parse summary metrics from a result folder
+- Query params: `?result=<name>`
+- Returns: cost delta, ENS, max shedding, LMP stats, figure list
+
+**`GET /api/results/csv`**
+- Return CSV preview (first 20 rows)
+- Query params: `?result=<name>&file=system_cost_comparison.csv`
+- Response: `{ rows: Array<Record<string, string>> }`
+
+**`GET /api/results/figure`**
+- Serve a PNG figure
+- Query params: `?result=<name>&file=fig_01.png`
+- Response: Binary PNG data
+
+**`GET /api/results/drawio`**
+- Download a Drawio file
+- Query params: `?result=<name>&file=diagram.drawio`
+- Response: Drawio XML file
+
+**`GET /api/results/svg`**
+- Download an SVG file
+- Query params: `?result=<name>&file=diagram.svg`
+- Response: SVG XML
+
+**`POST /api/results/diagrams`**
+- Generate result diagrams (if not already present)
+- Request body: `{ result: string }`
+- Response: `{ status: "generating" }`
+
+## Runtime Detection and Configuration
+
+**File: `src/app/lib/runtime.ts`**
+
+Resolves Python and Snakemake commands in this priority order:
+
+1. **`PLANUI_CONDA_ENV`** env var (if set, use named environment)
+   ```bash
+   export PLANUI_CONDA_ENV=pypsa
+   npm run dev
+   ```
+
+2. **`PLANUI_CONDA_PREFIX`** env var (if set, use prefix path)
+   ```bash
+   export PLANUI_CONDA_PREFIX=/usr/local/envs/pypsa
+   npm run dev
+   ```
+
+3. **Active conda prefix** (`$CONDA_PREFIX` if not `base`)
+   - Auto-detected if user has activated an environment
+
+4. **`CONDA_DEFAULT_ENV`** env var (if set and not `base`)
+
+5. **Named environment candidates** (in order):
+   - `pypsa`
+   - `pypsa-eur`
+
+6. **System Python fallback** (`/usr/bin/python3` on Unix, `python.exe` on Windows)
+
+**Command prefix construction:**
+```javascript
+// If PLANUI_CONDA_ENV="pypsa"
+commandPrefix = "conda run -n pypsa"
+
+// If PLANUI_CONDA_PREFIX="/path/to/env"
+commandPrefix = "conda run --prefix /path/to/env"
+
+// If auto-detected active conda env
+commandPrefix = "conda run -n <active-env>"
+```
+
+### Environment variable management
+
+**Proxy stripping (default behavior):**
+- By default, `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`, etc. are removed from subprocess environment
+- Reason: Conda and Snakemake can malfunction behind proxies
+
+**To keep proxy variables:**
 ```bash
-$env:PLANUI_CONDA_ENV = "pypsa"   # PowerShell
-# or
-set PLANUI_CONDA_ENV=pypsa        # CMD
+export PLANUI_USE_SYSTEM_PROXY=1
+npm run dev
 ```
 
-### Snakemake Remote Check Flag
+**Other env vars preserved:**
+- Standard conda vars: `CONDA_CHANNELS`, `CONDA_SOLVER`, etc.
+- Snakemake vars: `SNAKEMAKE_CORES`, etc.
 
-By default, `--storage-cached-http-skip-remote-checks` is passed to every Snakemake invocation. To disable:
-```bash
-$env:PLANUI_SNAKEMAKE_SKIP_REMOTE_CHECKS = "0"
+## Job Lifecycle and State Management
+
+**Job record structure:**
+```typescript
+interface JobRecord {
+  id: string;                  // Unique job ID (job-TIMESTAMP)
+  status: JobStatus;           // queued | running | succeeded | failed | cancelled | interrupted
+  mode: "paired" | "single";   // Run mode
+  slug: string;                // Scenario slug
+  output: string;              // Result folder path
+  configBaseline?: string;     // Baseline config path (paired mode)
+  configScenario: string;      // Scenario config path
+  createdAt: string;           // ISO 8601 timestamp
+  startedAt?: string;          // When job started
+  completedAt?: string;        // When job completed
+  progress?: string;           // Current progress text
+  exitCode?: number;           // Process exit code
+}
 ```
 
-### Proxy Stripping
+**State persistence:**
+- File: `vizualizer/.data/planui-state.json`
+- Updated every 1-2 seconds during execution
+- Immediately updated on state changes
+- Survives app restarts; running jobs marked as `interrupted`
 
-HTTP proxy environment variables are stripped before spawning subprocesses to prevent conda/snakemake from routing traffic through corporate proxies unintentionally. To keep them:
-```bash
-$env:PLANUI_USE_SYSTEM_PROXY = "1"
-```
+**Paired mode flow:**
+1. Generate `<slug>_baseline.yaml` and `<slug>_scenario.yaml`
+2. Unlock workflow
+3. Solve baseline
+4. Solve scenario
+5. Generate comparison report (CSVs, figures)
+6. Result validation (all 7 CSVs present)
 
----
+**Single mode flow:**
+1. Generate `<slug>_scenario.yaml`
+2. Solve scenario
+3. Generate report (using provided baseline network)
+4. Result validation
 
-## Job Lifecycle
+## Known Environment Issues
 
-```
-POST /api/runs/enqueue
-    ↓ buildConfigs() → writes baseline + scenario YAMLs to config/adversarial/generated/
-    ↓ buildCommands() → constructs argv arrays for snakemake unlock, solve, report
-    ↓ jobRunner.enqueue(spec) → writes to planui-state.json
-    ↓ runNext() → if no active job, starts immediately
+### Python 3.13 + linopy → `pkg_resources` error
 
-Per-command sequence (paired mode):
-  1. snakemake --unlock --configfile <baseline_cfg>     [allowFailure]
-  2. snakemake -c all <baseline_target_nc> --configfile <baseline_cfg>
-  3. snakemake --unlock --configfile <scenario_cfg>     [allowFailure]
-  4. snakemake -c all <scenario_target_nc> --configfile <scenario_cfg>
-  5. python scripts/report_romania_winter_stress.py \
-       --baseline-net <baseline_nc> --scenario-net <scenario_nc> \
-       --country <country> --outdir results/<output_name>
-```
+**Symptom:** `ModuleNotFoundError: No module named 'pkg_resources'` when running Snakemake
 
----
-
-## Required Result CSVs
-
-A result folder is only displayed if all seven files are present:
-
-1. `system_cost_comparison.csv`
-2. `generation_mix_mwh.csv`
-3. `lmp_summary_ro.csv`
-4. `ens_summary.csv`
-5. `curtailment_mwh.csv`
-6. `daily_net_imports_mwh.csv`
-7. `interconnector_flow_congestion.csv`
-
----
-
-## Known Environment Issue (Python 3.13 + linopy)
-
-**Symptom:** `ModuleNotFoundError: No module named 'pkg_resources'` when Snakemake starts.
-
-**Root cause:** `linopy` imports `google-cloud-storage` at module load time. The old bundled version `1.31.2` uses the deprecated `pkg_resources` API which is broken in Python 3.13.
+**Cause:** Old `google-cloud-storage` (v1.31.2) depends on deprecated `pkg_resources` API, removed in Python 3.13
 
 **Fix:**
 ```bash
 conda run -n pypsa pip install "google-cloud-storage>=2.10"
 ```
 
-Modern `google-cloud-storage` (2.x) uses `importlib.metadata` instead of `pkg_resources` and resolves the import chain.
+### Proxy-related Snakemake failures
 
----
+**Symptom:** Snakemake fails with network-related errors, especially behind corporate proxy
 
-## Relationship to Legacy Tkinter UI
+**Fix:**
+```bash
+export PLANUI_USE_SYSTEM_PROXY=1
+npm run dev
+```
 
-| Feature | Tkinter UI (`personal_dashboard/`) | Web UI (`vizualizer/`) |
-|---|---|---|
-| Scenario builder | Yes | Yes |
-| Run queue | Yes | Yes |
-| Results viewer | Yes | Yes |
-| Bilingual EN/RO | Yes | Planned |
-| Browser access | No | Yes |
-| Remote use | No | Yes (any device on LAN) |
-| Status | Legacy / stable | Active development |
+### SCIP solver not found
 
-The Tkinter UI remains functional. The web dashboard is the intended long-term replacement.
+**Symptom:** `ERROR: You have not found the SCIP solver` during optimization
+
+**Fix:**
+```bash
+conda install -c conda-forge scip
+```
