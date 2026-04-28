@@ -218,6 +218,17 @@ After installation, verify everything is working:
    python check_romania.py                # Should pass with no errors
    ```
 
+## What a successful installation gives you
+
+After setup, you should be able to:
+
+- Start the browser dashboard with `npm run dev` inside `vizualizer/`
+- Run scenario validation scripts from `personal_diagnostics/`
+- Execute baseline or scenario workflows from `personal_runners/`
+- Open generated result folders in `results/` and see them recognized by the dashboard
+
+If one of those steps fails, the issue is usually isolated to either the Python environment, the Node.js dependencies, or missing data downloads rather than the dashboard itself.
+
 ## Troubleshooting installation issues
 
 ### "conda: command not found"
@@ -243,5 +254,13 @@ After installation, verify everything is working:
 ### "ModuleNotFoundError: pkg_resources"
 - **Cause**: Old `google-cloud-storage` version in Python 3.13
 - **Fix**: `conda run -n pypsa pip install "google-cloud-storage>=2.10"`
+
+### Data download is slow or incomplete
+- **Cause**: Network interruption, API throttling, or proxy issues
+- **Fix**: Re-run the download script, verify proxy settings, and confirm the cached files appear in `data/cutout/archive/v0.8/`
+
+### Dashboard starts but shows no data
+- **Cause**: Missing generated configs, missing result folders, or incomplete CSV contracts
+- **Fix**: Run `python check_romania.py` and confirm the expected files exist under `config/adversarial/generated/` and `results/`
 
 For additional help, see [[Running]] or [[Usage]] guides.

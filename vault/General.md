@@ -51,3 +51,25 @@ This vault is the living documentation for the PyPSA-Eur Romania workspace. Star
 | Add support for new year | [[CLAUDE.md]] - Adding Support for a New Year |
 | Configure the dashboard | [[Vizualizer]] - Runtime configuration section |
 | Understand the system flow | [[Architecture]] - High-level flow diagram |
+
+## Reading notes
+
+- If you are troubleshooting a fresh setup, read [[Installation]] before [[Running]].
+- If you are trying to understand what happens after clicking Enqueue, read [[Running]] first, then [[Architecture]].
+- If you are changing the scenario form or any dashboard endpoint, read [[Vizualizer]] together with [[Usage]].
+- If you are adding a new stress parameter, read [[Architecture]] and then check the matching template in `personal_docs/`.
+
+## Documentation scope
+
+This vault tracks the current workflow as it exists in this repository. It is not a historical archive of every previous dashboard or runner design. Where older behavior is still relevant, the documentation names it explicitly as legacy or deprecated.
+
+## Working with the repo
+
+The repository is split into a few stable areas:
+
+- `vizualizer/` holds the active dashboard implementation.
+- `personal_docs/` holds the template and configuration references used by the workflow.
+- `personal_analysis/` and `personal_diagnostics/` hold post-processing and validation utilities.
+- `personal_dashboard/` remains as a legacy fallback and reference implementation.
+
+That split is reflected throughout the vault so that each page points to the correct owning area.

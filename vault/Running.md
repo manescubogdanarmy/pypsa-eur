@@ -153,6 +153,14 @@ running → (on completion) → succeeded / failed / cancelled
 running → (app restart) → interrupted
 ```
 
+### Interpreting the queue
+
+- Only one job should be actively running at a time.
+- A queued job has already been accepted but not yet started.
+- A running job has spawned a subprocess and is writing logs.
+- A succeeded job should have a valid output folder in `results/`.
+- A failed or interrupted job usually needs a log review before retrying.
+
 ---
 
 ## Result discovery process
@@ -316,3 +324,14 @@ This JSON file is updated:
 - On app startup to detect unfinished jobs
 
 Queue survives app restarts; running jobs marked as `interrupted`.
+
+## Recovery and cleanup
+
+If the queue looks stuck or the dashboard behaves unexpectedly after a crash:
+
+1. Check `vizualizer/.data/planui-state.json` to confirm the stored job state.
+2. Inspect `logs/planui-web/<jobId>.log` for the last successful step or the failure message.
+3. Use the Reset action in the UI if the queue needs to be re-evaluated.
+4. Remove stale interrupted job records only after confirming the underlying process is no longer running.
+
+If you retry a job, prefer to create a new queue entry rather than mutating a completed record in place.

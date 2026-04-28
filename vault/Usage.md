@@ -252,6 +252,13 @@ At the top of each result, key metrics are displayed:
 - Copy result folder path: `results/<result_name>/`
 - Share folder or individual CSVs with colleagues
 
+### Result interpretation tips
+
+- Compare the baseline and scenario values together rather than reading a single number in isolation.
+- Check the CSV tabs first if a summary metric looks unexpected; the preview often shows whether the issue is a data gap or a real model change.
+- Use the Assumptions tab when presenting results externally so the stress formulation is clear.
+- Treat missing figures or missing CSVs as a workflow issue, not a display issue, until the result folder passes the documented contract.
+
 ---
 
 ## Typical day-to-day workflow
@@ -311,6 +318,14 @@ At the top of each result, key metrics are displayed:
 3. Export all CSVs and figures
 4. Use templates in `personal_docs/` to assemble report
 5. Include `assumptions_limitations.md` as appendix
+
+### Adding a new scenario variant
+1. Duplicate an existing scenario configuration that is already known to work
+2. Change only one or two parameters first so the effect is easy to interpret
+3. Re-run the validation checks before increasing complexity
+4. Confirm the result folder still contains all required CSVs and figures
+
+This workflow keeps comparisons meaningful and makes it easier to spot regressions in either the model or the dashboard.
 
 ---
 

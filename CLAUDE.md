@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## How To Use This File
+
+Treat this as the repository-level operating manual. Start here for project structure, preferred workflows, and validation expectations, then move to the more specific docs referenced below when a task touches modeling, dashboard work, diagnostics, or reporting.
+
+When in doubt, keep changes small, follow the closest existing implementation, and validate only the slice you touched before widening scope.
+
 ## Project Overview
 
 **PyPSA-Eur Romania** is a comprehensive energy system modeling project combining:
@@ -10,6 +16,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Interactive Visualization**: Next.js/React web dashboard (in `vizualizer/` folder) for scenario management and results visualization
 - **Analysis & Reporting**: Post-processing and stress-test analysis tools
 - **Documentation**: Obsidian vault (in `vault/`) containing architecture, planning, and configuration guides
+
+## Repository Map
+
+Use these areas as the first stop when choosing where a change belongs:
+
+- `config/` - Scenario YAMLs, templates, schemas, and generated config inputs
+- `scripts/` - Modeling and solving logic, including scenario shock application and network assembly
+- `rules/` - Snakemake orchestration and task wiring
+- `personal_runners/` - Convenience entry points for end-to-end scenario execution
+- `personal_analysis/` - Reporting, summarization, and interpretation of solved results
+- `personal_diagnostics/` - Validation and environment checks before or after runs
+- `vizualizer/` - Primary web UI for scenario creation, queue management, and result browsing
+- `personal_dashboard/` - Legacy Tkinter UI retained as a fallback and reference implementation
+- `personal_docs/` - Long-form project documentation, templates, and implementation notes
+- `vault/` - Obsidian knowledge base with architecture and process documentation
+
+## Working Guidelines
+
+- Prefer the nearest owning abstraction. If a page, script, or rule already controls the behavior, update that surface instead of adding a new layer.
+- Preserve the existing file format and directory convention. YAML templates stay in `personal_docs/`, generated configs stay under `config/adversarial/generated/`, and results stay in `results/`.
+- Do not broaden changes into unrelated refactors, formatting passes, or data regeneration unless the user explicitly asks for them.
+- If a task affects both the model workflow and the dashboard, make the backend or config change first, then update the UI to match the same contract.
+- Favor reversible edits. If the path is uncertain, make the smallest change that can be validated quickly.
 
 ## Architecture Overview
 
@@ -48,6 +77,27 @@ Visualization & Dashboard (vizualizer/ web UI  or  personal_dashboard/ Tkinter)
 - `personal_docs/` - Implementation documentation and scenario templates
 - `vault/` - **Obsidian knowledge base** with architecture, running guides, configuration explanations (EN/RO)
 
+## Common Entry Points
+
+These files are the usual starting points for the most common tasks:
+
+- `config/create_scenarios.py` - Scenario generation and template-driven config creation
+- `scripts/romania_winter_stress.py` - Stress-shock application and constraint logic
+- `personal_runners/run_romania_winter_stress.py` - End-to-end baseline plus stress execution
+- `personal_analysis/run_summary.py` - Summary CSV generation and reporting outputs
+- `personal_diagnostics/check_romania.py` - Config and environment validation
+- `personal_diagnostics/check_csv.py` - Result structure and data-quality validation
+- `vizualizer/src/app/` - Next.js routes, UI components, and client-side workflow logic
+- `personal_dashboard/scenario_manager/` - Shared scenario manager logic used by the legacy UI
+
+## Preferred Workflow
+
+1. Identify the owning surface and read only the nearby code or doc that controls the behavior.
+2. Make the smallest focused edit that addresses the issue at the source.
+3. Run the cheapest validation that can confirm or disprove the change.
+4. Only expand scope after the targeted check passes.
+5. Update documentation when you change a workflow, a file contract, or a validation rule.
+
 ### Scenario Manager System
 
 The scenario manager logic is shared between the web dashboard (`vizualizer/`) and the legacy Tkinter UI (`personal_dashboard/scenario_manager/`). Both use:
@@ -62,6 +112,13 @@ Legacy Tkinter key modules (`personal_dashboard/scenario_manager/`):
 - `run_manager.py` - Queue management, subprocess orchestration, job state tracking
 - `results_index.py` - Scans `results/` for new-format comparison outputs; validates required CSV presence
 - `state_store.py` - Persistent JSON state for jobs, history, language preference
+
+## Change Boundaries
+
+- Treat `personal_docs/` templates and `vault/` documentation as source material, not generated output.
+- Avoid editing files under `results/`, `logs/`, or `vizualizer/.data/` unless the task explicitly concerns artifacts or state cleanup.
+- Keep result contracts stable. If a new output file is required, update the validation and discovery paths in the same change.
+- When adding a feature that crosses the web UI and the Python workflow, update both sides of the contract together so the dashboard does not drift from the backend behavior.
 
 ## Vizualizer – Web Dashboard (Next.js)
 
@@ -99,6 +156,16 @@ conda run -n pypsa pip install "google-cloud-storage>=2.10"
 
 Full API and architecture details: `vault/Vizualizer.md`
 
+## Validation Matrix
+
+Use the narrowest check that matches the change:
+
+- Python workflow or solver logic: run the targeted unit test or the closest diagnostics script first.
+- Config or template edits: run `personal_diagnostics/check_romania.py` and, if relevant, the downstream CSV validation.
+- Result parsing or reporting changes: run `personal_diagnostics/check_csv.py` and inspect the affected output folder.
+- Web UI or dashboard changes: run `npm run lint` in `vizualizer/`, then `npm run build` if the change affects routes, state, or data flow.
+- New scenario flow or runner changes: exercise the relevant runner script and verify the generated artifacts match the documented contract.
+
 ## Key Concepts & Patterns
 
 ### Configuration Architecture
@@ -126,6 +193,13 @@ New-format results (required for both dashboards):
 - `check_romania.py` - Validates scenario configs, cutout references, and network requirements
 - `check_csv.py` - Validates output CSV structure and data quality
 - `check_url.py` - Verifies external data source availability (ERA5, Zenodo)
+
+## Troubleshooting Snapshot
+
+- Missing cutout or dataset errors usually belong to `personal_data_download/` or the config/template that references the resource.
+- Solver availability or environment import issues usually belong to the Python environment, not the scenario logic.
+- A result folder that does not appear in the dashboard usually means the CSV contract or filename set is incomplete.
+- A UI page that loads but shows no data usually means the dashboard parser and the on-disk output format are out of sync.
 
 ## Documentation References
 

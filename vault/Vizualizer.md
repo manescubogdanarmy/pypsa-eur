@@ -357,3 +357,30 @@ npm run dev
 ```bash
 conda install -c conda-forge scip
 ```
+
+## Practical usage notes
+
+- The dashboard is designed around the current repo layout, so paths in the UI should be read as references to on-disk files rather than abstract resources.
+- Result discovery depends on the 7-file CSV contract; if a folder does not appear, check the output files first.
+- The job runner is sequential by design, so long-running jobs will delay later queue items until they finish or are cancelled.
+- Runtime detection favors the current conda environment because that is the safest way to keep the Python and Snakemake stack aligned.
+
+## When to consult this note
+
+Use this page when you need details beyond the high-level workflow pages:
+
+- You are changing the Scenario Builder form or its YAML synchronization behavior
+- You are editing or adding API routes under `src/app/api/`
+- You are troubleshooting conda detection, log handling, or queue state persistence
+- You are updating the result browser and need to keep the file contract aligned with the filesystem
+
+## Keeping the dashboard consistent
+
+The UI, API routes, and file-based artifacts should evolve together. If you change one of these pieces, check the others for matching assumptions:
+
+- form fields and YAML structure
+- queue state and persisted JSON shape
+- result summary parsing and the CSV filenames on disk
+- runtime configuration and the environment variables documented above
+
+This note is intentionally detailed so the dashboard implementation stays understandable without having to inspect the entire codebase every time.

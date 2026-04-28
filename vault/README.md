@@ -27,6 +27,27 @@ See [[Index]] for the complete map of all vault documents.
 
 Or [[General]] for a quick reference table organized by task.
 
+## How to read this vault
+
+The vault is organized from broad orientation to task-specific detail:
+
+- Start with [[Index]] to find the document that matches your task.
+- Use [[QuickStart]] when you want the fastest path from clone to first successful run.
+- Use [[Usage]] when you already have the environment working and need day-to-day workflow guidance.
+- Use [[Running]] when you need queue behavior, job lifecycle, or restart handling.
+- Use [[Architecture]] when you need the underlying data flow or component responsibilities.
+- Use [[Vizualizer]] when you need API routes, runtime configuration, or implementation details for the dashboard.
+
+## What this documentation is for
+
+This vault focuses on the current web-first workflow. It is intended to answer practical questions such as:
+
+- How to set up the environment and data needed for the project
+- How to build, enqueue, and monitor scenarios in the browser dashboard
+- How results are produced, validated, and displayed
+- How job state is stored and recovered after restarts
+- How to extend the workflow safely without breaking the result contract
+
 ---
 
 ## Technology stack
@@ -108,5 +129,7 @@ This vault is maintained alongside the repository. When you:
 - Add a new feature or workflow → Update relevant documentation
 - Fix a bug or change behavior → Update documentation to reflect change
 - Add new stress types or shock parameters → Document in [[Architecture]]
+
+When documentation changes, keep the overview pages and the task-specific pages in sync so the navigation links and quick references remain accurate.
 
 See [[General]] and [[Index]] for document organization principles.

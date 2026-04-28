@@ -352,3 +352,24 @@ The dashboard uses this priority order to find a Python environment:
   - `visualize_scenarios_ui_v2.py` - Main UI entry point
   - `scenario_manager/` - Scenario building and job queue logic
   - Covers same workflows as Next.js dashboard but with older technology stack
+
+## Contract boundaries
+
+The dashboard and the reporting scripts share the same expectation about the result folder layout. That means:
+
+- The dashboard should not invent data that is not present on disk.
+- The reporting scripts should continue producing the file names and columns that the dashboard already understands.
+- Any change to the result contract should be reflected in both the producer and the consumer in the same change set.
+
+In practice, the CSV set is the compatibility boundary for the whole workflow.
+
+## Extension guidance
+
+When adding a new feature, update the layer that owns the behavior first:
+
+- Add or change data generation in the Python workflow if the new behavior affects results.
+- Add or change API routes if the dashboard needs to read or write new state.
+- Add or change UI components only after the backend contract is defined.
+- Add or change documentation whenever a new file, state field, or workflow step becomes user-visible.
+
+This keeps the architecture understandable and avoids drifting contracts between the dashboard and the underlying model workflow.

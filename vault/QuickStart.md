@@ -144,6 +144,16 @@ This solves a quick baseline network without stress shocks. Should complete with
 
 If all checks pass, you're ready to build and run scenarios!
 
+## What to do next
+
+Once the first run works, the usual next steps are:
+
+1. Read [[Usage]] to learn the scenario builder and results browser in detail.
+2. Read [[Running]] if you need to understand job status, cancellation, or restart behavior.
+3. Read [[Architecture]] if you want to modify the workflow or add new result outputs.
+
+If you plan to work on the dashboard itself, open [[Vizualizer]] next so the API routes and runtime behavior match what you see in the UI.
+
 ---
 
 ## Next Steps
@@ -165,5 +175,12 @@ If all checks pass, you're ready to build and run scenarios!
 | Port 3000 in use | Use different port: `PORT=3001 npm run dev` |
 | Blank dashboard page | Check browser console for errors; try hard refresh (Ctrl+F5) |
 | SCIP solver not found | Run `conda install -c conda-forge scip` |
+
+## Common first-run mistakes
+
+- Using the wrong cutout year for the selected template
+- Skipping the data download step before starting the dashboard
+- Starting the dashboard from the wrong folder instead of `vizualizer/`
+- Expecting results to appear before a valid scenario has finished and produced all required CSVs
 
 For more help, see [[Installation]] or [[Running]].
