@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "QuickStart.md",
+                "file": "Architecture.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "QuickStart"
+              "title": "Architecture"
             }
           }
         ]
@@ -183,8 +183,10 @@
       "bases:Create new base": false
     }
   },
-  "active": "84036746d272df6b",
+  "active": "6b86b489a5580ccf",
   "lastOpenFiles": [
+    "FolderStructure.md",
+    "QuickStart.md",
     "FolderStructure.md.tmp.41148.1777317938640",
     "QuickStart.md.tmp.41148.1777317934416",
     "Index.md.tmp.41148.1777317926020",
@@ -193,7 +195,6 @@
     "archival/gpuplan.md",
     "Usage.md",
     "README.md",
-    "FolderStructure.md",
     "Index.md",
     "General.md",
     "Architecture.md"

@@ -182,6 +182,11 @@
   },
   "active": "096c3efeda8e16e0",
   "lastOpenFiles": [
+    "vault/Index.md",
+    "vault/Core/CLAUDE.md",
+    "vault/General.md",
+    "vault/FolderStructure.md",
+    "vault/Architecture.md",
     "results/r2456/diagram_interconnectors.svg",
     "results/r2456/diagram_interconnectors.svg.drawio",
     "results/r2456/diagram_net_imports.svg",
@@ -202,7 +207,6 @@
     "results/r2456/fig_02_daily_net_imports.png",
     "results/r2456/fig_01_shedding_timeseries.png",
     "results/r2456/diagram_price_curtail.png",
-    "results/r2456/diagram_interconnectors.png",
     "vault/QuickStart.md",
     "results/r2456/assumptions_limitations.md",
     "vizualizer/node_modules/@types/papaparse/README.md",
@@ -223,10 +227,6 @@
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/poweredByHeader.md",
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/pageExtensions.md",
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/output.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/optimizePackageImports.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/onDemandEntries.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/logging.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/index.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/images.md"
+    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/optimizePackageImports.md"
   ]
 }
