@@ -81,7 +81,8 @@ function selectCondaPrefix(): string | null {
   }
 
   const active = process.env.CONDA_PREFIX;
-  if (active && safeStat(active)) {
+  const activeEnvName = process.env.CONDA_DEFAULT_ENV;
+  if (active && safeStat(active) && activeEnvName && activeEnvName !== "base") {
     return active;
   }
 
@@ -98,9 +99,28 @@ export function snakemakeExtraArgs(): string[] {
 
 export function resolveRuntimePrefixes(): RuntimePrefixes {
   const condaExe = findCondaExecutable();
-  const condaPrefix = condaExe ? selectCondaPrefix() : null;
 
-  if (condaExe && condaPrefix) {
+  if (!condaExe) {
+    return {
+      snakemake: ["python", "-m", "snakemake"],
+      python: ["python"],
+      runtimeMode: "system-python",
+    };
+  }
+
+  // Try explicit conda env first
+  const explicit = process.env.PLANUI_CONDA_ENV;
+  if (explicit) {
+    return {
+      snakemake: [condaExe, "run", "-n", explicit, "python", "-m", "snakemake"],
+      python: [condaExe, "run", "-n", explicit, "python"],
+      runtimeMode: "conda-run",
+    };
+  }
+
+  // Try conda prefix method
+  const condaPrefix = selectCondaPrefix();
+  if (condaPrefix) {
     return {
       snakemake: [condaExe, "run", "-p", condaPrefix, "python", "-m", "snakemake"],
       python: [condaExe, "run", "-p", condaPrefix, "python"],
@@ -108,18 +128,11 @@ export function resolveRuntimePrefixes(): RuntimePrefixes {
     };
   }
 
-  if (condaExe) {
-    const envName = selectCondaEnvName(condaExe);
-    return {
-      snakemake: [condaExe, "run", "-n", envName, "python", "-m", "snakemake"],
-      python: [condaExe, "run", "-n", envName, "python"],
-      runtimeMode: "conda-run",
-    };
-  }
-
+  // Fall back to named environment selection
+  const envName = selectCondaEnvName(condaExe);
   return {
-    snakemake: ["python", "-m", "snakemake"],
-    python: ["python"],
-    runtimeMode: "system-python",
+    snakemake: [condaExe, "run", "-n", envName, "python", "-m", "snakemake"],
+    python: [condaExe, "run", "-n", envName, "python"],
+    runtimeMode: "conda-run",
   };
 }

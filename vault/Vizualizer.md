@@ -100,14 +100,17 @@ All paths are resolved relative to the repo root (one level up from `vizualizer/
 
 ## Runtime Detection (Conda Auto-Discovery)
 
-On startup, `src/app/lib/runtime.ts` auto-detects how to run Snakemake and Python:
+On startup, `src/app/lib/runtime.ts` auto-detects how to run Snakemake and Python. Priority order (first match wins):
 
-1. **`PLANUI_CONDA_PREFIX`** env var — use conda prefix path directly (`conda run -p <prefix>`)
-2. **`CONDA_PREFIX`** env var — active conda environment prefix
-3. **`PLANUI_CONDA_ENV`** env var — use a specific conda env name (`conda run -n <name>`)
-4. **`CONDA_DEFAULT_ENV`** — currently active env (skipped if `base`)
+1. **`PLANUI_CONDA_ENV`** env var — use named env directly (`conda run -n <name>`) — highest priority
+2. **`PLANUI_CONDA_PREFIX`** env var — use prefix path directly (`conda run -p <prefix>`)
+3. **`CONDA_PREFIX`** env var — active conda prefix, **only if `CONDA_DEFAULT_ENV` is not `base`** (guards against using the base environment when the dev server is launched without activating the project env)
+4. **`CONDA_DEFAULT_ENV`** — currently active named env (skipped if `base`)
 5. **Candidates:** `pypsa`, `pypsa-eur` — first one found in `conda env list` wins
 6. **Fallback:** plain `python` / `python -m snakemake` (system Python)
+
+> [!WARNING]
+> If you start `npm run dev` from a terminal where the **base** conda environment is active, `CONDA_PREFIX` points to the Anaconda root (no Snakemake). The base-env guard (step 3) catches this and falls through to the named-env candidates. Still, the safest practice is to activate the `pypsa` environment before starting the server, or set `PLANUI_CONDA_ENV` explicitly.
 
 To override, set the env var before starting the dev server:
 ```bash

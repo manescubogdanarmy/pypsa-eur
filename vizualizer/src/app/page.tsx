@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import YAML from "yaml";
+import { ThemeToggle } from "@/app/lib/theme-provider";
 
 import type { CsvPreview, JobRecord, ResultEntry } from "@/app/lib/types";
 
@@ -357,7 +358,7 @@ function formatCurrency(value: string | number | undefined, locale = "en-US"): s
   return `${num.toLocaleString(locale, { maximumFractionDigits: 2 })} EUR`;
 }
 
-function buildPayload(inputs: ScenarioInputsState, workingYaml: string) {
+function buildPayload(inputs: ScenarioInputsState, workingYaml: string, useProxy: boolean) {
   return {
     runMode: inputs.runMode,
     outputName: inputs.outputName,
@@ -383,6 +384,7 @@ function buildPayload(inputs: ScenarioInputsState, workingYaml: string) {
     importHalf: Number(inputs.importHalf),
     importFactor: Number(inputs.importFactor),
     workingYaml,
+    useProxy,
   };
 }
 
@@ -545,10 +547,11 @@ function BarPairList({
 export default function Home() {
   const [language, setLanguage] = useState<Language>("en");
   const [activeTab, setActiveTab] = useState<TabKey>("builder");
+  const [useProxy, setUseProxy] = useState(false);
   const [inputs, setInputs] = useState<ScenarioInputsState>(defaultInputs);
   const [workingYaml, setWorkingYaml] = useState("");
   const [templateYaml, setTemplateYaml] = useState("");
-  const [status, setStatus] = useState(copy.en.statusReady);
+  const [status, setStatus] = useState<string>(copy.en.statusReady);
   const [baselines, setBaselines] = useState<string[]>([]);
   const [jobs, setJobs] = useState<JobRecord[]>([]);
   const [selectedJobId, setSelectedJobId] = useState("");
@@ -586,7 +589,7 @@ export default function Home() {
       setStatus(text.statusBuildingYaml);
       const data = await fetchJson<{ yaml: string }>("/api/scenario/build", {
         method: "POST",
-        body: JSON.stringify(buildPayload(inputs, workingYaml)),
+        body: JSON.stringify(buildPayload(inputs, workingYaml, useProxy)),
       });
       setWorkingYaml(data.yaml);
       setStatus(text.statusYamlUpdated);
@@ -709,7 +712,7 @@ export default function Home() {
       setStatus(text.statusQueueingRun);
       const data = await fetchJson<{ jobId: string }>("/api/runs/enqueue", {
         method: "POST",
-        body: JSON.stringify(buildPayload(inputs, workingYaml)),
+        body: JSON.stringify(buildPayload(inputs, workingYaml, useProxy)),
       });
       setStatus(`${text.statusJobQueued}: ${data.jobId}`);
       setActiveTab("runs");
@@ -797,9 +800,13 @@ export default function Home() {
     if (typeof window === "undefined") {
       return;
     }
-    const saved = window.localStorage.getItem("planui-language");
-    if (saved === "ro" || saved === "en") {
-      setLanguage(saved);
+    const savedLanguage = window.localStorage.getItem("planui-language");
+    if (savedLanguage === "ro" || savedLanguage === "en") {
+      setLanguage(savedLanguage);
+    }
+    const savedProxy = window.localStorage.getItem("planui-use-proxy");
+    if (savedProxy === "true") {
+      setUseProxy(true);
     }
   }, []);
 
@@ -815,6 +822,13 @@ export default function Home() {
       return prev;
     });
   }, [language]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    window.localStorage.setItem("planui-use-proxy", String(useProxy));
+  }, [useProxy]);
 
   useEffect(() => {
     void refreshTemplate(inputs.cutoutYear);
@@ -943,24 +957,39 @@ export default function Home() {
             </div>
             <span className="coords">44.4268°N · 26.1025°E · UTC+02 · v0.1.0</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="eyebrow-muted">{text.languageLabel}</span>
-            <div className="lang-switch">
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={`lang-pill ${language === "en" ? "lang-pill-active" : ""}`}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("ro")}
-                className={`lang-pill ${language === "ro" ? "lang-pill-active" : ""}`}
-              >
-                RO
-              </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <span className="eyebrow-muted">{text.languageLabel}</span>
+              <div className="lang-switch">
+                <button
+                  type="button"
+                  onClick={() => setLanguage("en")}
+                  className={`lang-pill ${language === "en" ? "lang-pill-active" : ""}`}
+                >
+                  EN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage("ro")}
+                  className={`lang-pill ${language === "ro" ? "lang-pill-active" : ""}`}
+                >
+                  RO
+                </button>
+              </div>
             </div>
+            <div className="w-px h-6 bg-[var(--stroke-soft)]" />
+            <label className="flex items-center gap-2 cursor-pointer">
+              <span className="eyebrow-muted text-xs">PROXY</span>
+              <input
+                type="checkbox"
+                checked={useProxy}
+                onChange={(e) => setUseProxy(e.target.checked)}
+                className="w-4 h-4"
+                title="Enable corporate proxy (175.16.3.253:3128)"
+              />
+            </label>
+            <div className="w-px h-6 bg-[var(--stroke-soft)]" />
+            <ThemeToggle />
           </div>
         </div>
 

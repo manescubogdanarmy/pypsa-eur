@@ -33,6 +33,7 @@ export type ScenarioInputs = {
   importHalf: number;
   importFactor: number;
   workingYaml?: string | null;
+  useProxy?: boolean;
 };
 
 export type ScenarioInputsPayload = {
@@ -60,6 +61,7 @@ export type ScenarioInputsPayload = {
   importHalf?: number | string;
   importFactor?: number | string;
   workingYaml?: string | null;
+  useProxy?: boolean;
 };
 
 export type CommandSpec = {
@@ -80,6 +82,7 @@ export type JobSpec = {
   scenarioRunName: string;
   baselineRunName?: string | null;
   country: string;
+  useProxy?: boolean;
 };
 
 export type JobRecord = {

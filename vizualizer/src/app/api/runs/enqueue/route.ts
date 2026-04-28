@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       scenarioRunName: buildResult.scenarioRunName,
       baselineRunName: buildResult.baselineRunName || null,
       country: inputs.country,
+      useProxy: inputs.useProxy || false,
     };
 
     jobRunner.enqueue(spec);

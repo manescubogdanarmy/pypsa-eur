@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const buffer = await loadFigureFromResult(name, file);
-    return new Response(buffer, {
+    return new Response(new Uint8Array(buffer), {
       status: 200,
       headers: {
         "Content-Type": "image/png",

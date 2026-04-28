@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, IBM_Plex_Mono, Manrope } from "next/font/google";
+import { ThemeProvider } from "./lib/theme-provider";
 import "./globals.css";
 
 const displayFont = JetBrains_Mono({
@@ -32,9 +33,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} h-full antialiased`}
+      className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

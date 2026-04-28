@@ -103,6 +103,7 @@ export function normalizeScenarioInputs(payload: ScenarioInputsPayload): Scenari
     importHalf: parseIntValue(payload.importHalf ?? 48, "import half hours"),
     importFactor: parseNumber(payload.importFactor ?? 0.5, "import half factor"),
     workingYaml: payload.workingYaml || null,
+    useProxy: payload.useProxy || false,
   };
 }
 

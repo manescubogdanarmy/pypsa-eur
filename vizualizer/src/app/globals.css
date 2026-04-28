@@ -35,6 +35,35 @@
   --inset-glow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
+:root.light {
+  --bg: #f8f9fa;
+  --bg-elev: #eef0f5;
+  --panel: #ffffff;
+  --panel-2: #f2f4f9;
+  --stroke: #d4dae5;
+  --stroke-soft: #e0e5f0;
+  --hairline: rgba(0, 0, 0, 0.04);
+
+  --ink: #1a202c;
+  --ink-soft: #2d3748;
+  --ink-muted: #6b7280;
+  --ink-dim: #9ca3af;
+
+  --amber: #d97706;
+  --amber-soft: #f59e0b;
+  --amber-glow: rgba(217, 119, 6, 0.12);
+
+  --cyan: #0891b2;
+  --cyan-soft: #06b6d4;
+  --green: #059669;
+  --red: #dc2626;
+  --magenta: #9333ea;
+
+  --shadow-deep: 0 30px 60px rgba(0, 0, 0, 0.12);
+  --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --inset-glow: inset 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
 @theme inline {
   --color-ink: var(--ink);
   --color-muted: var(--ink-muted);
@@ -980,4 +1009,35 @@ body::after {
   color: var(--ink-dim);
   font-family: var(--font-mono);
   font-size: 0.6rem;
+}
+
+/* =========================================================
+   THEME TOGGLE - dark/light mode switch
+   ========================================================= */
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  color: var(--amber);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--amber);
+  box-shadow: 0 0 12px var(--amber-glow);
+  transform: scale(1.05);
+}
+
+.theme-toggle:active {
+  transform: scale(0.98);
 }

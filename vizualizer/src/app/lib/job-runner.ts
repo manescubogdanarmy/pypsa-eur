@@ -275,9 +275,16 @@ export class JobRunner {
   private runCommand(job: JobRecord, argv: string[], logStream: fs.WriteStream): Promise<number> {
     return new Promise((resolve) => {
       const [command, ...args] = argv;
+      const env = sanitizeEnv();
+
+      if (job.spec.useProxy) {
+        env.http_proxy = "http://manescu.bogdan:GdJh%23Pdg9b3%40@175.16.3.253:3128";
+        env.https_proxy = "http://manescu.bogdan:GdJh%23Pdg9b3%40@175.16.3.253:3128";
+      }
+
       const child = spawn(command, args, {
         cwd: repoRoot(),
-        env: sanitizeEnv(),
+        env,
         shell: process.platform === "win32",
         windowsHide: true,
       });

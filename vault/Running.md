@@ -232,7 +232,27 @@ After running scenarios:
 3. Generate reports: See `../analysis/` folder
 4. Check diagnostics: See `../diagnostics/` folder
 
+---
 
+## Additional Troubleshooting
+
+**`No module named snakemake` in web dashboard (conda-run-prefix mode)**
+- Symptom: log shows `conda run -p C:\...\anaconda3 python -m snakemake` → `No module named snakemake`
+- Cause: dev server started while the **base** conda env was active; `CONDA_PREFIX` resolved to the Anaconda root which has no Snakemake
+- Fix: activate the `pypsa` env before starting the server (`conda activate pypsa && npm run dev`), or set `PLANUI_CONDA_ENV=pypsa` before running
+- The base-env guard in `runtime.ts` (added 2026-04-28) handles this automatically and falls through to the `pypsa`/`pypsa-eur` named-env candidates
+
+**`add_electricity` rule fails: `ParserError: Error tokenizing data. C error: Expected 1 fields in line 8, saw 2`**
+- Cause: the IRENASTAT CSV cached by `powerplantmatching` is a Zenodo **403 Forbidden HTML page** — written when Zenodo rate-limited the initial download
+- File location: `C:\Users\<user>\AppData\Roaming\powerplantmatching\data\in\IRENASTAT_capacities_2000-2023.csv`
+- Detection: `head -3` the file — if it starts with `<html>` or `403 Forbidden`, it is corrupted
+- Fix: delete and re-download:
+  ```powershell
+  Remove-Item "$env:APPDATA\powerplantmatching\data\in\IRENASTAT_capacities_2000-2023.csv"
+  curl -L -o "$env:APPDATA\powerplantmatching\data\in\IRENASTAT_capacities_2000-2023.csv" `
+    "https://zenodo.org/records/10952917/files/IRENASTAT_capacities_2000-2023.csv"
+  ```
+- If Zenodo still rate-limits: set `estimate_renewable_capacities.enable: false` in the scenario YAML to skip the IRENA step (GEM data from `from_gem: true` is the primary capacity source anyway)
 
 
 
