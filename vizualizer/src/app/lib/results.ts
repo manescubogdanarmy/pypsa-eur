@@ -57,11 +57,13 @@ export async function scanResults(): Promise<ResultEntry[]> {
       const csvFiles = allFiles.filter((name: string) => name.endsWith(".csv"));
       const figureFiles = allFiles.filter((name: string) => name.endsWith(".png"));
       const drawioFiles = allFiles.filter((name: string) => name.endsWith(".drawio"));
+      const svgFiles = allFiles.filter((name: string) => name.endsWith(".svg"));
       const assumptionsFile = path.join(folder, "assumptions_limitations.md");
 
       const mtimes = await Promise.all<number>([
         ...csvFiles.map((name: string) => statMtime(path.join(folder, name))),
         ...figureFiles.map((name: string) => statMtime(path.join(folder, name))),
+        ...svgFiles.map((name: string) => statMtime(path.join(folder, name))),
         statMtime(assumptionsFile),
       ]);
 
@@ -72,6 +74,7 @@ export async function scanResults(): Promise<ResultEntry[]> {
         csvFiles,
         figureFiles,
         drawioFiles,
+        svgFiles,
         assumptionsFile: (await statMtime(assumptionsFile)) ? assumptionsFile : null,
       });
     }

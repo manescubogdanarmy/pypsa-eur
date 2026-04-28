@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
     csvFiles: entry.csvFiles,
     figureFiles: entry.figureFiles,
     drawioFiles: entry.drawioFiles,
+    svgFiles: entry.svgFiles,
     assumptions,
   });
 }

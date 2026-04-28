@@ -3,16 +3,18 @@
  * generate-diagrams.mjs
  *
  * Generates draw.io diagrams from simulation result CSVs, then exports each to PNG
- * via the draw.io desktop CLI.
+ * (optionally SVG) via the draw.io desktop CLI.
  *
  * Usage:
- *   node vizualizer/scripts/generate-diagrams.mjs <result-name>
+ *   node vizualizer/scripts/generate-diagrams.mjs <result-name> [--svg] [--svg-only]
  *
  * Outputs (inside results/<result-name>/):
  *   diagram_cost_ens.drawio / .png         — Cost comparison + ENS
  *   diagram_generation_mix.drawio / .png   — Generation mix by carrier
  *   diagram_price_curtail.drawio / .png    — LMP prices + curtailment
+ *   diagram_net_imports.drawio / .png      — Daily net imports comparison
  *   diagram_interconnectors.drawio / .png  — Interconnector loading
+ *   diagram_*.svg (when --svg/--svg-only)  — Transparent background, light theme
  */
 
 import fs from "fs/promises";
@@ -65,7 +67,7 @@ async function loadCsv(filePath) {
 
 // ── Formatting ───────────────────────────────────────────────────────────────
 
-const THEME = {
+const THEME_DEFAULT = {
   ink: "#1E2B3A",
   muted: "#5D6A7B",
   navy: "#0A3DA3",
@@ -79,6 +81,13 @@ const THEME = {
   negative: "#C4372A",
   track: "#E3ECFA",
 };
+
+const THEME_SVG_LIGHT = {
+  ...THEME_DEFAULT,
+  paper: "none",
+};
+
+let THEME = THEME_DEFAULT;
 
 function esc(s) {
   return String(s ?? "")
@@ -116,6 +125,13 @@ function fmtMwh(n) {
   if (isNaN(v)) return "—";
   if (Math.abs(v) >= 1000) return fmtNum(v / 1000, 1) + " GWh";
   return fmtNum(v, 0) + " MWh";
+}
+
+function fmtSignedMwh(n) {
+  const v = parseFloat(n);
+  if (isNaN(v)) return "—";
+  const sign = v > 0 ? "+" : "";
+  return sign + fmtMwh(v);
 }
 
 function deltaColor(n) {
@@ -162,6 +178,13 @@ function rect({ x, y, w, h, fill = "#FFFFFF", stroke = "none", rounded = 0, opac
   return `        <mxCell id="${uid()}" value="" style="${style};" vertex="1" parent="1">`
     + `\n          <mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry" />`
     + `\n        </mxCell>`;
+}
+
+function backgroundRect(pageW, pageH) {
+  if (THEME.paper === "none") {
+    return "";
+  }
+  return rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper });
 }
 
 function banner(x, y, w, title, subtitle) {
@@ -252,13 +275,57 @@ function barPairList({ x, y, w, labelWidth = 240, rowH = 42, barH = 10,
   return cells.join("\n");
 }
 
+function barPairListWithDelta({
+  x,
+  y,
+  w,
+  labelWidth = 240,
+  rowH = 42,
+  barH = 10,
+  rows,
+  maxValue,
+  baselineColor = THEME.baseline,
+  scenarioColor = THEME.scenario,
+  valueFormatter = fmtNum,
+  deltaFormatter = fmtNum,
+}) {
+  const valueWidth = 96;
+  const deltaWidth = 100;
+  const barX = x + labelWidth + 12;
+  const barW = Math.max(40, w - labelWidth - valueWidth - deltaWidth - 28);
+  const deltaX = barX + barW + valueWidth + 10;
+  const max = maxValue > 0 ? maxValue : 1;
+  const cells = [];
+
+  rows.forEach((row, i) => {
+    const rowY = y + i * rowH;
+    const baseVal = num(row.baseline);
+    const scenVal = num(row.scenario);
+    const deltaVal = num(row.delta ?? scenVal - baseVal);
+    const baseW = Math.max(4, (Math.abs(baseVal) / max) * barW);
+    const scenW = Math.max(4, (Math.abs(scenVal) / max) * barW);
+
+    cells.push(cell({ x, y: rowY + 4, w: labelWidth, h: rowH - 8, fill: "none", stroke: "none", label: row.label, fontSize: 9, fontColor: THEME.ink, align: "left" }));
+    cells.push(rect({ x: barX, y: rowY + 6, w: barW, h: barH, fill: THEME.track, stroke: "none", rounded: 1 }));
+    cells.push(rect({ x: barX, y: rowY + 22, w: barW, h: barH, fill: THEME.track, stroke: "none", rounded: 1 }));
+    cells.push(rect({ x: barX, y: rowY + 6, w: baseW, h: barH, fill: baselineColor, stroke: "none", rounded: 1 }));
+    cells.push(rect({ x: barX, y: rowY + 22, w: scenW, h: barH, fill: scenarioColor, stroke: "none", rounded: 1 }));
+    cells.push(cell({ x: barX + barW + 6, y: rowY + 2, w: valueWidth, h: 16, fill: "none", stroke: "none", label: `B: ${valueFormatter(baseVal)}`, fontSize: 8, fontColor: baselineColor, align: "left" }));
+    cells.push(cell({ x: barX + barW + 6, y: rowY + 20, w: valueWidth, h: 16, fill: "none", stroke: "none", label: `S: ${valueFormatter(scenVal)}`, fontSize: 8, fontColor: scenarioColor, align: "left" }));
+    cells.push(cell({ x: deltaX, y: rowY + 12, w: deltaWidth, h: 16, fill: "none", stroke: "none", label: `Δ ${deltaFormatter(deltaVal)}`, fontSize: 8, fontColor: deltaColor(deltaVal), align: "left" }));
+  });
+
+  return cells.join("\n");
+}
+
 function wrapDiagram(name, id, bodyXml, pageW = 1400, pageH = 850) {
+  const bg = THEME.paper === "none" ? " background=\"none\"" : "";
   return `<?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="pypsa-eur-romania" version="24.7.5" type="device">
   <diagram name="${esc(name)}" id="${esc(id)}">
     <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="0" tooltips="1"
                   connect="0" arrows="0" fold="0" page="0" pageScale="1"
-                  pageWidth="${pageW}" pageHeight="${pageH}" math="0" shadow="0">
+                  pageWidth="${pageW}" pageHeight="${pageH}" math="0" shadow="0"${bg}>
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -282,7 +349,7 @@ function buildCostEns(cost, ens, resultName) {
   const panelW = 660;
   const panelH = 260;
 
-  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(backgroundRect(pageW, pageH));
   parts.push(banner(PAD, PAD, contentW, "SYSTEM COST &amp; ENERGY NOT SERVED", `Scenario: ${resultName}`));
 
   const crow = cost.rows[0] ?? {};
@@ -378,7 +445,7 @@ function buildGenerationMix(mix, resultName) {
   const panelH = 80 + rowH * rows.length + 30;
   const pageH = panelY + panelH + 20;
 
-  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(backgroundRect(pageW, pageH));
   parts.push(banner(PAD, PAD, contentW, "GENERATION MIX — Romania", `Scenario: ${resultName}`));
   parts.push(panel(PAD, panelY, contentW, panelH, "GENERATION MIX BY CARRIER"));
   parts.push(legendPair(PAD + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
@@ -460,7 +527,7 @@ function buildPriceCurtail(lmp, curtail, resultName) {
   const panelH = 80 + rowH * rowsCount + 30;
   const pageH = panelY + panelH + 20;
 
-  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(backgroundRect(pageW, pageH));
   parts.push(banner(PAD, PAD, contentW, "PRICE (LMP) &amp; CURTAILMENT", `Scenario: ${resultName}`));
 
   parts.push(panel(PAD, panelY, panelW, panelH, "PRICE SIGNALS (€/MWh)"));
@@ -493,7 +560,66 @@ function buildPriceCurtail(lmp, curtail, resultName) {
   return wrapDiagram("Price & Curtailment", "price-curtail", parts.join("\n"), pageW, pageH);
 }
 
-// ── Diagram 4: Interconnectors ───────────────────────────────────────────────
+// ── Diagram 4: Daily Net Imports ─────────────────────────────────────────────
+
+function buildNetImports(imports, resultName) {
+  _id = 700;
+  const parts = [];
+  const pageW = 1400;
+  const PAD = 20;
+  const contentW = 1360;
+  const panelY = 110;
+  const rowH = 42;
+
+  const rowsAll = imports.rows.map((row) => ({
+    label: String(row.local_day ?? row.day ?? row.date ?? "—"),
+    baseline: num(row.baseline_mwh ?? 0),
+    scenario: num(row.scenario_mwh ?? 0),
+    delta: num(row.delta_mwh ?? 0),
+  }));
+
+  let rows = rowsAll;
+  let subtitle = "Daily net imports (MWh)";
+  if (rowsAll.length > 14) {
+    rows = [...rowsAll]
+      .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+      .slice(0, 14)
+      .sort((a, b) => a.label.localeCompare(b.label));
+    subtitle = "Top 14 delta days (MWh)";
+  }
+
+  if (rows.length === 0) {
+    rows = [{ label: "No net import data", baseline: 0, scenario: 0, delta: 0 }];
+  }
+
+  const maxValue = Math.max(
+    ...rows.map((row) => Math.max(Math.abs(num(row.baseline)), Math.abs(num(row.scenario)))),
+    1,
+  );
+
+  const panelH = 80 + rowH * rows.length + 30;
+  const pageH = panelY + panelH + 20;
+
+  parts.push(backgroundRect(pageW, pageH));
+  parts.push(banner(PAD, PAD, contentW, "DAILY NET IMPORTS — Romania", `Scenario: ${resultName}`));
+  parts.push(panel(PAD, panelY, contentW, panelH, subtitle));
+  parts.push(legendPair(PAD + 20, panelY + 34, "Baseline", "Scenario", THEME.baseline, THEME.scenario));
+  parts.push(barPairListWithDelta({
+    x: PAD + 20,
+    y: panelY + 50,
+    w: contentW - 40,
+    labelWidth: 200,
+    rowH,
+    rows,
+    maxValue,
+    valueFormatter: (v) => fmtSignedMwh(v),
+    deltaFormatter: (v) => fmtSignedMwh(v),
+  }));
+
+  return wrapDiagram("Daily Net Imports", "net-imports", parts.join("\n"), pageW, pageH);
+}
+
+// ── Diagram 5: Interconnectors ───────────────────────────────────────────────
 
 function buildInterconnectors(flows, resultName) {
   _id = 800;
@@ -551,7 +677,7 @@ function buildInterconnectors(flows, resultName) {
   const panelH = 80 + rowH * rowsCount + 30;
   const pageH = panelY + panelH + 20;
 
-  parts.push(rect({ x: 0, y: 0, w: pageW, h: pageH, fill: THEME.paper, stroke: THEME.paper }));
+  parts.push(backgroundRect(pageW, pageH));
   parts.push(banner(PAD, PAD, contentW, "INTERCONNECTOR LOADING — Border Assets", `Scenario: ${resultName}`));
 
   parts.push(panel(PAD, panelY, panelW, panelH, "MEAN LOADING (%)"));
@@ -600,12 +726,40 @@ function exportPng(drawioPath, pngPath) {
   return true;
 }
 
+function exportSvg(drawioPath, svgPath) {
+  console.log(`  Exporting ${path.basename(drawioPath)} → ${path.basename(svgPath)}`);
+  const result = spawnSync(
+    DRAWIO_EXE,
+    ["--export", "--format", "svg", "--border", "8", "--output", svgPath, drawioPath],
+    { encoding: "utf-8", timeout: 30_000 }
+  );
+  if (result.status !== 0) {
+    console.warn(`  draw.io export warning (exit ${result.status}): ${result.stderr || result.error?.message || "unknown"}`);
+    return false;
+  }
+  return true;
+}
+
+function buildDiagrams(resultName, data) {
+  return [
+    { name: "diagram_cost_ens",        xml: buildCostEns(data.cost, data.ens, resultName) },
+    { name: "diagram_generation_mix", xml: buildGenerationMix(data.mix, resultName) },
+    { name: "diagram_price_curtail",  xml: buildPriceCurtail(data.lmp, data.curtail, resultName) },
+    { name: "diagram_net_imports",    xml: buildNetImports(data.imports, resultName) },
+    { name: "diagram_interconnectors",xml: buildInterconnectors(data.flows, resultName) },
+  ];
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const resultName = process.argv[2];
+  const args = process.argv.slice(2);
+  const resultName = args.find((arg) => !arg.startsWith("--"));
+  const svgEnabled = args.includes("--svg") || args.includes("--svg-only");
+  const svgOnly = args.includes("--svg-only");
+
   if (!resultName) {
-    console.error("Usage: node generate-diagrams.mjs <result-name>");
+    console.error("Usage: node generate-diagrams.mjs <result-name> [--svg] [--svg-only]");
     process.exit(1);
   }
 
@@ -621,29 +775,43 @@ async function main() {
   console.log(`Generating diagrams for: ${resultName}`);
 
   // Load CSVs
-  const [cost, ens, mix, lmp, curtail, flows] = await Promise.all([
+  const [cost, ens, mix, lmp, curtail, imports, flows] = await Promise.all([
     loadCsv(path.join(resultDir, "system_cost_comparison.csv")),
     loadCsv(path.join(resultDir, "ens_summary.csv")),
     loadCsv(path.join(resultDir, "generation_mix_mwh.csv")),
     loadCsv(path.join(resultDir, "lmp_summary_ro.csv")),
     loadCsv(path.join(resultDir, "curtailment_mwh.csv")),
+    loadCsv(path.join(resultDir, "daily_net_imports_mwh.csv")),
     loadCsv(path.join(resultDir, "interconnector_flow_congestion.csv")),
   ]);
 
-  const diagrams = [
-    { name: "diagram_cost_ens",       xml: buildCostEns(cost, ens, resultName) },
-    { name: "diagram_generation_mix", xml: buildGenerationMix(mix, resultName) },
-    { name: "diagram_price_curtail",  xml: buildPriceCurtail(lmp, curtail, resultName) },
-    { name: "diagram_interconnectors",xml: buildInterconnectors(flows, resultName) },
-  ];
+  const data = { cost, ens, mix, lmp, curtail, imports, flows };
 
-  for (const { name, xml } of diagrams) {
-    const drawioPath = path.join(resultDir, `${name}.drawio`);
-    const pngPath    = path.join(resultDir, `${name}.png`);
+  if (!svgOnly) {
+    THEME = THEME_DEFAULT;
+    const diagrams = buildDiagrams(resultName, data);
+    for (const { name, xml } of diagrams) {
+      const drawioPath = path.join(resultDir, `${name}.drawio`);
+      const pngPath    = path.join(resultDir, `${name}.png`);
 
-    console.log(`  Writing ${name}.drawio`);
-    await fs.writeFile(drawioPath, xml, "utf-8");
-    exportPng(drawioPath, pngPath);
+      console.log(`  Writing ${name}.drawio`);
+      await fs.writeFile(drawioPath, xml, "utf-8");
+      exportPng(drawioPath, pngPath);
+    }
+  }
+
+  if (svgEnabled) {
+    THEME = THEME_SVG_LIGHT;
+    const diagrams = buildDiagrams(resultName, data);
+    for (const { name, xml } of diagrams) {
+      const tempDrawioPath = path.join(resultDir, `${name}.svg.drawio`);
+      const svgPath        = path.join(resultDir, `${name}.svg`);
+
+      console.log(`  Writing ${path.basename(tempDrawioPath)}`);
+      await fs.writeFile(tempDrawioPath, xml, "utf-8");
+      exportSvg(tempDrawioPath, svgPath);
+      await fs.unlink(tempDrawioPath).catch(() => {});
+    }
   }
 
   console.log("Done.");

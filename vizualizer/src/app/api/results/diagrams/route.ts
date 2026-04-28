@@ -10,6 +10,8 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const url = new URL(req.url);
   const name = url.searchParams.get("name") || "";
+  const svg = url.searchParams.get("svg") || "";
+  const svgOnly = url.searchParams.get("svgOnly") || "";
 
   if (!name) {
     return new Response("Missing parameter: name", { status: 400 });
@@ -23,7 +25,14 @@ export async function POST(req: NextRequest) {
 
   const scriptPath = path.resolve(process.cwd(), "scripts", "generate-diagrams.mjs");
 
-  const result = spawnSync(process.execPath, [scriptPath, name], {
+  const args = [scriptPath, name];
+  if (svgOnly === "1" || svgOnly === "true") {
+    args.push("--svg-only");
+  } else if (svg === "1" || svg === "true") {
+    args.push("--svg");
+  }
+
+  const result = spawnSync(process.execPath, args, {
     encoding: "utf-8",
     timeout: 120_000,
     cwd: path.resolve(process.cwd(), ".."),

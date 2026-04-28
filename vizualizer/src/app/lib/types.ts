@@ -103,6 +103,7 @@ export type ResultEntry = {
   csvFiles: string[];
   figureFiles: string[];
   drawioFiles: string[];
+  svgFiles: string[];
   assumptionsFile?: string | null;
 };
 

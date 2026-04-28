@@ -924,6 +924,47 @@ body::after {
 }
 
 /* =========================================================
+   FIGURE DOWNLOADS
+   ========================================================= */
+
+.figure-caption {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.figure-caption-name {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
+  word-break: break-all;
+}
+
+.figure-caption-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.figure-caption-action {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  text-decoration: none;
+  border: 1px solid var(--stroke);
+  padding: 0.2rem 0.45rem;
+  background: var(--panel-2);
+  letter-spacing: 0.06em;
+}
+
+.figure-caption-action:hover {
+  border-color: var(--cyan);
+  color: var(--cyan-soft);
+}
+
+/* =========================================================
    STATUS BADGES (job statuses)
    ========================================================= */
 

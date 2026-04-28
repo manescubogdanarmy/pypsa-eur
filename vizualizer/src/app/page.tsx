@@ -39,6 +39,7 @@ type ResultDetails = {
   csvFiles: string[];
   figureFiles: string[];
   drawioFiles: string[];
+  svgFiles: string[];
   assumptions: string;
 };
 
@@ -774,11 +775,12 @@ export default function Home() {
     }
   };
 
-  const generateDiagrams = async () => {
+  const generateDiagrams = async (svg = false) => {
     if (!selectedResult) return;
     setDiagramGenState("generating");
     try {
-      const res = await fetch(`/api/results/diagrams?name=${selectedResult}`, { method: "POST" });
+      const params = svg ? `?name=${selectedResult}&svg=1` : `?name=${selectedResult}`;
+      const res = await fetch(`/api/results/diagrams${params}`, { method: "POST" });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `HTTP ${res.status}`);
@@ -1686,21 +1688,32 @@ export default function Home() {
                     </span>
                     <div className="flex items-center gap-3">
                       {selectedResult && (
-                        <button
-                          onClick={() => void generateDiagrams()}
-                          disabled={diagramGenState === "generating"}
-                          className="button-secondary"
-                          style={{ fontSize: "0.7rem", padding: "4px 10px" }}
-                          title="Generate draw.io diagrams from simulation CSVs"
-                        >
-                          {diagramGenState === "generating"
-                            ? "Generating…"
-                            : diagramGenState === "done"
-                            ? "Re-generate Diagrams"
-                            : "Generate Diagrams"}
-                        </button>
+                        <>
+                          <button
+                            onClick={() => void generateDiagrams()}
+                            disabled={diagramGenState === "generating"}
+                            className="button-secondary"
+                            style={{ fontSize: "0.7rem", padding: "4px 10px" }}
+                            title="Generate draw.io diagrams from simulation CSVs"
+                          >
+                            {diagramGenState === "generating"
+                              ? "Generating…"
+                              : diagramGenState === "done"
+                              ? "Re-generate Diagrams"
+                              : "Generate Diagrams"}
+                          </button>
+                          <button
+                            onClick={() => void generateDiagrams(true)}
+                            disabled={diagramGenState === "generating"}
+                            className="button-ghost"
+                            style={{ fontSize: "0.7rem", padding: "4px 10px" }}
+                            title="Generate SVG exports (transparent, light theme)"
+                          >
+                            Generate SVGs
+                          </button>
+                        </>
                       )}
-                      <span className="eyebrow-muted">PNG · DRAWIO</span>
+                      <span className="eyebrow-muted">PNG · SVG · DRAWIO</span>
                     </div>
                   </div>
                   <div className="panel-body">
@@ -1712,6 +1725,7 @@ export default function Home() {
                         {resultDetails.figureFiles.map((file) => {
                           const stem = file.replace(/\.png$/, "");
                           const hasDrawio = resultDetails.drawioFiles?.includes(`${stem}.drawio`);
+                          const hasSvg = resultDetails.svgFiles?.includes(`${stem}.svg`);
                           return (
                             <figure key={file} className="border border-[var(--stroke)] bg-[var(--bg-elev)] p-2">
                               <img
@@ -1720,17 +1734,35 @@ export default function Home() {
                                 className="w-full block"
                                 style={file.startsWith("diagram_") ? undefined : { filter: "invert(0.92) hue-rotate(180deg)" }}
                               />
-                              <figcaption className="mt-2 flex items-center justify-between gap-2">
-                                <span className="text-[0.65rem] font-mono text-dim break-words tracking-wider">{file}</span>
-                                {hasDrawio && (
+                              <figcaption className="figure-caption">
+                                <span className="figure-caption-name">{file}</span>
+                                <div className="figure-caption-actions">
                                   <a
-                                    href={`/api/results/drawio?name=${selectedResult}&file=${stem}.drawio`}
-                                    download={`${stem}.drawio`}
-                                    className="text-[0.65rem] font-mono text-[var(--cyan)] hover:underline whitespace-nowrap"
+                                    href={`/api/results/figure?name=${selectedResult}&file=${file}`}
+                                    download={file}
+                                    className="figure-caption-action"
                                   >
-                                    ↓ .drawio
+                                    Download PNG
                                   </a>
-                                )}
+                                  {hasSvg && (
+                                    <a
+                                      href={`/api/results/svg?name=${selectedResult}&file=${stem}.svg`}
+                                      download={`${stem}.svg`}
+                                      className="figure-caption-action"
+                                    >
+                                      Download SVG
+                                    </a>
+                                  )}
+                                  {hasDrawio && (
+                                    <a
+                                      href={`/api/results/drawio?name=${selectedResult}&file=${stem}.drawio`}
+                                      download={`${stem}.drawio`}
+                                      className="figure-caption-action"
+                                    >
+                                      Download .drawio
+                                    </a>
+                                  )}
+                                </div>
                               </figcaption>
                             </figure>
                           );
