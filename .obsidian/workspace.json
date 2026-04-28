@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "vault/QuickStart.md",
+                "file": "results/r2456/assumptions_limitations.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "QuickStart"
+              "title": "assumptions_limitations"
             }
           }
         ]
@@ -182,23 +182,28 @@
   },
   "active": "096c3efeda8e16e0",
   "lastOpenFiles": [
+    "vizualizer/2026-04-28-111935-this-session-is-being-continued-from-a-previous-c.txt",
+    "results/r2456/diagram_cost_ens.png",
+    "results/r2456/fig_02_daily_net_imports.pdf",
+    "results/r2456/fig_02_daily_net_imports.png",
+    "results/r2456/fig_01_shedding_timeseries.pdf",
+    "results/r2456/fig_01_shedding_timeseries.png",
+    "results/r2456/diagram_price_curtail.png",
+    "results/r2456/diagram_interconnectors.png",
+    "results/r2456/diagram_generation_mix.png",
+    "vault/QuickStart.md",
+    "vizualizer/src/app/page.tsx.tmp.25564.1777363460470",
+    "results/r2456/diagram_interconnectors.drawio",
+    "results/r2456/diagram_price_curtail.drawio",
+    "results/r2456/diagram_generation_mix.drawio",
+    "results/r2456/diagram_cost_ens.drawio",
     "vizualizer/src/app/page.tsx.tmp.25564.1777363320016",
     "vizualizer/src/app/page.tsx.tmp.25564.1777363307643",
     "vizualizer/src/app/page.tsx.tmp.25564.1777363279205",
-    "vizualizer/src/app/lib/results.ts.tmp.25564.1777363266030",
-    "vizualizer/src/app/api/results/drawio/route.ts",
-    "vizualizer/src/app/api/results/drawio",
-    "vizualizer/src/app/api/results/diagrams/route.ts",
-    "vizualizer/src/app/api/results/diagrams",
-    "vizualizer/scripts/generate-diagrams.mjs",
-    "vizualizer/scripts",
-    "ExampleDiagram.drawio",
     "results/r2456/assumptions_limitations.md",
     "results/r2456/fig_05_ro_price_distribution.png",
     "results/r2456/fig_04_interconnector_loading.png",
     "results/r2456/fig_03_generation_mix.png",
-    "results/r2456/fig_02_daily_net_imports.png",
-    "results/r2456/fig_01_shedding_timeseries.png",
     "vizualizer/node_modules/@types/papaparse/README.md",
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/webVitalsAttribution.md",
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/webpack.md",
@@ -221,7 +226,6 @@
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/onDemandEntries.md",
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/logging.md",
     "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/index.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/images.md",
-    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/httpAgentOptions.md"
+    "vizualizer/node_modules/next/dist/docs/02-pages/04-api-reference/04-config/01-next-config-js/images.md"
   ]
 }

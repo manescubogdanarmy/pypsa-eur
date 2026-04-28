@@ -1689,7 +1689,8 @@ export default function Home() {
                         <button
                           onClick={() => void generateDiagrams()}
                           disabled={diagramGenState === "generating"}
-                          className="btn btn-sm"
+                          className="button-secondary"
+                          style={{ fontSize: "0.7rem", padding: "4px 10px" }}
                           title="Generate draw.io diagrams from simulation CSVs"
                         >
                           {diagramGenState === "generating"
