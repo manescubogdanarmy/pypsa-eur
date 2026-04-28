@@ -38,6 +38,7 @@ type ResultDetails = {
   summary: Record<string, string>;
   csvFiles: string[];
   figureFiles: string[];
+  drawioFiles: string[];
   assumptions: string;
 };
 
@@ -562,6 +563,7 @@ export default function Home() {
   const [selectedCsv, setSelectedCsv] = useState("");
   const [csvPreview, setCsvPreview] = useState<CsvPreview | null>(null);
   const [chartPack, setChartPack] = useState<ChartPack>({});
+  const [diagramGenState, setDiagramGenState] = useState<"idle" | "generating" | "done" | "error">("idle");
 
   const text = copy[language];
   const locale = language === "ro" ? "ro-RO" : "en-US";
@@ -759,6 +761,7 @@ export default function Home() {
   };
 
   const loadResultDetails = async (name: string) => {
+    setDiagramGenState("idle");
     try {
       const data = await fetchJson<ResultDetails>(`/api/results/summary?name=${name}`);
       setResultDetails(data);
@@ -768,6 +771,23 @@ export default function Home() {
     } catch (error) {
       setResultDetails(null);
       setStatus(error instanceof Error ? error.message : text.statusLoadResultFailed);
+    }
+  };
+
+  const generateDiagrams = async () => {
+    if (!selectedResult) return;
+    setDiagramGenState("generating");
+    try {
+      const res = await fetch(`/api/results/diagrams?name=${selectedResult}`, { method: "POST" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `HTTP ${res.status}`);
+      }
+      setDiagramGenState("done");
+      void loadResultDetails(selectedResult);
+    } catch (error) {
+      setDiagramGenState("error");
+      setStatus(error instanceof Error ? error.message : "Diagram generation failed");
     }
   };
 
@@ -1664,24 +1684,56 @@ export default function Home() {
                       <span className="panel-title-id">03.G</span>
                       {text.figuresTitle}
                     </span>
-                    <span className="eyebrow-muted">PNG</span>
+                    <div className="flex items-center gap-3">
+                      {selectedResult && (
+                        <button
+                          onClick={() => void generateDiagrams()}
+                          disabled={diagramGenState === "generating"}
+                          className="btn btn-sm"
+                          title="Generate draw.io diagrams from simulation CSVs"
+                        >
+                          {diagramGenState === "generating"
+                            ? "Generating…"
+                            : diagramGenState === "done"
+                            ? "Re-generate Diagrams"
+                            : "Generate Diagrams"}
+                        </button>
+                      )}
+                      <span className="eyebrow-muted">PNG · DRAWIO</span>
+                    </div>
                   </div>
                   <div className="panel-body">
+                    {diagramGenState === "error" && (
+                      <p className="text-sm font-mono text-[var(--red)] mb-3">Diagram generation failed — check console.</p>
+                    )}
                     {resultDetails && resultDetails.figureFiles.length ? (
                       <div className="grid gap-3 md:grid-cols-2">
-                        {resultDetails.figureFiles.map((file) => (
-                          <figure key={file} className="border border-[var(--stroke)] bg-[var(--bg-elev)] p-2">
-                            <img
-                              src={`/api/results/figure?name=${selectedResult}&file=${file}`}
-                              alt={file}
-                              className="w-full block"
-                              style={{ filter: "invert(0.92) hue-rotate(180deg)" }}
-                            />
-                            <figcaption className="mt-2 text-[0.65rem] font-mono text-dim break-words tracking-wider">
-                              {file}
-                            </figcaption>
-                          </figure>
-                        ))}
+                        {resultDetails.figureFiles.map((file) => {
+                          const stem = file.replace(/\.png$/, "");
+                          const hasDrawio = resultDetails.drawioFiles?.includes(`${stem}.drawio`);
+                          return (
+                            <figure key={file} className="border border-[var(--stroke)] bg-[var(--bg-elev)] p-2">
+                              <img
+                                src={`/api/results/figure?name=${selectedResult}&file=${file}`}
+                                alt={file}
+                                className="w-full block"
+                                style={file.startsWith("diagram_") ? undefined : { filter: "invert(0.92) hue-rotate(180deg)" }}
+                              />
+                              <figcaption className="mt-2 flex items-center justify-between gap-2">
+                                <span className="text-[0.65rem] font-mono text-dim break-words tracking-wider">{file}</span>
+                                {hasDrawio && (
+                                  <a
+                                    href={`/api/results/drawio?name=${selectedResult}&file=${stem}.drawio`}
+                                    download={`${stem}.drawio`}
+                                    className="text-[0.65rem] font-mono text-[var(--cyan)] hover:underline whitespace-nowrap"
+                                  >
+                                    ↓ .drawio
+                                  </a>
+                                )}
+                              </figcaption>
+                            </figure>
+                          );
+                        })}
                       </div>
                     ) : (
                       <p className="text-sm text-muted font-mono">{text.figuresEmpty}</p>

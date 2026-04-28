@@ -53,8 +53,10 @@ export async function scanResults(): Promise<ResultEntry[]> {
         continue;
       }
 
-      const csvFiles = (await fs.readdir(folder)).filter((name: string) => name.endsWith(".csv"));
-      const figureFiles = (await fs.readdir(folder)).filter((name: string) => name.endsWith(".png"));
+      const allFiles = await fs.readdir(folder);
+      const csvFiles = allFiles.filter((name: string) => name.endsWith(".csv"));
+      const figureFiles = allFiles.filter((name: string) => name.endsWith(".png"));
+      const drawioFiles = allFiles.filter((name: string) => name.endsWith(".drawio"));
       const assumptionsFile = path.join(folder, "assumptions_limitations.md");
 
       const mtimes = await Promise.all<number>([
@@ -69,6 +71,7 @@ export async function scanResults(): Promise<ResultEntry[]> {
         requiredFilesPresent: true,
         csvFiles,
         figureFiles,
+        drawioFiles,
         assumptionsFile: (await statMtime(assumptionsFile)) ? assumptionsFile : null,
       });
     }

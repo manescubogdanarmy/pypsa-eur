@@ -102,6 +102,7 @@ export type ResultEntry = {
   requiredFilesPresent: boolean;
   csvFiles: string[];
   figureFiles: string[];
+  drawioFiles: string[];
   assumptionsFile?: string | null;
 };
 
