@@ -1,19 +1,25 @@
 # General Documentation
 
-This vault is the living documentation for the PyPSA-Eur Romania workspace. Start with [[Index]].
+This vault is the living documentation for the PyPSA-Eur Romania workspace. Start with [[Index]], then open [[Vizualizer]] for the current dashboard details.
 
-## Documentation sources
+## What the vault covers
 
-- vault/ - Obsidian notes kept in sync with the repo
-- doc/ - Sphinx documentation for the upstream PyPSA-Eur workflow
-- personal_docs/ - internal templates and short guides
-- README.md - repo entry point and pointers
-- CLAUDE.md - repo conventions and assistant guidance
+- The Next.js vizualizer and its route handlers
+- The scenario generation and run queue workflow
+- The result folder structure consumed by the dashboard
+- The supporting repo layout and setup steps
 
-## How to navigate
+## Source notes
 
-- [[FolderStructure]] maps the directory layout.
-- [[Architecture]] describes data flow and key components.
-- [[QuickStart]] and [[Installation]] cover setup.
-- [[Running]] and [[Usage]] cover daily workflows.
-- [[Vizualizer]] documents the web dashboard.
+- `vault/` - Obsidian notes kept in sync with the repo
+- `doc/` - upstream Sphinx documentation
+- `personal_docs/` - YAML templates and operational notes used by the dashboard
+- `README.md` - repo entry point
+- `CLAUDE.md` - repo conventions and assistant guidance
+
+## Navigation
+
+- [[QuickStart]] and [[Installation]] cover setup
+- [[Running]] and [[Usage]] cover the live dashboard workflow
+- [[Architecture]] explains the app and repo structure
+- [[FolderStructure]] maps the main directories

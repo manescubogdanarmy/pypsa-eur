@@ -1,3 +1,5 @@
 # PyPSA-Eur Romania Documentation
 
-Please start with the [[Index]] file for a map of the documentation.
+This vault tracks the current PyPSA-Eur Romania workflow, with the browser-based Next.js vizualizer as the main UI.
+
+Start with [[Index]] for the map of the notes.

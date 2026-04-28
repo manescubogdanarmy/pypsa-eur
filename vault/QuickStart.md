@@ -1,65 +1,50 @@
 # Quick Start Guide
 
-This guide covers everything needed to set up a fresh machine and run the PyPSA-Eur Romania project end-to-end.
+This guide covers the shortest path from a fresh clone to the current browser dashboard.
 
 ---
 
-## Prerequisites (install once, system-level)
+## Prerequisites
 
 | Tool | Why | Install |
 |---|---|---|
-| [Miniconda or Anaconda](https://docs.conda.io/en/latest/miniconda.html) | Python environment manager | Download installer |
-| [Node.js ≥ 20 LTS](https://nodejs.org/) | Required for the vizualizer web dashboard | Download installer or `winget install OpenJS.NodeJS.LTS` |
+| Miniconda or Anaconda | Python environment manager for the workflow | Download installer |
+| Node.js 20 LTS or newer | Runs the Next.js vizualizer | Download installer or use `winget install OpenJS.NodeJS.LTS` |
 
 ---
 
-## 1. Create and Activate the Conda Environment
+## 1. Create the Conda Environment
+
+From the repo root:
 
 ```bash
-# From the repo root — creates environment named "pypsa" (overrides the name in the yaml)
 conda env create -f envs/environment.yaml -n pypsa
-
-# Activate it
 conda activate pypsa
 ```
 
-> [!NOTE]
-> The environment file (`envs/environment.yaml`) installs all Python packages, Snakemake, and solvers (HiGHS, GLPK, SCIP, Gurobi). This step takes 5–15 minutes.
+The environment file installs Snakemake, Python packages, and the solver stack used by the workflow.
 
-### Fix for Python 3.13+ (linopy / pkg_resources)
-
-If conda resolves Python 3.13 or newer, run this after environment creation:
+If Python 3.13 is selected, apply the current `google-cloud-storage` fix after creating the environment:
 
 ```bash
 conda run -n pypsa pip install "google-cloud-storage>=2.10"
 ```
 
-**Symptom without fix:** `ModuleNotFoundError: No module named 'pkg_resources'` when Snakemake starts. See [[Vizualizer#Known Environment Issue]] for details.
-
 ---
 
 ## 2. Download Required Data
 
-The `data/` folder is not in the repo (~5–10 GB). Download it before running any scenario:
+The repo does not ship the large `data/` payload. Download the cutout and Zenodo-backed datasets before running scenarios:
 
 ```bash
 cd personal_data_download
-
-# 1. Weather cutout (ERA5 + SARAH-3, ~1.2 GB) — takes 10–30 min
 python download_cutout.py
-
-# 2. Zenodo datasets (power plants, grid, costs, boundaries, ~5–10 GB) — takes 30–120 min
 python download_zenodo_files.py
 ```
 
-> [!WARNING]
-> Zenodo occasionally rate-limits downloads and returns a 403 HTML page instead of the actual file. If a later pipeline step fails with a CSV parse error on a file in `AppData\Roaming\powerplantmatching\`, that file is a corrupted 403 page — delete it and re-download. See [[Running#Additional Troubleshooting]] for the full fix.
-
 ---
 
-## 3. Install Web Dashboard Dependencies
-
-`node_modules` is not committed to the repo. Run once after cloning:
+## 3. Install the Vizualizer Dependencies
 
 ```bash
 cd vizualizer
@@ -68,39 +53,31 @@ npm install
 
 ---
 
-## 4. Launch the Web Dashboard (recommended)
+## 4. Start the Web Dashboard
 
 ```bash
 cd vizualizer
-npm run dev        # http://localhost:3000
+npm run dev
 ```
 
-> [!NOTE]
-> The dashboard auto-discovers the `pypsa` conda environment. If detection fails (e.g. you started the server while `base` was active), set `PLANUI_CONDA_ENV=pypsa` before running. See [[Vizualizer]] for full documentation.
+Open http://localhost:3000 in the browser.
+
+If the server does not pick up the intended conda environment automatically, set `PLANUI_CONDA_ENV=pypsa` before starting `npm run dev`.
 
 ---
 
-## 5. (Optional) Legacy Tkinter UI
+## 5. First Things to Verify
 
-The Tkinter dashboard is still functional as a fallback:
+- The Scenario Builder loads a YAML template and allows edits through the form controls.
+- The Run Queue tab can list and tail jobs.
+- The Results tab shows only folders with the required comparison CSVs.
+
+---
+
+## Optional Production Start
 
 ```bash
-# From the repo root
-python personal_dashboard/visualize_scenarios_ui_v2.py
+cd vizualizer
+npm run build
+npm start
 ```
-
-> [!NOTE]
-> The dashboard auto-scans `results/` and shows only folders with the 7 required new-format CSVs. Legacy formats are not displayed.
-
----
-
-## Summary Checklist (new machine)
-
-- [ ] Miniconda / Anaconda installed
-- [ ] Node.js ≥ 20 LTS installed
-- [ ] `conda env create -f envs/environment.yaml -n pypsa`
-- [ ] `google-cloud-storage>=2.10` fix applied (if Python 3.13+)
-- [ ] `python personal_data_download/download_cutout.py`
-- [ ] `python personal_data_download/download_zenodo_files.py`
-- [ ] `cd vizualizer && npm install`
-- [ ] `npm run dev` → open http://localhost:3000
