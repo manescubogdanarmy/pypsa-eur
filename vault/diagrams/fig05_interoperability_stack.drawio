@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="pypsa-eur-romania" version="29.6.6" type="device">
+  <diagram name="Interoperability Stack" id="fig05-interop">
+    <mxGraphModel dx="1422" dy="800" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1240" pageHeight="780" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="banner" value="Technical Interoperability Layers (EIF) Mapped to PyPSA-Eur Romania" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=18;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1160" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subbanner" value="From legal frame to byte-level contract – how an open energy modelling stack achieves cross-border interoperability" style="text;html=1;strokeColor=none;fillColor=#072A75;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#C9D7F5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="1160" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Headers -->
+        <mxCell id="hdr_layer" value="EIF LAYER" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="124" width="240" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_concern" value="GENERIC CONCERN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="124" width="320" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_impl" value="REALISATION IN PyPSA-EUR ROMANIA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="640" y="124" width="560" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Row 1: Legal -->
+        <mxCell id="r1_l" value="LEGAL&#10;Interoperability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="166" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_c" value="Compatible licensing, data-protection, dual-use export controls, public-procurement compliance." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="166" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_i" value="MIT/Apache-style licensing on PyPSA + permissive licensing on Vizualizer enables reuse by ministries, regulators and defence stakeholders alike. Public ECMWF/Zenodo provenance avoids licensing collisions. Open-source carve-out under EU Reg. 2021/821 simplifies cross-border collaboration." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="640" y="166" width="560" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Row 2: Organisational -->
+        <mxCell id="r2_l" value="ORGANISATIONAL&#10;Interoperability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="256" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_c" value="Aligned business processes, role definitions, governance, change management between actors." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="256" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_i" value="Three-tab UI (Builder · Runs · Results) maps directly to RACI roles: analyst configures, operator monitors, decision-maker reviews. Sequential queue documents runs; persistent state (planui-state.json) provides organisational audit trail across restarts and shift changes." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="640" y="256" width="560" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Row 3: Semantic -->
+        <mxCell id="r3_l" value="SEMANTIC&#10;Interoperability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="346" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_c" value="Shared meaning, units, vocabularies, ontologies; unambiguous translation between systems." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="346" width="320" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_i" value="SI units enforced (MWh, MW, EUR/MWh). Country / asset codes follow ISO-3166-1 (RO, BG, HU, RS) and ENTSO-E component identifiers. Result schema names align with TYNDP output expectations: system_cost, generation_mix, lmp_summary, ens_summary, curtailment, daily_net_imports, interconnector_flow_congestion. Bilingual UI labels (EN/RO) preserve a single semantic layer." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="640" y="346" width="560" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Row 4: Technical -->
+        <mxCell id="r4_l" value="TECHNICAL&#10;Interoperability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="456" width="240" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_c" value="Standard formats, protocols, API contracts; the byte-level handshake that lets systems exchange data and operations." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="456" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_i" value="• YAML configuration (industry-standard, schema-versioned)&#10;• netCDF cutouts (CF conventions for climate data)&#10;• CSV result contract – 7 mandatory files with stable column names&#10;• REST API (HTTP/JSON) for queue, scenario and result endpoints&#10;• drawio (mxGraph) + SVG for figure portability across editors&#10;• Snakemake DAG for reproducible cross-host execution&#10;• Conda env spec for deterministic dependency resolution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="640" y="456" width="560" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- Row 5: Underpinning - Integrated public service governance -->
+        <mxCell id="r5_l" value="GOVERNANCE&#10;(underpinning)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F28C28;strokeColor=#F28C28;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="586" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_c" value="Coordination, monitoring, accountability — the cross-cutting governance underpinning all four EIF layers." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="586" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_i" value="Job state JSON, immutable templates and per-run logs constitute a governance audit envelope. Snakemake provenance is reproducible from form input to delivered figure. Each result inherits assumptions_limitations.md so policy briefings carry their epistemic provenance forward." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="640" y="586" width="560" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption" value="Each layer is enforced by an explicit artefact in the codebase – making interoperability a verifiable property rather than aspirational claim." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="680" width="1140" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption2" value="The four-layer European Interoperability Framework (EIF) is augmented with a fifth governance layer aligned with the ESPD–PSD/CIRA modernisation agenda." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="704" width="1140" height="22" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
