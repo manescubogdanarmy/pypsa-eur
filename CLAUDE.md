@@ -203,20 +203,20 @@ New-format results (required for both dashboards):
 
 ## Documentation References
 
-**For architecture, planning, and configuration details:**
-- `vault/Index.md` - Master index to all Obsidian documentation
+**Obsidian vault (`vault/`) — primary knowledge base:**
+- `vault/Index.md` - Master index to all vault documentation
 - `vault/Architecture.md` - Stress test implementation plan, shock logic, reporting specs
-- `vault/FolderStructure.md` - Directory roles and organization
 - `vault/Vizualizer.md` - Web dashboard architecture, API endpoints, env vars, known issues
-- `personal_docs/PLAN.md` - Original project scope and acceptance criteria
-- `personal_docs/TEMPLATE_ARCHITECTURE.md` - Year-specific template selection system (400+ lines)
-- `personal_docs/romania_config_explanation.md` - YAML configuration guide (English)
-- `personal_docs/romania_config_explanation_ro.md` - YAML configuration guide (Romanian)
-- `personal_docs/PROJECT_ORGANIZATION.md` - Updated folder structure guide with quick-start workflows
+- `vault/Running.md` - Scenario execution guide
+- `vault/Installation.md` - Environment setup
+- `vault/QuickStart.md` - Quick-start workflows
+- `vault/ComplexScenario.md` - Complex/adversarial scenario notes
+- `vault/Usage.md`, `vault/General.md` - Usage and general project notes
 
-**For dashboard/UI details:**
-- `personal_docs/planui.md` - Legacy Tkinter Scenario Manager UI architecture and implementation notes
-- `personal_dashboard/README.md` - Tkinter dashboard usage guide
+**`personal_docs/` — implementation notes and templates:**
+- `personal_docs/scenario_template.yaml`, `scenario_template_2023.yaml`, `scenario_template_complex.yaml` - Read-only canonical templates
+- `personal_docs/HIGHS_GPU_SETUP_PLAN.md` - HiGHS GPU solver setup plan
+- `personal_docs/results_summary.md` - Results summary notes
 
 ## Common Development Tasks
 
@@ -231,7 +231,7 @@ This runs both baseline and stress scenarios, generates comparison reports, and 
 
 **Quick baseline test (for validation):**
 ```bash
-python run_baseline_only.bat                 # Quick baseline test
+personal_runners/run_baseline_only.bat       # Quick baseline test (Windows .bat — invoke directly, not via python)
 ```
 Use this to validate that the environment is working and network solves correctly without stress shocks.
 
@@ -373,7 +373,7 @@ Before running large scenario suites, verify all prerequisites:
 
 2. **Run a quick baseline test:**
    ```bash
-   python personal_runners/run_baseline_only.bat
+   personal_runners/run_baseline_only.bat
    ```
    Should complete in 30-60 seconds; verifies solver and network loading.
 
@@ -394,52 +394,34 @@ Before running large scenario suites, verify all prerequisites:
 Check fails → Review error message → Fix (e.g., download cutout) → Re-check → Proceed
 ```
 
-## Notes for Future Development
+## System Maintenance
 
-### Planned Enhancements
-
-**Bilingual Dashboard Support**
-- Web dashboard (Next.js) will soon support English/Romanian toggle similar to legacy Tkinter UI
-- Translations managed in `vizualizer/src/app/lib/i18n.ts` (structure mirrors `personal_dashboard/scenario_manager/i18n.py`)
-- Expected in next release
-
-**Tkinter UI Consolidation**
-- Legacy Tkinter UI (`personal_dashboard/`) will be retired once web dashboard achieves feature parity
-- Current status: web dashboard covers all core workflows; Tkinter remains as stable fallback
-
-### System Maintenance
-
-**Cutout and Data Management**
+**Cutout and data management:**
 - Weather data (ERA5 cutouts) is large (~2GB per year)
 - `personal_data_download/download_cutout.py` caches to `data/cutout/archive/v0.8/` for offline use
 - Zenodo datasets auto-cached during first scenario run
 - Delete `data/cutout/archive/` to force re-download if corruption suspected
 
-**Template Versioning Strategy**
-- Keep all year-specific templates in sync with each other
-- Document breaking changes in `personal_docs/TEMPLATE_ARCHITECTURE.md`
-- When updating stress test defaults, update all templates (not just 2023)
-- Use git history to track template evolution
+**Template versioning:**
+- Keep year-specific templates in `personal_docs/` in sync with each other
+- When updating stress-test defaults, update all templates (not just 2023)
 
-**Performance Tuning**
-- Network solve time scales with:
-  - **Cluster count**: Higher = slower but more spatially refined. Start with 5-10 for testing.
-  - **Temporal resolution**: Daily is much faster than hourly. Use for sensitivity studies.
-  - **Solver options**: `solver_logfile=false` and `min_iterations=1` can speed up test runs.
+**Performance tuning:**
+- Cluster count: higher = slower but more spatially refined. Start with 5-10 for testing.
+- Temporal resolution: daily solves much faster than hourly; use for sensitivity studies.
 - Typical baseline solve: 5-15 min (10 clusters, hourly). Stress solves usually ±10% due to shock magnitude.
 
-### Extensibility
+## Extensibility
 
 **Adding new stress types:**
 1. Define new shock parameters in template YAML under `stress_test.`
 2. Implement shock application logic in `scripts/romania_winter_stress.py`
-3. Add constraint generation in same script
-4. Update form controls in `vizualizer/src/app/components/ScenarioBuilder.tsx`
-5. Add new result metrics to reporting script
+3. Add constraint generation in the same script
+4. Update the relevant UI surface in `vizualizer/src/app/page.tsx` (the dashboard is currently a single-page app — add components under `vizualizer/src/app/` if the form grows)
+5. Add new result metrics to the reporting script
 
 **Supporting new geographic regions:**
 1. Extend PyPSA-Eur config scope (e.g., EU-wide instead of Balkans)
 2. Create region-specific template: `personal_docs/scenario_template_<region>.yaml`
-3. Update shock logic to apply only to target countries
+3. Update shock logic in `scripts/romania_winter_stress.py` to apply only to target countries
 4. Add region-specific result visualizations
-5. Document in `personal_docs/REGION_GUIDE.md`
