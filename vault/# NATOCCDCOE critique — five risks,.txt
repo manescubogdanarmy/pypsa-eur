@@ -1,0 +1,30 @@
+# NATO/CCDCOE critique — five risks, three counters each
+
+**1. Optimisation models can't represent adversaries.** A linear-programming core with pre-injected shocks is a *consequence* model, not a *threat* model. CCDCOE readers will note that real hybrid campaigns are adaptive, multi-stage, and target the control plane (SCADA, comms, market clearing) — none of which a SCIP solve captures. The "SCADA proxy" being a ramp-rate constraint will read as a category error.
+- *Counter A:* The platform is positioned as the consequence-quantification layer that complements (not replaces) red-team and attack-graph tools — ENS envelopes feed wargames, they don't replace them.
+- *Counter B:* Section 8 already books cyber-physical co-simulation as future work; the current claim is bounded to *post-compromise* system response.
+- *Counter C:* CER Directive Art. 13 national risk assessments explicitly require quantitative impact estimates — exactly what optimisation gives you, and what threat-modelling tools don't.
+
+**2. "Dual-use" framing is asserted, not demonstrated.** A NATO reader will ask: what defence decision was actually made differently because of a PyPSA run? The paper shows a civilian model with security *vocabulary* layered on top, not evidence of operational uptake. The Romania case is a single academic week-long simulation.
+- *Counter A:* The contribution is explicitly *substrate*, not deployment — analogous to how GIS stacks became dual-use long before any specific military adoption.
+- *Counter B:* TYNDP and PCI cost-benefit analyses are already consumed by ENTSO-E and DG ENER for cross-border resilience decisions; the same outputs are what the platform produces.
+- *Counter C:* Allied table-top exercises (e.g. EU PACE, NATO CMX energy injects) need reproducible scenario libraries — the seven-CSV contract is a concrete artefact for that, even absent classified deployment.
+
+**3. Open-source + critical infrastructure = attacker reconnaissance gift.** CCDCOE has published repeatedly on the offence-defence asymmetry of open OT data. A reader will argue that publishing stress-test playbooks, shock taxonomies and Romanian network topology lowers the cost of *targeting* faster than it raises the cost of *defending*.
+- *Counter A:* The network data ingested (ENTSO-E TYNDP, ECMWF ERA5, GADM) is already public; the platform composes public data, it doesn't disclose operator-confidential topology.
+- *Counter B:* The architectural separation in §5 (open orchestration / operator-controlled data) means classified deployments inherit the codebase without publishing their parameterisation.
+- *Counter C:* Security-through-obscurity has a poor track record in power-systems research (cf. the open-vs-closed debate around CIM/CGMES); peer-reviewable models produce more defensible policy than vendor black boxes.
+
+**4. The headline number is fragile.** "~45 GWh ENS, +31% cost, +570 M€" from a single deterministic week with hand-picked shock magnitudes (load ×1.3, gas −20%, imports = 0) will read to a defence analyst as a *scenario*, not a *risk envelope*. No sensitivity analysis, no probability weighting, no confidence interval, no comparison to historical Romanian winter incidents.
+- *Counter A:* The paper explicitly disclaims prediction ("envelope indicating order of magnitude") in §4.3 — the number's purpose is calibration, not forecast.
+- *Counter B:* The 2⁵ orthogonal shock combinations (Figure 2) are designed precisely to support sensitivity sweeps; the case study is one cell, not the methodology's ceiling.
+- *Counter C:* Deterministic worst-case envelopes are the convention in CER Art. 13 risk assessments and in N-k contingency studies — probabilistic framing is a separate (and complementary) tradition.
+
+**5. EU-funding pitch reads as opportunism.** Claiming simultaneous eligibility for Horizon Europe, EDF, CEF and rescEU on one platform invites the response that the paper is reverse-engineering a funding narrative around an existing civilian tool. EDF reviewers in particular are sensitive to "civilian project with a defence label stapled on."
+- *Counter A:* The instruments cited each fund a *distinct* artefact (R&I code, resilience evidence, CBA inputs, preparedness exercises) — not the same deliverable four times.
+- *Counter B:* The dual-use carve-out under Reg. 2021/821 is invoked at the *codebase* level; deployment-level funding is independently classifiable, which is exactly the EDF's preferred posture per the 2024 work programme.
+- *Counter C:* Cross-instrument alignment is EU policy, not author opportunism — the Strategic Compass and the 2024 Defence Industrial Strategy explicitly call for civil-military convergence on critical-infrastructure tooling.
+
+---
+
+**Sharpest single critique to pre-empt in the paper:** #1 + #3 combined — "you've built a consequence calculator on public data and called it dual-use." Worth a paragraph in §8 distinguishing *substrate contribution* from *operational capability*, and citing one concrete defence/resilience exercise (real or planned) that consumes outputs of this shape. Without that, the dual-use claim rests entirely on Figure 4's labelling.

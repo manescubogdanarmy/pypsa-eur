@@ -1,0 +1,17 @@
+first read all the documentation in the obsidian vault from C:\Users\Bogdan\Desktop\Programs\pypsa-eur\vault then
+I need to write a paper for a panel on
+KNOWLEDGE-BASED ORGANIZATION 2026
+for the Panel III: AUGMENTING TECHNICAL INTEROPERABILITY OF COMPLEX SYSTEMS
+topics: Risk Analysis of Industry 5.0 or 	Dual-Use Technologies and Contemporary Funding Mechanisms for Security
+
+write an .md file with as much info as possible based on the C:\Users\Bogdan\Desktop\Programs\pypsa-eur project and how the built app in Vizualizer helps run complex scenarios but do not mention the proxy switch
+
+I'll then use the md file in claude for word so it writes the paper, so include instructions for that session references and use the brainstorming plugin to help 
+
+the template for the final paper is at "C:\Users\Bogdan\Downloads\KBOPaperTemplate2026 (1) (1).xml"
+also generate in the vault diagrams using the draw.io installed at C:\Program Files\draw.io and maybe its mcp server i have installed or the
+skill i installed for draw.io to generate professional and scientific diagrams for the paper in the vault, i want the .drawio files and then exports of them in svg format transparent background and light theme, there is an example diagram at "C:\Users\Bogdan\Desktop\Programs\pypsa-eur\ExampleDiagram.drawio" read it before to know how to best generate them, also look at "C:\Users\Bogdan\Desktop\Programs\pypsa-eur\vizualizer\scripts\generate-diagrams.mjs" this generates diagrams in the visualizer app
+
+
+then try to wite the paper using the diagrams, documentation, vault etc, in "C:\Users\Bogdan\Desktop\Programs\pypsa-eur\vault\KBOPaperTemplate2026 (1) (1).xml" an xml format paper template 
+
