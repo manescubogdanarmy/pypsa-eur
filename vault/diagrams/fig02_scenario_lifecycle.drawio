@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="pypsa-eur-romania" version="29.6.6" type="device">
+  <diagram name="Scenario Lifecycle" id="fig02-lifecycle">
+    <mxGraphModel dx="1422" dy="800" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1300" pageHeight="640" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="banner" value="Stress-Test Scenario Lifecycle – From Form Input to Comparable Result" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=18;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1220" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subbanner" value="End-to-end traceability of a paired baseline / shocked-scenario run" style="text;html=1;strokeColor=none;fillColor=#072A75;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#C9D7F5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="1220" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 1: Configure -->
+        <mxCell id="ph1" value="1. CONFIGURE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" value="Form input&#10;or YAML editing&#10;&#10;Slug, countries, dates,&#10;clusters, solver, shocks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;fontSize=11;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="170" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step1note" value="Year-specific template (2020 / 2023) auto-resolved from cutout selection." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="240" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 2: Generate -->
+        <mxCell id="ph2" value="2. GENERATE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="300" y="130" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="step2" value="Paired YAMLs written&#10;&#10;slug_baseline.yaml&#10;(stress_test.enable=false)&#10;&#10;slug_scenario.yaml&#10;(stress_test.enable=true)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;fontSize=11;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="300" y="170" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step2note" value="Two configs differ only in stress block – clean A/B comparison preserved." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="280" y="280" width="240" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 3: Queue -->
+        <mxCell id="ph3" value="3. QUEUE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="540" y="130" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="step3" value="Job record persisted&#10;&#10;.data/planui-state.json&#10;&#10;Sequential runner&#10;queued → running → done" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;fontSize=11;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="540" y="170" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step3note" value="State survives app restart; running jobs marked &quot;interrupted&quot; on relaunch." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="520" y="280" width="240" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 4: Solve -->
+        <mxCell id="ph4" value="4. SOLVE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F28C28;strokeColor=#F28C28;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="780" y="130" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="step4" value="Snakemake DAG executes&#10;&#10;1. unlock&#10;2. solve baseline (~7-15 min)&#10;3. solve scenario (~8-12 min)&#10;4. report comparison" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=11;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="780" y="170" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step4note" value="SCIP / HiGHS solver invoked through conda-managed Python environment." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="760" y="280" width="240" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 5: Validate -->
+        <mxCell id="ph5" value="5. VALIDATE &amp; SHOW" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0F7B3B;strokeColor=#0F7B3B;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="130" width="220" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="step5" value="7-CSV contract enforced&#10;&#10;Cost · ENS · LMP · Mix&#10;Curtailment · Imports · Congestion&#10;&#10;Diagrams + figures auto-generated" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0F7B3B;strokeWidth=2;fontSize=11;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="170" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="step5note" value="Folders missing any required CSV are hidden from the dashboard." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="280" width="260" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="arr1" style="endArrow=classicThin;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2;strokeColor=#0A3DA3;" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr2" style="endArrow=classicThin;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2;strokeColor=#0A3DA3;" edge="1" parent="1" source="step2" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr3" style="endArrow=classicThin;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2;strokeColor=#0A3DA3;" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr4" style="endArrow=classicThin;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2;strokeColor=#F28C28;" edge="1" parent="1" source="step4" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom: Stress shocks injected -->
+        <mxCell id="shockbg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="340" width="1180" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="shocklbl" value="Stress shocks injected at the &quot;Solve&quot; phase before optimisation runs" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#072A75;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="350" width="1180" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sh1" value="Load Multiplier&#10;1.0 → 2.0&#10;&#10;Demand scaling for cold-snap, electrification, behavioural surge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="386" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sh2" value="Hydro Reduction&#10;0.0 → 1.0&#10;&#10;Drought / low-runoff / reservoir constraints" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="320" y="386" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sh3" value="Gas Capacity Reduction&#10;0.0 → 1.0&#10;&#10;Supply disruption / maintenance / fuel logistics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="560" y="386" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sh4" value="SCADA Proxy&#10;ramp-rate constraints&#10;&#10;Operational limits on thermal generators (~15%/h)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="800" y="386" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sh5" value="Import Cap&#10;directional flow caps&#10;&#10;Cross-border isolation; geopolitical disruption" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="386" width="180" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="appliesto" value="Shocks compose orthogonally → 2⁵ test combinations from 5 binary toggles + 3 continuous parameters" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="500" width="1180" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="appliesto2" value="Pre-solve injection (apply_timeseries_shocks) → linear constraint generation (add_*_constraints) → unchanged solver core" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="528" width="1180" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="appliesto3" value="Result: deterministic, reproducible, traceable comparisons usable for risk analysis and policy briefings." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontStyle=1;fontColor=#072A75;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="552" width="1180" height="22" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
