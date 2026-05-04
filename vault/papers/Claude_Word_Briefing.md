@@ -4,6 +4,7 @@
 
 **Generated:** 2026-05-04
 **Target Document:** `C:\Users\Bogdan\Desktop\Programs\pypsa-eur\vault\papers\Raport_2_citatii_verificate.xml`
+**Document Language:** Romanian (Limba română) — all text improvements, figure captions, and new content must be written in Romanian, not English.
 **CRITICAL:** The target document is a Flat OPC XML Word file with its own style definitions already embedded. **Preserve all existing formatting, styles, fonts, spacing, margins, page layout, and section properties exactly as they are in the XML.** Only improve the text content, insert the new diagrams, and update references. Do NOT apply any external template or style overrides.
 
 ---
@@ -37,17 +38,17 @@ Run these prompts in order. Pause between each and approve insertions before pro
 
 > **Prompt 2 (Document Audit).** "Read the entire document and tell me: (a) what styles are defined and used, (b) what sections/chapters exist with their headings, (c) what figures or diagrams are already placed, (d) what citation format is used, (e) what the current page count and structure looks like. Do NOT modify anything. This is reconnaissance only."
 
-> **Prompt 3 (Content Improvement Plan).** "Based on the document audit and the content in `Claude_Word_Briefing.md`, propose a section-by-section improvement plan. For each section, list: what stays as-is, what text should be improved with content from the briefing, and where each of the 8 new diagrams (fig01 through fig08) should be placed. Wait for my approval before making any changes."
+> **Prompt 3 (Content Improvement Plan).** "Based on the document audit and the content in `Claude_Word_Briefing.md`, propose a section-by-section improvement plan in Romanian. For each section, list: what stays as-is, what text should be improved with content from the briefing (translated into Romanian), and where each of the 8 new diagrams (fig01 through fig08) should be placed. Wait for my approval before making any changes."
 
-> **Prompt 4 (Title, Abstract, and Introduction).** "Improve the title, abstract, and introduction sections. Use the quantitative results and architectural detail from `Claude_Word_Briefing.md`. Preserve the existing paragraph styles exactly. Do not change any formatting — only the text content within existing paragraphs. If you need to add a paragraph, match the style of its neighbours."
+> **Prompt 4 (Title, Abstract, and Introduction).** "Improve the title, abstract, and introduction sections IN ROMANIAN. Use the quantitative results and architectural detail from `Claude_Word_Briefing.md`, translating all content into Romanian. Preserve the existing paragraph styles exactly. Do not change any formatting — only the text content within existing paragraphs. If you need to add a paragraph, match the style of its neighbours."
 
-> **Prompt 5 (Core Sections — One at a Time).** For each major section: "Improve this section using the detailed content from `Claude_Word_Briefing.md`. Preserve the existing heading and body styles exactly as they are in the document. Only change the text. Preserve in-text citations in the format already used by the document. If the document uses a different citation style than [1], [2], match the document's existing convention."
+> **Prompt 5 (Core Sections — One at a Time).** For each major section: "Improve this section IN ROMANIAN using the detailed content from `Claude_Word_Briefing.md` (translate everything into Romanian). Preserve the existing heading and body styles exactly as they are in the document. Only change the text. Preserve in-text citations in the format already used by the document. If the document uses a different citation style than [1], [2], match the document's existing convention."
 
-> **Prompt 6 (Insert Figures).** "Insert the 8 SVG figures from `vault/diagrams/` into the document at the appropriate locations we agreed in the plan. Place each figure between paragraphs using the same figure-placement pattern already used in the document. Use the same caption style as existing figures. Caption text for each figure is in Section 11 of the briefing. Center figures horizontally. Do NOT change any page layout — match existing figure formatting."
+> **Prompt 6 (Insert Figures).** "Insert the 8 SVG figures from `vault/diagrams/` into the document at the appropriate locations we agreed in the plan. Place each figure between paragraphs using the same figure-placement pattern already used in the document. Use the same caption style as existing figures. Write all figure captions IN ROMANIAN — translate the English captions from Section 11 of the briefing. Center figures horizontally. Do NOT change any page layout."
 
-> **Prompt 7 (References).** "Review and improve the References / Bibliography section. Ensure every in-text citation has a corresponding reference entry. Use the references from Section 12 of `Claude_Word_Briefing.md` to supplement, but preserve the citation format already used in the document. Do not invent references; if something is missing, leave a `[TODO: cite]` marker."
+> **Prompt 7 (References).** "Review and improve the References / Bibliography section. Ensure every in-text citation has a corresponding reference entry. Use the references from Section 12 of `Claude_Word_Briefing.md` to supplement, but preserve the citation format already used in the document. Keep reference titles and journal names in their original language (English/French). Do not invent references; if something is missing, leave a `[TODO: citare]` marker."
 
-> **Prompt 8 (Acknowledgements).** "Review and improve the Acknowledgements section using content from Section 13 of the briefing."
+> **Prompt 8 (Acknowledgements).** "Review and improve the Acknowledgements section IN ROMANIAN using content from Section 13 of the briefing (translated)."
 
 > **Prompt 9 (Length Check).** "Use the Brainstorming plugin: report the current page count. If the document needs trimming or expansion, propose three specific changes listing exact paragraphs to cut or expand."
 
@@ -67,6 +68,7 @@ Trigger the Claude Brainstorming skill between substantive sections:
 
 ### 0.5 Rules for Claude in the Word Session
 
+- **WRITE IN ROMANIAN.** The target document is a Romanian-language doctorate report. All text improvements, figure captions, section headings, and new content must be written in Romanian (limba română). Translate any English content from this briefing into Romanian before inserting. Do NOT insert English text into the document.
 - **PRESERVE ALL EXISTING FORMATTING.** Never change styles, fonts, margins, columns, spacing, or section properties. The document's XML already defines these correctly.
 - **Match adjacent styles.** When inserting new content, copy the `w:pStyle` value from the nearest paragraph of the same type.
 - **Cite carefully.** Every citation must correspond to one reference entry. If you would have to invent a source, leave `[TODO: cite]` and list the gap.
