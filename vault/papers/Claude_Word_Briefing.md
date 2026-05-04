@@ -4,7 +4,7 @@
 
 **Generated:** 2026-05-04
 **Target Document:** `C:\Users\Bogdan\Desktop\Programs\pypsa-eur\vault\papers\Raport_2_citatii_verificate.xml`
-**Template Reference:** KBO 2026 Paper Template at `C:\Users\Bogdan\Desktop\Programs\pypsa-eur\vault\papers\KBOPaperTemplate2026 (1) (1).xml`
+**CRITICAL:** The target document is a Flat OPC XML Word file with its own style definitions already embedded. **Preserve all existing formatting, styles, fonts, spacing, margins, page layout, and section properties exactly as they are in the XML.** Only improve the text content, insert the new diagrams, and update references. Do NOT apply any external template or style overrides.
 
 ---
 
@@ -12,35 +12,48 @@
 
 ### 0.1 Setting Up the Session
 
-1. Open the target document in Microsoft Word (File → Open, select the XML file; Word recognizes Flat OPC XML natively).
+1. Open the target document in Microsoft Word: **File → Open** → select `Raport_2_citatii_verificate.xml`. Word recognises Flat OPC XML natively (it may also open if renamed to `.docx`).
 2. Activate the Claude task pane in Word (**Home → Claude** or the dedicated Claude ribbon).
 3. Attach this file (`Claude_Word_Briefing.md`) to the conversation as the primary reference document.
-4. Attach the five SVGs from `vault/diagrams/` (`fig01_system_architecture.svg` through `fig05_interoperability_stack.svg`) for figure placement.
+4. Attach all eight SVGs from `vault/diagrams/` (`fig01_system_architecture.svg` through `fig08_eu_regulatory_framework.svg`) for figure placement.
 5. Open the **Brainstorming** plugin. Configure it for *Academic / Doctoral thesis* with audience *energy-system analysts, critical-infrastructure planners, and EU policy stakeholders*.
 
-### 0.2 Suggested Prompt Sequence
+### 0.2 CRITICAL: Style Preservation Rule
+
+The target document (`Raport_2_citatii_verificate.xml`) is a Flat OPC XML file with its own style definitions already embedded in the XML. **These styles must be preserved exactly as they are.** Claude in Word must:
+
+- **NEVER** apply KBO template styles, KBO Title, KBO Heading 1, KBO Text Body, or any external style set
+- **NEVER** change page margins, column layout, fonts, line spacing, or section properties
+- **NEVER** modify the `<w:sectPr>` block or any `<w:pPr>` / `<w:rPr>` formatting already in the XML
+- **ONLY** improve the text content inside existing paragraphs, insert new diagrams, and update references
+- When inserting a new paragraph or figure, **match the adjacent paragraph's style** — look at the `w:pStyle` value of neighbouring paragraphs and reuse that exact style ID
+- When inserting a figure, use the same figure-placement pattern already used by existing figures in the document
+
+### 0.3 Suggested Prompt Sequence
 
 Run these prompts in order. Pause between each and approve insertions before proceeding.
 
-> **Prompt 1 (Warm-up Brainstorm).** "Use the Brainstorming plugin. Goal: review the current doctorate report document and critique its structure. List five risks a reviewer from an energy-systems or critical-infrastructure background might raise, with three counter-arguments per risk. Be concise."
+> **Prompt 1 (Warm-up Brainstorm).** "Use the Brainstorming plugin. Goal: review the current doctorate report open in Word and critique its structure. List five risks a reviewer from an energy-systems or critical-infrastructure background might raise, with three counter-arguments per risk. Do NOT change anything in the document yet. Be concise."
 
-> **Prompt 2 (Title and Metadata).** "Review the title, author block, and affiliations in the current document. Ensure they match the content of the PyPSA-Eur Romania project described in `Claude_Word_Briefing.md`. Apply appropriate heading styles."
+> **Prompt 2 (Document Audit).** "Read the entire document and tell me: (a) what styles are defined and used, (b) what sections/chapters exist with their headings, (c) what figures or diagrams are already placed, (d) what citation format is used, (e) what the current page count and structure looks like. Do NOT modify anything. This is reconnaissance only."
 
-> **Prompt 3 (Abstract and Keywords).** "Review and improve the abstract. Target 195-200 words. Ensure it covers: the dual-use nature of open-source energy modelling, the six-layer platform architecture, the Romania winter case study with quantitative results (45 GWh ENS, +31% cost delta, +570 M EUR), the EIF interoperability mapping, and the EU funding alignment. Use appropriate abstract style."
+> **Prompt 3 (Content Improvement Plan).** "Based on the document audit and the content in `Claude_Word_Briefing.md`, propose a section-by-section improvement plan. For each section, list: what stays as-is, what text should be improved with content from the briefing, and where each of the 8 new diagrams (fig01 through fig08) should be placed. Wait for my approval before making any changes."
 
-> **Prompt 4 (Each Section in Turn).** For each major section, run: "Insert/improve this section using the detailed content from `Claude_Word_Briefing.md`. Apply the appropriate heading styles. Preserve in-text citations exactly as [1], [2], etc. Do not add abbreviations to section titles."
+> **Prompt 4 (Title, Abstract, and Introduction).** "Improve the title, abstract, and introduction sections. Use the quantitative results and architectural detail from `Claude_Word_Briefing.md`. Preserve the existing paragraph styles exactly. Do not change any formatting — only the text content within existing paragraphs. If you need to add a paragraph, match the style of its neighbours."
 
-> **Prompt 5 (Figures).** "Insert each figure listed in the Figures section below in the order specified. Use the SVG files from `vault/diagrams/<name>.svg`. Center each figure horizontally across the page width. Use appropriate caption style below each figure. Caption text is provided verbatim in Section 11 of this briefing."
+> **Prompt 5 (Core Sections — One at a Time).** For each major section: "Improve this section using the detailed content from `Claude_Word_Briefing.md`. Preserve the existing heading and body styles exactly as they are in the document. Only change the text. Preserve in-text citations in the format already used by the document. If the document uses a different citation style than [1], [2], match the document's existing convention."
 
-> **Prompt 6 (References).** "Insert the References block from Section 12 below. Use appropriate heading and text styles for references. Number entries to match in-text citations. Do not invent references; if any cited number is missing, leave a TODO comment."
+> **Prompt 6 (Insert Figures).** "Insert the 8 SVG figures from `vault/diagrams/` into the document at the appropriate locations we agreed in the plan. Place each figure between paragraphs using the same figure-placement pattern already used in the document. Use the same caption style as existing figures. Caption text for each figure is in Section 11 of the briefing. Center figures horizontally. Do NOT change any page layout — match existing figure formatting."
 
-> **Prompt 7 (Acknowledgements).** "Insert the Acknowledgements paragraph before References."
+> **Prompt 7 (References).** "Review and improve the References / Bibliography section. Ensure every in-text citation has a corresponding reference entry. Use the references from Section 12 of `Claude_Word_Briefing.md` to supplement, but preserve the citation format already used in the document. Do not invent references; if something is missing, leave a `[TODO: cite]` marker."
 
-> **Prompt 8 (Length Sanity Check).** "Use the Brainstorming plugin: count the current page count. Target is appropriate for a doctoral report. If too long or too short, propose three specific cuts or expansions, listing exact paragraphs."
+> **Prompt 8 (Acknowledgements).** "Review and improve the Acknowledgements section using content from Section 13 of the briefing."
 
-> **Prompt 9 (Final Review).** "Run a self-review of the document: check for consistent terminology, SI units only (GWh, MWh, MW, EUR/MWh, EUR), proper citation numbering, no footnotes, and alignment with the content in `Claude_Word_Briefing.md`. Output a checklist with PASS/FAIL per item and propose surgical fixes."
+> **Prompt 9 (Length Check).** "Use the Brainstorming plugin: report the current page count. If the document needs trimming or expansion, propose three specific changes listing exact paragraphs to cut or expand."
 
-### 0.3 Brainstorming Prompts (Use Between Sections)
+> **Prompt 10 (Final Review).** "Run a self-review of the entire document: check for consistent terminology, SI units only (GWh, MWh, MW, EUR/MWh, EUR), proper citation numbering, no broken cross-references, and alignment with `Claude_Word_Briefing.md`. Confirm that all formatting is preserved as originally found. Output a PASS/FAIL checklist."
+
+### 0.4 Brainstorming Prompts (Use Between Sections)
 
 Trigger the Claude Brainstorming skill between substantive sections:
 
@@ -52,17 +65,17 @@ Trigger the Claude Brainstorming skill between substantive sections:
 - *"Brainstorm a one-paragraph response to a reviewer who claims that an optimisation model cannot represent adversarial behaviour."*
 - *"Brainstorm three risks of mis-citation and a one-line mitigation for each."*
 
-### 0.4 Rules for Claude in the Word Session
+### 0.5 Rules for Claude in the Word Session
 
-- **Cite carefully.** Every numbered citation [n] must correspond to one entry in the References section. If you would have to invent a source, instead leave `[TODO: cite]` and list the gap.
-- **Do not paraphrase the abstract** — it is already calibrated to ~200 words.
-- **Do not change the figure order.** The narrative depends on it.
-- **Never mention** HTTP proxy stripping behaviour, the `PLANUI_USE_SYSTEM_PROXY` variable, or proxy environment workarounds. They are implementation details unrelated to the paper's argument.
+- **PRESERVE ALL EXISTING FORMATTING.** Never change styles, fonts, margins, columns, spacing, or section properties. The document's XML already defines these correctly.
+- **Match adjacent styles.** When inserting new content, copy the `w:pStyle` value from the nearest paragraph of the same type.
+- **Cite carefully.** Every citation must correspond to one reference entry. If you would have to invent a source, leave `[TODO: cite]` and list the gap.
+- **Do not change the figure order.** The narrative depends on the sequence (Fig 1 → Fig 8).
+- **Never mention** HTTP proxy stripping behaviour, the `PLANUI_USE_SYSTEM_PROXY` variable, or proxy environment workarounds.
 - **Use SI units only.** GWh, MWh, MW, EUR/MWh, EUR.
 - **Do not use abbreviations in section titles.**
-- **Do not use footnotes.**
-- **Times New Roman, single line spacing, justified text.**
-- **No running heads, no page numbers** (unless required by template).
+- **Do not add footnotes** unless the document already uses them — match the existing convention.
+- **Do not apply any KBO template, KBO styles, or external style sets.** The existing document is self-contained.
 
 ---
 
@@ -513,29 +526,38 @@ Interoperability becomes a **verifiable** property rather than an aspirational c
 
 ## 11. Figures (Insertion Order, Captions, and Source Files)
 
-All five figures are SVG files exported with transparent background and light theme from `vault/diagrams/`. Theme colours: navy `#0A3DA3`, dark navy `#072A75`, scenario orange `#F28C28`, success green `#0F7B3B`, alert red `#C4372A`, ink `#1E2B3A`, muted `#5D6A7B`.
+All eight figures are SVG files exported with transparent background and light theme from `vault/diagrams/`. Theme colours: navy `#0A3DA3`, dark navy `#072A75`, scenario orange `#F28C28`, success green `#0F7B3B`, alert red `#C4372A`, ink `#1E2B3A`, muted `#5D6A7B`.
 
 | Order | File (relative to repo root) | Caption (verbatim) |
 |---|---|---|
 | Figure 1 | `vault/diagrams/fig01_system_architecture.svg` | *Figure 1: Six-layer architecture of the PyPSA-Eur Romania platform. Source: authors, derived from the project codebase.* |
 | Figure 2 | `vault/diagrams/fig02_scenario_lifecycle.svg` | *Figure 2: Stress-test scenario lifecycle from form input to comparable result, with the five shock channels exposed by the dashboard. Source: authors.* |
 | Figure 3 | `vault/diagrams/fig03_risk_matrix.svg` | *Figure 3: Likelihood–severity risk matrix for European energy systems under an Industry 5.0 lens, mapped to the platform's stress-test coverage. Source: authors, categories adapted from Directive (EU) 2022/2557.* |
-| Figure 4 | `vault/diagrams/fig04_dual_use_mapping.svg` | *Figure 4: Dual-use capability mapping – civilian, shared core and defence/security columns – with aligned EU funding instruments. Source: authors, instruments compiled from official EU work programmes.* |
-| Figure 5 | `vault/diagrams/fig05_interoperability_stack.svg` | *Figure 5: Mapping of the platform onto the four-layer European Interoperability Framework, augmented with a governance layer. Source: authors.* |
+| Figure 4 | `vault/diagrams/fig07_shock_taxonomy.svg` | *Figure 4: Stress-test shock taxonomy — classification of the five shock channels by threat domain, type/range, operational effect, and real-world analogue. Source: authors.* |
+| Figure 5 | `vault/diagrams/fig06_case_study_results.svg` | *Figure 5: Romania winter case study quantitative results — system cost, ENS, LMP shift, and generation mix under cross-border isolation (15–22 January 2023). Source: authors.* |
+| Figure 6 | `vault/diagrams/fig04_dual_use_mapping.svg` | *Figure 6: Dual-use capability mapping – civilian, shared core and defence/security columns – with aligned EU funding instruments. Source: authors, instruments compiled from official EU work programmes.* |
+| Figure 7 | `vault/diagrams/fig08_eu_regulatory_framework.svg` | *Figure 7: EU regulatory framework interaction — how NIS2, the CER Directive, the Dual-Use Regulation, and EU funding instruments converge on the platform. Source: authors.* |
+| Figure 8 | `vault/diagrams/fig05_interoperability_stack.svg` | *Figure 8: Mapping of the platform onto the four-layer European Interoperability Framework, augmented with a governance layer. Source: authors.* |
 
-**Figure placement note:** Figures should span the full page width (across both columns). Place caption below the figure. SVGs render as vector graphics natively in Word 2016 SP and later.
+**Figure placement note:** Match the existing figure-placement pattern already in the document (page width, caption positioning, text wrapping). SVGs render as vector graphics natively in Word 2016 SP and later. Do NOT change the document's page layout to accommodate figures — use whatever figure formatting convention the document already employs.
 
 ### 11.1 Figure Descriptions for In-Text References
 
-**Figure 1 — System Architecture:** Shows six horizontal layers from Presentation (top) through External Data (bottom). Each layer contains its component blocks with role annotations. Colour-coded: navy for core infrastructure, blue for API/services, green for workflow, orange for stress-test components, grey for persistence.
+**Figure 1 — System Architecture:** Six horizontal layers from Presentation (top) through External Data (bottom). Each layer contains component blocks with role annotations. Colour-coded: navy for core infrastructure, blue for API/services, green for workflow, orange for stress-test components, grey for persistence.
 
-**Figure 2 — Scenario Lifecycle:** Five-phase horizontal flow (CONFIGURE → GENERATE → QUEUE → SOLVE → VALIDATE & SHOW) with arrows. Below the flow, five stress shock boxes (Load Multiplier, Hydro Reduction, Gas Capacity Reduction, SCADA Proxy, Import Cap) show injection points and parameter ranges. Annotated with the orthogonal composition principle (2⁵ combinations).
+**Figure 2 — Scenario Lifecycle:** Five-phase horizontal flow (CONFIGURE → GENERATE → QUEUE → SOLVE → VALIDATE & SHOW) with arrows. Below the flow, five stress shock boxes show injection points and parameter ranges, annotated with the orthogonal composition principle (2⁵ combinations).
 
-**Figure 3 — Risk Matrix:** 3×3 likelihood-severity grid with colour gradient (green → yellow → red). Nine risk items placed in cells: cyber-physical attack (critical), cross-border isolation (critical), compounded cold-snap + gas disruption (critical), zero-day on relays (elevated), hydro drought (elevated), SCADA ramp limits (elevated), single unit outage (routine), renewables intermittency (routine), diurnal demand (routine). Legend maps colours to modelling coverage. Bottom band maps Industry 5.0 pillars (human-centric, sustainability, resilience) to platform capabilities.
+**Figure 3 — Risk Matrix:** 3×3 likelihood-severity grid with colour gradient (green → yellow → red). Nine risk items placed across cells from routine variability to critical compound threats. Legend maps colours to modelling coverage. Bottom band maps Industry 5.0 pillars (human-centric, sustainability, resilience) to platform capabilities.
 
-**Figure 4 — Dual-Use Mapping:** Three-column layout: Civilian Applications (green, left), Shared Core Capabilities (navy, centre), Defence/Security Applications (red, right). Double-headed arrows show data flow from civilian ↔ core ↔ defence. Lower band lists four EU funding instruments with colour-coded alignment.
+**Figure 4 — Shock Taxonomy:** Five-row classification table (Demand-Side / Supply-Side ×2 / Control-Plane / Cross-Border) with columns for threat domain, shock channel, type/range, operational effect, and real-world analogue. Bottom section shows the shock application mechanism: pre-solve injection → constraint generation → unchanged solver core. Orthogonality principle annotated.
 
-**Figure 5 — Interoperability Stack:** Five-row table with columns: EIF Layer, Generic Concern, Realisation in PyPSA-Eur Romania. Rows: Legal (blue), Organisational (blue), Semantic (blue), Technical (blue), Governance (orange, proposed addition). Bottom caption notes EIF augmentation rationale.
+**Figure 5 — Case Study Results:** Five headline metric cards (Cost Delta +570 M EUR, ENS 45.2 GWh, LMP 65→145 EUR/MWh, Gas Generation +37%, Isolation Cost 12–15 M EUR/GWh). Generation mix bar chart comparison for all six technology groups. LMP summary table (min/mean/max). ENS distribution analysis (temporal concentration, regional asymmetry, neighbour impact, capacity gap estimate). Four policy-implication panels at bottom.
+
+**Figure 6 — Dual-Use Mapping:** Three-column layout: Civilian Applications (green, left), Shared Core Capabilities (navy, centre), Defence/Security Applications (red, right). Double-headed arrows show bidirectional data flow. Lower band lists four EU funding instruments with colour-coded alignment.
+
+**Figure 7 — EU Regulatory Framework:** Three-pillar layout (NIS2 Directive, CER Directive, Dual-Use Regulation) converging into a platform convergence zone. Four funding instrument detail cards (Horizon Europe Cluster 5, EDF, CEF, rescEU + CRMA) with output-to-instrument alignment. Architectural separation principle annotated at bottom.
+
+**Figure 8 — Interoperability Stack:** Five-row table with columns: EIF Layer, Generic Concern, Realisation in PyPSA-Eur Romania. Rows: Legal, Organisational, Semantic, Technical (blue), Governance (orange, proposed fifth layer). Bottom caption notes that each layer is enforced by a concrete artefact in the codebase.
 
 ---
 
@@ -780,32 +802,20 @@ All five have corresponding `.svg` and `.png` exports.
 2. `vault/diagrams/fig01_system_architecture.svg`
 3. `vault/diagrams/fig02_scenario_lifecycle.svg`
 4. `vault/diagrams/fig03_risk_matrix.svg`
-5. `vault/diagrams/fig04_dual_use_mapping.svg`
-6. `vault/diagrams/fig05_interoperability_stack.svg`
+5. `vault/diagrams/fig07_shock_taxonomy.svg`
+6. `vault/diagrams/fig06_case_study_results.svg`
+7. `vault/diagrams/fig04_dual_use_mapping.svg`
+8. `vault/diagrams/fig08_eu_regulatory_framework.svg`
+9. `vault/diagrams/fig05_interoperability_stack.svg`
 
-**Style names from KBO template:**
-- `KBOTitle` — Title (size 12, bold, all caps, centred)
-- `KBOAuthors` — Author names
-- `KBOAffiliation` — Affiliations
-- `KBOAbstract` — Abstract (size 11, italic, justified)
-- `KBOKeywords` — Keywords (size 12, bold, justified)
-- `KBOHeading1` — Section heading (size 12, bold, justified)
-- `KBOHeading2` — Sub-heading (size 12, bold, justified)
-- `KBOTextBody` — Body text (size 12, regular, justified, no indentation)
-- `KBOCaptionFigure` — Figure caption (size 11, italic, centred, below figure)
-- `KBOFigure` — Figure placeholder
-- `KBOReferencesCaption` — References heading
-- `KBOReferences` — Reference entries (hanging 1 cm indent)
-- `KBOBulletList` — Bullet list items
+**Golden rule:** Preserve all existing formatting, styles, and layout from the target XML document. Only improve text content and insert diagrams. Match the document's own conventions for everything.
 
-**Formatting rules:**
-- A4, 21 × 29.7 cm, margins 2.5 cm all sides
-- Two columns 7.5 cm each, 1 cm gap, equal width
-- Times New Roman, single line spacing
-- No footnotes, no running heads, no page numbers
-- SI units only
-- No abbreviations in title
-- Length: target appropriate for doctoral report
+**Content rules:**
+- SI units only (GWh, MWh, MW, EUR/MWh, EUR)
+- No abbreviations in section titles
+- No mention of proxy environment variables
+- Every citation must have a corresponding reference
+- Match the document's existing citation format — do not impose a new one
 
 ---
 

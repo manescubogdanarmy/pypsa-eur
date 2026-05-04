@@ -90,6 +90,7 @@
         </mxCell>
         <mxCell id="fund_title" value="EU FUNDING INSTRUMENTS: ALIGNMENT WITH PLATFORM OUTPUTS" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#072A75;fontFamily=Helvetica;" vertex="1" parent="1">
           <mxGeometry x="60" y="600" width="1160" height="22" as="geometry" />
+        </mxCell>
 
         <mxCell id="f1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;" vertex="1" parent="1">
           <mxGeometry x="80" y="634" width="270" height="250" as="geometry" />
