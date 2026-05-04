@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="pypsa-eur-romania" version="29.6.6" type="device">
+  <diagram name="EU Regulatory Framework" id="fig08-eu-reg">
+    <mxGraphModel dx="1422" dy="800" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1280" pageHeight="950" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="banner" value="EU Regulatory Framework -- Interaction of Legal Instruments with Open Energy Modelling" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=18;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1200" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subbanner" value="How NIS2, CER Directive, Dual-Use Regulation, and EU funding instruments converge on the platform" style="text;html=1;strokeColor=none;fillColor=#072A75;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#C9D7F5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="1200" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Three pillars -->
+        <mxCell id="pillar1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#0A3DA3;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="370" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar1_title" value="NIS2 Directive" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="370" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar1_ref" value="Directive (EU) 2022/2555" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="162" width="370" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar1_body" value="Cybersecurity obligations on operators&#10;of essential services, including TSOs and&#10;DSOs.&#10;&#10;• Risk management measures&#10;• Incident notification (24h / 72h)&#10;• Supply-chain security&#10;• Board-level accountability&#10;&#10;Imposes a DEFENSIVE POSTURE -- requires&#10;operators to identify threats, assess risk,&#10;and implement proportionate controls." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="76" y="186" width="338" height="210" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pillar2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5ED;strokeColor=#F28C28;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="455" y="130" width="370" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar2_title" value="CER Directive" style="text;html=1;strokeColor=none;fillColor=#F28C28;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="455" y="130" width="370" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar2_ref" value="Directive (EU) 2022/2557" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="455" y="162" width="370" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar2_body" value="Resilience of critical entities against&#10;physical and hybrid threats.&#10;&#10;• National risk assessments (Art. 13)&#10;• Dependency &amp; vulnerability mapping&#10;• Stress scenario identification&#10;• Cross-border coordination&#10;&#10;Demands QUANTITATIVE RESILIENCE&#10;EVIDENCE -- exactly the output produced&#10;by the platform's stress-test envelopes." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="471" y="186" width="338" height="210" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pillar3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FAF3;strokeColor=#0F7B3B;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="850" y="130" width="370" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar3_title" value="Dual-Use Regulation" style="text;html=1;strokeColor=none;fillColor=#0F7B3B;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="850" y="130" width="370" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar3_ref" value="Regulation (EU) 2021/821 (Recast)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="850" y="162" width="370" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="pillar3_body" value="Export and intra-Union transfer controls&#10;on dual-use items.&#10;&#10;• Public-domain carve-out for openly&#10;  published software and data&#10;• Deployment-level classification for&#10;  operator-confidential data&#10;• Architectural separation: open&#10;  orchestration / controlled data layer&#10;&#10;The CARVE-OUT enables the platform's&#10;codebase to circulate freely while&#10;national deployments remain classified." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="866" y="186" width="338" height="210" as="geometry" />
+        </mxCell>
+
+        <!-- Convergence zone -->
+        <mxCell id="conv_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="440" width="1000" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="conv_title" value="CONVERGENCE ZONE: The Platform's Role" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="140" y="440" width="1000" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="conv_1" value="NIS2: Risk identification → Platform stress scenarios operationalise threat catalogues" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="160" y="478" width="460" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="conv_2" value="CER Directive: Quantitative evidence → Platform outputs (ENS, cost delta, LMP shift) feed Art. 13 risk assessments" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="160" y="498" width="500" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="conv_3" value="Dual-Use Reg.: Public-domain carve-out → Codebase is open; deployment with national data is independently classifiable" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="160" y="518" width="540" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="conv_4" value="RESULT: Single platform serves civilian decarbonisation AND defence resilience WITHOUT architectural duplication" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontStyle=1;fontColor=#0A3DA3;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="160" y="540" width="620" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- NIS2 → Platform arrow -->
+        <mxCell id="arr_nis2" style="endArrow=classicThin;html=1;strokeWidth=2;strokeColor=#0A3DA3;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" edge="1" parent="1" source="pillar1_bg" target="conv_bg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_cer" style="endArrow=classicThin;html=1;strokeWidth=2;strokeColor=#F28C28;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="pillar2_bg" target="conv_bg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_dual" style="endArrow=classicThin;html=1;strokeWidth=2;strokeColor=#0F7B3B;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="pillar3_bg" target="conv_bg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Funding instruments section -->
+        <mxCell id="fund_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="590" width="1160" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="fund_title" value="EU FUNDING INSTRUMENTS: ALIGNMENT WITH PLATFORM OUTPUTS" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#072A75;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="1160" height="22" as="geometry" />
+
+        <mxCell id="f1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="634" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="f1_title" value="HORIZON EUROPE&#10;Cluster 5" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="80" y="634" width="270" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="f1_body" value="Climate, Energy &amp; Mobility&#10;&#10;Output funded:&#10;• Open modelling R&amp;I code&#10;• Renewable + grid optimisation&#10;• Scenario methodology&#10;• Interoperability standards&#10;&#10;Alignment: Open-science obligations&#10;in HE grants match PyPSA's permissive&#10;licensing. Platform is eligible without&#10;further IP negotiation." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=9;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="90" y="678" width="250" height="196" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C4372A;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="365" y="634" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="f2_title" value="EUROPEAN DEFENCE&#10;FUND (EDF)" style="text;html=1;strokeColor=none;fillColor=#C4372A;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="365" y="634" width="270" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="f2_body" value="Energy &amp; Environment category&#10;&#10;Output funded:&#10;• Resilience evidence (ENS envelopes)&#10;• Hybrid-threat scenario libraries&#10;• Contingency planning models&#10;• Strategic reserve sizing&#10;&#10;Alignment: EDF 2024 work programme&#10;explicitly supports dual-use leverage&#10;where civilian foundations exist.&#10;Codebase carve-out under Reg. 2021/821." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5F5;strokeColor=#C7D5EF;strokeWidth=1;fontSize=9;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="375" y="678" width="250" height="196" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0F7B3B;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="650" y="634" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="f3_title" value="CONNECTING EUROPE&#10;FACILITY (CEF)" style="text;html=1;strokeColor=none;fillColor=#0F7B3B;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="650" y="634" width="270" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="f3_body" value="Energy &amp; Digital strands&#10;&#10;Output funded:&#10;• Cross-border interconnector CBA&#10;• PCI list evidence (congestion data)&#10;• TYNDP scenario inputs&#10;• Data infrastructure for modelling&#10;&#10;Alignment: Platform's interconnector-&#10;flow and net-import CSVs feed directly&#10;into CEF cost-benefit analysis and&#10;TYNDP cycle requirements." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FAF3;strokeColor=#C7D5EF;strokeWidth=1;fontSize=9;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="660" y="678" width="250" height="196" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f4_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="935" y="634" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="f4_title" value="RESCEU &amp; CRITICAL&#10;RAW MATERIALS ACT" style="text;html=1;strokeColor=none;fillColor=#F28C28;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="935" y="634" width="270" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="f4_body" value="Civil Protection &amp; Supply Chain&#10;&#10;Output funded:&#10;• Preparedness exercise scenarios&#10;• Energy-supply contingency plans&#10;• Storage &amp; grid hardware supply&#10;  chain resilience studies&#10;&#10;Alignment: rescEU backs civil-protection&#10;exercises -- platform stress scenarios&#10;provide quantitative injects. CRMA&#10;connects to storage value chains." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5ED;strokeColor=#C7D5EF;strokeWidth=1;fontSize=9;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="945" y="678" width="250" height="196" as="geometry" />
+        </mxCell>
+
+        <!-- Architectural separation note -->
+        <mxCell id="sep_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="910" width="1160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sep_text" value="ARCHITECTURAL PRINCIPLE: Open orchestration layer (codebase, MIT/Apache license, public domain) | Operator-controlled data layer (national topology, classified parameters). Same code serves both pillars; differentiation is at deployment, not at architecture." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="76" y="914" width="1128" height="22" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

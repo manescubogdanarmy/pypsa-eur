@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="pypsa-eur-romania" version="29.6.6" type="device">
+  <diagram name="Shock Taxonomy" id="fig07-shocks">
+    <mxGraphModel dx="1422" dy="800" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1240" pageHeight="900" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="banner" value="Stress-Test Shock Taxonomy — Classification, Semantics, and Operational Mapping" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=18;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1160" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subbanner" value="Orthogonal shock decomposition for unambiguous stress-test specification and cross-model comparison" style="text;html=1;strokeColor=none;fillColor=#072A75;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#C9D7F5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="1160" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Classification headers -->
+        <mxCell id="hdr_domain" value="THREAT DOMAIN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="124" width="200" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_shock" value="SHOCK CHANNEL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="124" width="220" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_type" value="TYPE / RANGE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="124" width="180" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_effect" value="OPERATIONAL EFFECT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="690" y="124" width="220" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_real" value="REAL-WORLD ANALOGUE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="920" y="124" width="280" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Row 1: Demand-side -->
+        <mxCell id="r1_domain" value="DEMAND-SIDE&#10;DISRUPTION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="166" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_shock" value="Load Multiplier" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="166" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_type" value="Continuous&#10;&#10;0.5 – 2.0&#10;(default: 1.0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="166" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_effect" value="Uniform scaling of all load&#10;time series before optimisation.&#10;&#10;Applied pre-solve as demand&#10;multiplier on every bus and hour." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="166" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_real" value="Cold-snap heating surge;&#10;behavioural change (EV charging);&#10;electrification of new sectors;&#10;population displacement" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="166" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Row 2: Supply-side - Hydro -->
+        <mxCell id="r2_domain" value="SUPPLY-SIDE&#10;DISRUPTION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="256" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_shock" value="Hydro Reduction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="256" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_type" value="Continuous&#10;&#10;0.0 – 1.0&#10;(default: 0.0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="256" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_effect" value="Scales hydro inflow availability&#10;(p_max_pu) for run-of-river and&#10;reservoir plants.&#10;&#10;Applied pre-solve as capacity factor&#10;reduction on hydro generators." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="256" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_real" value="Drought / low precipitation;&#10;seasonal runoff variation;&#10;climate-change-induced hydrology;&#10;upstream water diversion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="256" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Row 3: Supply-side - Gas -->
+        <mxCell id="r3_domain" value="SUPPLY-SIDE&#10;DISRUPTION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="346" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_shock" value="Gas Capacity Reduction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="346" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_type" value="Continuous&#10;&#10;0.0 – 1.0&#10;(default: 0.0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="346" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_effect" value="Scales gas plant maximum&#10;installed capacity (p_nom).&#10;&#10;Applied pre-solve. Does not affect&#10;ramp capability — that is controlled&#10;separately via SCADA proxy." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="346" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_real" value="Fuel supply disruption;&#10;pipeline / LNG terminal outage;&#10;maintenance backlog;&#10;geopolitical gas weaponisation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="346" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Row 4: Control-plane - SCADA -->
+        <mxCell id="r4_domain" value="CONTROL-PLANE&#10;DEGRADATION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="436" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_shock" value="SCADA Proxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="436" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_type" value="Binary Toggle&#10;&#10;on / off&#10;(default: off)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="436" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_effect" value="Ramp-rate constraints (~15 % of&#10;nominal capacity per hour) on all&#10;controllable generators.&#10;&#10;Added as linear constraints before&#10;optimisation. Restricts hour-to-hour&#10;dispatch changes." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="436" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_real" value="SCADA/EMS compromise;&#10;manual dispatch fallback;&#10;AGC (automatic generation&#10;control) malfunction;&#10;operator caution under stress" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="436" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Row 5: Interconnection -->
+        <mxCell id="r5_domain" value="CROSS-BORDER&#10;ISOLATION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="526" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_shock" value="Import Cap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="526" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_type" value="Binary Toggle + Value&#10;&#10;on/off + MWh cap&#10;(default: off)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="526" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_effect" value="Directional flow limits on all&#10;cross-border interconnectors.&#10;&#10;Added as linear constraints before&#10;optimisation. Configurable per-link;&#10;set to 0 MWh for full isolation." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="526" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_real" value="Geopolitical border closure;&#10;interconnector physical damage;&#10;desynchronisation event;&#10;trade embargo / sanction regime" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="526" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Application mechanism -->
+        <mxCell id="mech_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="630" width="1140" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_title" value="SHOCK APPLICATION MECHANISM" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#072A75;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="636" width="1140" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_pre" value="PRE-SOLVE INJECTION&#10;apply_timeseries_shocks()&#10;&#10;Load, hydro, gas capacity scaling&#10;applied to network components&#10;before solver invocation." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="660" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_arrow" value="→" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1;fontColor=#0A3DA3;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="410" y="672" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_const" value="CONSTRAINT GENERATION&#10;add_*_constraints()&#10;&#10;SCADA ramp-rate and import-cap&#10;constraints added as linear&#10;inequalities to the optimisation." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F28C28;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="460" y="660" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_arrow2" value="→" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1;fontColor=#F28C28;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="790" y="672" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mech_solve" value="UNCHANGED SOLVER CORE&#10;&#10;SCIP / HiGHS mixed-integer LP&#10;solves the modified problem.&#10;No solver code changes needed." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0F7B3B;strokeWidth=2;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="840" y="660" width="340" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Orthogonality note -->
+        <mxCell id="ortho_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C7D5EF;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="752" width="1140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ortho_text" value="ORTHOGONALITY PRINCIPLE: The five shock channels compose independently — 2³ × ∞² combinations (3 binary toggles × 2 continuous parameters). Each shock can be activated in isolation for sensitivity analysis, or combined into multi-shock scenarios (as in the Romania winter case study). The modular design means adding a new shock type requires only: (1) a YAML parameter, (2) an apply_* or add_* function in romania_winter_stress.py, and (3) a UI control in the dashboard." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="76" y="758" width="1108" height="58" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption" value="Shock taxonomy enables unambiguous scenario specification, cross-model comparison, and systematic sensitivity analysis." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#5D6A7B;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="60" y="832" width="1140" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
