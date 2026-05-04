@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Architecture.md",
+                "file": "Core/CLAUDE.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Architecture"
+              "title": "CLAUDE"
             }
           }
         ]
@@ -185,17 +185,18 @@
   },
   "active": "6b86b489a5580ccf",
   "lastOpenFiles": [
-    "mso1F84.tmp",
-    "~WRL0005.tmp",
-    "~WRD0004.tmp",
-    "~$OPieleManescu.docx",
-    "~WRL0003.tmp",
-    "~WRD0002.tmp",
-    "~WRL0001.tmp",
-    "~WRD0000.tmp",
-    "~$OPaperTemplate2026 (1) (1).xml",
-    "KBOPieleManescu.pdf",
-    "msoB74A.tmp",
+    "Architecture.md",
+    "prompts/# NATOCCDCOE critique — five risks,.txt",
+    "prompts/first read all the documentation in.txt",
+    "prompts",
+    "New folder",
+    "papers/Raport_2_citatii_verificate.xml",
+    "papers/KBOPaperTemplate2026 (1) (1).xml",
+    "papers/Raport_2_citatii_verificate.docx",
+    "papers/KBOPieleManescu.pdf",
+    "papers/KBOPieleManescu.docx",
+    "papers/KBOPaperTemplate2026 (1) (1).pdf",
+    "papers/KBO2026_Paper_Draft.md",
     "diagrams/fig05_interoperability_stack.png",
     "diagrams/fig04_dual_use_mapping.png",
     "diagrams/fig03_risk_matrix.png",
@@ -214,7 +215,6 @@
     "Usage.md",
     "README.md",
     "Index.md",
-    "General.md",
-    "Architecture.md"
+    "General.md"
   ]
 }
