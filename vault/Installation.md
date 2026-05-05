@@ -59,15 +59,18 @@ This creates a new conda environment named `pypsa` with:
 
 ### Known environment issues
 
-**Python 3.13 + linopy → pkg_resources error**
+**Python 3.13 is not supported**
 
-If Snakemake fails with `ModuleNotFoundError: No module named 'pkg_resources'`:
+Python 3.13 causes multiple failures in this workflow:
+1. `ModuleNotFoundError: No module named 'pkg_resources'` — old `google-cloud-storage` uses the deprecated `pkg_resources` API removed in 3.13
+2. `TypeError: Cannot interpret '<StringDtype(na_value=nan)>' as a data type` — modern pandas uses `StringDtype` which numpy can't interpret, breaking xarray's NetCDF export during `base_network` and `build_hydro_profile` rules
+
+`environment.yaml` pins `python >=3.10,<3.13`. If your environment was created with 3.13, recreate it:
 
 ```bash
-conda run -n pypsa pip install "google-cloud-storage>=2.10"
+conda env remove -n pypsa
+conda env create -f envs/environment.yaml -n pypsa
 ```
-
-This installs a newer version that doesn't use the deprecated `pkg_resources` API.
 
 **Missing SCIP solver**
 

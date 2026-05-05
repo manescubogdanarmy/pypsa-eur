@@ -33,10 +33,15 @@ python --version          # Should show 3.11 or 3.12
 snakemake --version       # Should show 8.0 or newer
 ```
 
-**If Python 3.13 is selected**, apply this fix after environment creation:
+**If Python 3.13 is selected**, the environment is likely broken. Python 3.13 causes multiple known failures:
+- `ModuleNotFoundError: No module named 'pkg_resources'` (old `google-cloud-storage`)
+- `TypeError: Cannot interpret '<StringDtype(na_value=nan)>' as a data type` (pandas StringDtype incompatible with xarray/NetCDF export)
+
+Recreate the environment instead of trying to patch it — the `environment.yaml` pins `python >=3.10,<3.13` to prevent this:
 
 ```bash
-conda run -n pypsa pip install "google-cloud-storage>=2.10"
+conda env remove -n pypsa
+conda env create -f envs/environment.yaml -n pypsa
 ```
 
 ---

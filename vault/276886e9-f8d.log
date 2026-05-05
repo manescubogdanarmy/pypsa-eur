@@ -1,0 +1,639 @@
+
+[2026-04-30T11:58:44.598Z] Unlock baseline workflow [conda-run]
+$ C:\ProgramData\anaconda3\condabin\conda.bat run -n pypsa python -m snakemake --storage-cached-http-skip-remote-checks --unlock --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260430115844_baseline.yaml
+Using workflow specific profile profiles\default for setting default command line arguments.
+Config file config/config.default.yaml is extended by additional config specified via the command line.
+Config file config/plotting.default.yaml is extended by additional config specified via the command line.
+Unlocked working directory.
+
+
+[2026-04-30T11:59:39.751Z] Solve baseline scenario [conda-run]
+$ C:\ProgramData\anaconda3\condabin\conda.bat run -n pypsa python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260430115844/networks/base_s_3_elec_.nc --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260430115844_baseline.yaml
+Using workflow specific profile profiles\default for setting default command line arguments.
+Config file config/config.default.yaml is extended by additional config specified via the command line.
+Config file config/plotting.default.yaml is extended by additional config specified via the command line.
+Assuming unrestricted shared filesystem usage.
+host: STI-W1500
+Building DAG of jobs...
+Provided cores: 12
+Rules claiming more threads will be scaled down.
+Job stats:
+job                                      count
+-------------------------------------  -------
+retrieve_corine                              1
+retrieve_cost_data                           1
+retrieve_country_runoff                      1
+retrieve_eez                                 1
+retrieve_electricity_demand                  1
+retrieve_eu_nuts_2021                        1
+retrieve_gdp_per_capita                      1
+retrieve_jrc_ardeco                          1
+retrieve_luisa_land_cover                    1
+retrieve_natura                              1
+retrieve_osm_archive                         1
+retrieve_osm_boundaries                      1
+retrieve_population_count                    1
+retrieve_powerplants                         1
+retrieve_ship_raster                         1
+retrieve_synthetic_electricity_demand        1
+build_electricity_demand                     1
+build_osm_boundaries                         4
+build_ship_raster                            1
+build_shapes                                 1
+base_network                                 1
+build_hydro_profile                          1
+build_transmission_projects                  1
+add_transmission_projects_and_dlr            1
+simplify_network                             1
+build_electricity_demand_base                1
+process_cost_data                            1
+cluster_network                              1
+build_powerplants                            1
+determine_availability_matrix                3
+build_renewable_profiles                     3
+add_electricity                              1
+prepare_network                              1
+solve_network                                1
+total                                       41
+
+Select jobs to execute...
+Execute 12 jobs...
+Retrieving from storage: https://zenodo.org/records/15846440/files/ref-nuts-2021-01m.geojson.zip
+Retrieving from storage: https://zenodo.org/records/16556029/files/GDP_per_capita_PPP_1990_2015_v2.nc
+Retrieving from storage: https://zenodo.org/records/16992755/files/osm_boundaries.zip
+Retrieving from storage: https://zenodo.org/records/16849356/files/era5-runoff-per-country.csv
+Retrieving from storage: https://raw.githubusercontent.com/PyPSA/powerplantmatching/refs/tags/v0.7.1/powerplants.csv
+Finished retrieval.
+Retrieving from storage: https://zenodo.org/records/16881818/files/natura.tiff
+Retrieving from storage: https://zenodo.org/records/16894236/files/shipdensity_global.zip
+Retrieving from storage: https://raw.githubusercontent.com/PyPSA/technology-data/v0.13.3/outputs/costs_2050.csv
+Finished retrieval.
+Retrieving from storage: https://zenodo.org/records/16899113/files/corine.zip
+Retrieving from storage: https://zenodo.org/records/14144752/files/buses.csv
+Retrieving from storage: https://zenodo.org/records/14144752/files/converters.csv
+Retrieving from storage: https://zenodo.org/records/14144752/files/lines.csv
+Retrieving from storage: https://zenodo.org/records/14144752/files/links.csv
+Retrieving from storage: https://zenodo.org/records/14144752/files/transformers.csv
+Retrieving from storage: https://zenodo.org/records/14144752/files/map.html
+Retrieving from storage: https://zenodo.org/records/15879466/files/LUISA_basemap_020321_50m.tif
+Retrieved ref-nuts-2021-01m.geojson.zip from cache (https://zenodo.org/records/15846440/files/ref-nuts-2021-01m.geojson.zip)
+Finished retrieval.
+Retrieved osm_boundaries.zip from cache (https://zenodo.org/records/16992755/files/osm_boundaries.zip)
+Finished retrieval.
+Retrieved GDP_per_capita_PPP_1990_2015_v2.nc from cache (https://zenodo.org/records/16556029/files/GDP_per_capita_PPP_1990_2015_v2.nc)
+Finished retrieval.
+Retrieved natura.tiff from cache (https://zenodo.org/records/16881818/files/natura.tiff)
+Finished retrieval.
+Retrieved buses.csv from cache (https://zenodo.org/records/14144752/files/buses.csv)
+Finished retrieval.
+Retrieved era5-runoff-per-country.csv from cache (https://zenodo.org/records/16849356/files/era5-runoff-per-country.csv)
+Finished retrieval.
+Retrieved converters.csv from cache (https://zenodo.org/records/14144752/files/converters.csv)
+Finished retrieval.
+Retrieved transformers.csv from cache (https://zenodo.org/records/14144752/files/transformers.csv)
+Finished retrieval.
+Retrieved corine.zip from cache (https://zenodo.org/records/16899113/files/corine.zip)
+Finished retrieval.
+Retrieved lines.csv from cache (https://zenodo.org/records/14144752/files/lines.csv)
+Finished retrieval.
+Retrieved links.csv from cache (https://zenodo.org/records/14144752/files/links.csv)
+Finished retrieval.
+Retrieved map.html from cache (https://zenodo.org/records/14144752/files/map.html)
+Finished retrieval.
+Cached shipdensity_global.zip to C:\Users\Administrator\AppData\Local\snakemake-pypsa-eur\snakemake-pypsa-eur\Cache
+Finished retrieval.
+Cached LUISA_basemap_020321_50m.tif to C:\Users\Administrator\AppData\Local\snakemake-pypsa-eur\snakemake-pypsa-eur\Cache
+Finished retrieval.
+
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_eu_nuts_2021:
+    input: https://zenodo.org/records/15846440/files/ref-nuts-2021-01m.geojson.zip (retrieve from storage)
+    output: data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson.zip, data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson, data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_3.geojson, data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_2.geojson, data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_1.geojson, data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_0.geojson
+    jobid: 10
+    reason: Missing output files: data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_3.geojson
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_gdp_per_capita:
+    input: https://zenodo.org/records/16556029/files/GDP_per_capita_PPP_1990_2015_v2.nc (retrieve from storage)
+    output: data/gdp_per_capita/archive/2018-02-06/GDP_per_capita_PPP_1990_2015_v2.nc
+    jobid: 17
+    reason: Missing output files: data/gdp_per_capita/archive/2018-02-06/GDP_per_capita_PPP_1990_2015_v2.nc
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_osm_boundaries:
+    input: https://zenodo.org/records/16992755/files/osm_boundaries.zip (retrieve from storage)
+    output: data/osm_boundaries/archive/unknown/XK_adm1.json, data/osm_boundaries/archive/unknown/UA_adm1.json, data/osm_boundaries/archive/unknown/MD_adm1.json, data/osm_boundaries/archive/unknown/BA_adm1.json, data/osm_boundaries/archive/unknown/osm_boundaries.zip
+    jobid: 12
+    reason: Missing output files: data/osm_boundaries/archive/unknown/MD_adm1.json, data/osm_boundaries/archive/unknown/BA_adm1.json, data/osm_boundaries/archive/unknown/UA_adm1.json, data/osm_boundaries/archive/unknown/XK_adm1.json
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_country_runoff:
+    input: https://zenodo.org/records/16849356/files/era5-runoff-per-country.csv (retrieve from storage)
+    output: data/country_runoff/archive/2025-08-13/era5-runoff-per-country.csv
+    jobid: 37
+    reason: Missing output files: data/country_runoff/archive/2025-08-13/era5-runoff-per-country.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_powerplants:
+    input: https://raw.githubusercontent.com/PyPSA/powerplantmatching/refs/tags/v0.7.1/powerplants.csv (retrieve from storage)
+    output: data/powerplants/primary/0.7.1/powerplants.csv
+    jobid: 41
+    reason: Missing output files: data/powerplants/primary/0.7.1/powerplants.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_natura:
+    input: https://zenodo.org/records/16881818/files/natura.tiff (retrieve from storage)
+    output: data/natura/archive/2025-08-15/natura.tiff
+    log: logs/retrieve_natura.log
+    jobid: 6
+    reason: Missing output files: data/natura/archive/2025-08-15/natura.tiff
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_ship_raster:
+    input: https://zenodo.org/records/16894236/files/shipdensity_global.zip (retrieve from storage)
+    output: data/ship_raster/archive/v5/shipdensity_global.zip
+    log: logs/retrieve_ship_raster.log
+    jobid: 35
+    reason: Missing output files: data/ship_raster/archive/v5/shipdensity_global.zip
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=5000, mem=5 GB, mem_mib=4769
+[Thu Apr 30 15:01:57 2026]
+localrule retrieve_cost_data:
+    input: https://raw.githubusercontent.com/PyPSA/technology-data/v0.13.3/outputs/costs_2050.csv (retrieve from storage)
+    output: data/costs/primary/v0.13.3/costs_2050.csv
+    jobid: 39
+    reason: Missing output files: data/costs/primary/v0.13.3/costs_2050.csv
+    wildcards: planning_horizons=2050
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:58 2026]
+localrule retrieve_corine:
+    input: https://zenodo.org/records/16899113/files/corine.zip (retrieve from storage)
+    output: data/corine/archive/v18_5/corine.zip, data/corine/archive/v18_5/corine.tif
+    jobid: 5
+    reason: Missing output files: data/corine/archive/v18_5/corine.tif
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:58 2026]
+localrule retrieve_osm_archive:
+    input: https://zenodo.org/records/14144752/files/buses.csv (retrieve from storage), https://zenodo.org/records/14144752/files/converters.csv (retrieve from storage), https://zenodo.org/records/14144752/files/lines.csv (retrieve from storage), https://zenodo.org/records/14144752/files/links.csv (retrieve from storage), https://zenodo.org/records/14144752/files/transformers.csv (retrieve from storage), https://zenodo.org/records/14144752/files/map.html (retrieve from storage)
+    output: data/osm/archive/0.6/buses.csv, data/osm/archive/0.6/converters.csv, data/osm/archive/0.6/lines.csv, data/osm/archive/0.6/links.csv, data/osm/archive/0.6/transformers.csv, data/osm/archive/0.6/map.html
+    log: logs/retrieve_osm_archive.log
+    jobid: 23
+    reason: Missing output files: data/osm/archive/0.6/lines.csv, data/osm/archive/0.6/converters.csv, data/osm/archive/0.6/transformers.csv, data/osm/archive/0.6/links.csv, data/osm/archive/0.6/buses.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=500, mem=500 MB, mem_mib=477
+[Thu Apr 30 15:01:58 2026]
+localrule retrieve_luisa_land_cover:
+    input: https://zenodo.org/records/15879466/files/LUISA_basemap_020321_50m.tif (retrieve from storage)
+    output: data/luisa_land_cover/archive/2021-03-02/LUISA_basemap_020321_50m.tif
+    jobid: 7
+    reason: Missing output files: data/luisa_land_cover/archive/2021-03-02/LUISA_basemap_020321_50m.tif
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:01:58 2026]
+localrule retrieve_electricity_demand:
+    output: data/electricity_demand_raw.csv
+    log: logs/retrieve_electricity_demand.log
+    jobid: 27
+    reason: Missing output files: data/electricity_demand_raw.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=5000, mem=5 GB, mem_mib=4769
+Removing local copy of storage file: https://zenodo.org/records/16556029/files/GDP_per_capita_PPP_1990_2015_v2.nc (in storage)
+[Thu Apr 30 15:01:58 2026]
+Finished jobid: 17 (Rule: retrieve_gdp_per_capita)
+1 of 41 steps (2%) done
+[Thu Apr 30 15:01:58 2026]
+Finished jobid: 41 (Rule: retrieve_powerplants)
+2 of 41 steps (5%) done
+Removing local copy of storage file: https://zenodo.org/records/16881818/files/natura.tiff (in storage)
+[Thu Apr 30 15:01:58 2026]
+Finished jobid: 6 (Rule: retrieve_natura)
+3 of 41 steps (7%) done
+Removing local copy of storage file: https://zenodo.org/records/16992755/files/osm_boundaries.zip (in storage)
+[Thu Apr 30 15:01:58 2026]
+Finished jobid: 12 (Rule: retrieve_osm_boundaries)
+4 of 41 steps (10%) done
+[Thu Apr 30 15:01:58 2026]
+Finished jobid: 39 (Rule: retrieve_cost_data)
+5 of 41 steps (12%) done
+Select jobs to execute...
+Execute 4 jobs...
+Retrieving from storage: https://zenodo.org/records/10820928/files/demand_hourly.csv
+Retrieving from storage: https://zenodo.org/records/17249457/files/ARDECO-SUVGDP.2021.table.csv
+Retrieving from storage: https://zenodo.org/records/17249457/files/ARDECO-SNPTD.2021.table.csv
+Retrieving from storage: https://zenodo.org/records/16558833/files/ppp_2019_1km_Aggregated.tif
+Retrieving from storage: https://zenodo.org/records/16355917/files/World_EEZ_v12_20231025_LR.zip
+Retrieved ARDECO-SUVGDP.2021.table.csv from cache (https://zenodo.org/records/17249457/files/ARDECO-SUVGDP.2021.table.csv)
+Finished retrieval.
+Retrieved ppp_2019_1km_Aggregated.tif from cache (https://zenodo.org/records/16558833/files/ppp_2019_1km_Aggregated.tif)
+Finished retrieval.
+Retrieved ARDECO-SNPTD.2021.table.csv from cache (https://zenodo.org/records/17249457/files/ARDECO-SNPTD.2021.table.csv)
+Finished retrieval.
+Retrieved demand_hourly.csv from cache (https://zenodo.org/records/10820928/files/demand_hourly.csv)
+Finished retrieval.
+Retrieved World_EEZ_v12_20231025_LR.zip from cache (https://zenodo.org/records/16355917/files/World_EEZ_v12_20231025_LR.zip)
+Finished retrieval.
+
+[Thu Apr 30 15:02:00 2026]
+localrule retrieve_synthetic_electricity_demand:
+    input: https://zenodo.org/records/10820928/files/demand_hourly.csv (retrieve from storage)
+    output: data/synthetic_electricity_demand/primary/v2/load_synthetic_raw.csv
+    jobid: 28
+    reason: Missing output files: data/synthetic_electricity_demand/primary/v2/load_synthetic_raw.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:02:00 2026]
+localrule retrieve_jrc_ardeco:
+    input: https://zenodo.org/records/17249457/files/ARDECO-SUVGDP.2021.table.csv (retrieve from storage), https://zenodo.org/records/17249457/files/ARDECO-SNPTD.2021.table.csv (retrieve from storage)
+    output: data/jrc_ardeco/archive/2021/ARDECO-SUVGDP.2021.table.csv, data/jrc_ardeco/archive/2021/ARDECO-SNPTD.2021.table.csv
+    jobid: 16
+    reason: Missing output files: data/jrc_ardeco/archive/2021/ARDECO-SNPTD.2021.table.csv, data/jrc_ardeco/archive/2021/ARDECO-SUVGDP.2021.table.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:02:00 2026]
+localrule retrieve_population_count:
+    input: https://zenodo.org/records/16558833/files/ppp_2019_1km_Aggregated.tif (retrieve from storage)
+    output: data/population_count/archive/2018-11-01/ppp_2019_1km_Aggregated.tif
+    jobid: 18
+    reason: Missing output files: data/population_count/archive/2018-11-01/ppp_2019_1km_Aggregated.tif
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+[Thu Apr 30 15:02:00 2026]
+localrule retrieve_eez:
+    input: https://zenodo.org/records/16355917/files/World_EEZ_v12_20231025_LR.zip (retrieve from storage)
+    output: data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR.zip, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    jobid: 9
+    reason: Missing output files: data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp
+Removing local copy of storage file: https://zenodo.org/records/16894236/files/shipdensity_global.zip (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 35 (Rule: retrieve_ship_raster)
+6 of 41 steps (15%) done
+Removing local copy of storage file: https://zenodo.org/records/15879466/files/LUISA_basemap_020321_50m.tif (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 7 (Rule: retrieve_luisa_land_cover)
+7 of 41 steps (17%) done
+Removing local copy of storage file: https://zenodo.org/records/16899113/files/corine.zip (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 5 (Rule: retrieve_corine)
+8 of 41 steps (20%) done
+Removing local copy of storage file: https://zenodo.org/records/16849356/files/era5-runoff-per-country.csv (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 37 (Rule: retrieve_country_runoff)
+9 of 41 steps (22%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Apr 30 15:02:00 2026]
+localrule build_ship_raster:
+    input: data/ship_raster/archive/v5/shipdensity_global.zip, data/cutout/archive/v0.8/europe-2023-sarah3-era5.nc
+    output: resources/romania-winter-stress-baseline-20260430115844/shipdensity_raster.tif
+    log: logs/romania-winter-stress-baseline-20260430115844/build_ship_raster.log
+    jobid: 34
+    benchmark: benchmarks/romania-winter-stress-baseline-20260430115844/build_ship_raster
+    reason: Missing output files: resources/romania-winter-stress-baseline-20260430115844/shipdensity_raster.tif; Input files updated by another job: data/ship_raster/archive/v5/shipdensity_global.zip
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=5000, mem=5 GB, mem_mib=4769
+Removing local copy of storage file: https://zenodo.org/records/16558833/files/ppp_2019_1km_Aggregated.tif (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 18 (Rule: retrieve_population_count)
+10 of 41 steps (24%) done
+Removing local copy of storage file: https://zenodo.org/records/17249457/files/ARDECO-SUVGDP.2021.table.csv (in storage)
+Removing local copy of storage file: https://zenodo.org/records/17249457/files/ARDECO-SNPTD.2021.table.csv (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 16 (Rule: retrieve_jrc_ardeco)
+11 of 41 steps (27%) done
+Removing local copy of storage file: https://zenodo.org/records/10820928/files/demand_hourly.csv (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 28 (Rule: retrieve_synthetic_electricity_demand)
+12 of 41 steps (29%) done
+Removing local copy of storage file: https://zenodo.org/records/16355917/files/World_EEZ_v12_20231025_LR.zip (in storage)
+[Thu Apr 30 15:02:00 2026]
+Finished jobid: 9 (Rule: retrieve_eez)
+13 of 41 steps (32%) done
+Select jobs to execute...
+Execute 4 jobs...
+
+[Thu Apr 30 15:02:00 2026]
+localrule build_osm_boundaries:
+    input: data/osm_boundaries/archive/unknown/BA_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    output: data/osm_boundaries/build/unknown/BA_adm1.geojson
+    log: logs/build_osm_boundaries_BA.log
+    jobid: 11
+    reason: Missing output files: data/osm_boundaries/build/unknown/BA_adm1.geojson; Input files updated by another job: data/osm_boundaries/archive/unknown/BA_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    wildcards: country=BA
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=1500, mem=1.5 GB, mem_mib=1431
+[Thu Apr 30 15:02:00 2026]
+localrule build_osm_boundaries:
+    input: data/osm_boundaries/archive/unknown/MD_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    output: data/osm_boundaries/build/unknown/MD_adm1.geojson
+    log: logs/build_osm_boundaries_MD.log
+    jobid: 13
+    reason: Missing output files: data/osm_boundaries/build/unknown/MD_adm1.geojson; Input files updated by another job: data/osm_boundaries/archive/unknown/MD_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    wildcards: country=MD
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=1500, mem=1.5 GB, mem_mib=1431
+[Thu Apr 30 15:02:00 2026]
+localrule build_osm_boundaries:
+    input: data/osm_boundaries/archive/unknown/UA_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    output: data/osm_boundaries/build/unknown/UA_adm1.geojson
+    log: logs/build_osm_boundaries_UA.log
+    jobid: 14
+    reason: Missing output files: data/osm_boundaries/build/unknown/UA_adm1.geojson; Input files updated by another job: data/osm_boundaries/archive/unknown/UA_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    wildcards: country=UA
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=1500, mem=1.5 GB, mem_mib=1431
+[Thu Apr 30 15:02:00 2026]
+localrule build_osm_boundaries:
+    input: data/osm_boundaries/archive/unknown/XK_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    output: data/osm_boundaries/build/unknown/XK_adm1.geojson
+    log: logs/build_osm_boundaries_XK.log
+    jobid: 15
+    reason: Missing output files: data/osm_boundaries/build/unknown/XK_adm1.geojson; Input files updated by another job: data/osm_boundaries/archive/unknown/XK_adm1.json, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg
+    wildcards: country=XK
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=1500, mem=1.5 GB, mem_mib=1431
+Removing local copy of storage file: https://zenodo.org/records/14144752/files/buses.csv (in storage)
+Removing local copy of storage file: https://zenodo.org/records/14144752/files/converters.csv (in storage)
+Removing local copy of storage file: https://zenodo.org/records/14144752/files/lines.csv (in storage)
+Removing local copy of storage file: https://zenodo.org/records/14144752/files/links.csv (in storage)
+Removing local copy of storage file: https://zenodo.org/records/14144752/files/transformers.csv (in storage)
+Removing local copy of storage file: https://zenodo.org/records/14144752/files/map.html (in storage)
+[Thu Apr 30 15:02:01 2026]
+Finished jobid: 23 (Rule: retrieve_osm_archive)
+14 of 41 steps (34%) done
+Removing local copy of storage file: https://zenodo.org/records/15846440/files/ref-nuts-2021-01m.geojson.zip (in storage)
+[Thu Apr 30 15:02:03 2026]
+Finished jobid: 10 (Rule: retrieve_eu_nuts_2021)
+15 of 41 steps (37%) done
+INFO:__main__:Building administrative boundaries from OSM data for country BA.
+INFO:__main__:Building administrative boundaries from OSM data for country MD.
+INFO:__main__:Building administrative boundaries from OSM data for country XK.
+INFO:__main__:Building administrative boundaries from OSM data for country UA.
+INFO:pyogrio._io:Created 7 records
+INFO:pyogrio._io:Created 3 records
+INFO:pyogrio._io:Created 37 records
+[Thu Apr 30 15:02:33 2026]
+Finished jobid: 11 (Rule: build_osm_boundaries)
+16 of 41 steps (39%) done
+[Thu Apr 30 15:02:33 2026]
+Finished jobid: 15 (Rule: build_osm_boundaries)
+17 of 41 steps (41%) done
+[Thu Apr 30 15:02:33 2026]
+Finished jobid: 13 (Rule: build_osm_boundaries)
+18 of 41 steps (44%) done
+INFO:pyogrio._io:Created 27 records
+[Thu Apr 30 15:02:37 2026]
+Finished jobid: 14 (Rule: build_osm_boundaries)
+19 of 41 steps (46%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Apr 30 15:02:37 2026]
+localrule build_shapes:
+    input: data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg, data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_3.geojson, data/osm_boundaries/build/unknown/BA_adm1.geojson, data/osm_boundaries/build/unknown/MD_adm1.geojson, data/osm_boundaries/build/unknown/UA_adm1.geojson, data/osm_boundaries/build/unknown/XK_adm1.geojson, data/jrc_ardeco/archive/2021/ARDECO-SUVGDP.2021.table.csv, data/jrc_ardeco/archive/2021/ARDECO-SNPTD.2021.table.csv, data/gdp_per_capita/archive/2018-02-06/GDP_per_capita_PPP_1990_2015_v2.nc, data/population_count/archive/2018-11-01/ppp_2019_1km_Aggregated.tif
+    output: resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/offshore_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/europe_shape.geojson, resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson
+    log: logs/romania-winter-stress-baseline-20260430115844/build_shapes.log
+    jobid: 8
+    benchmark: benchmarks/romania-winter-stress-baseline-20260430115844/build_shapes
+    reason: Missing output files: resources/romania-winter-stress-baseline-20260430115844/offshore_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/europe_shape.geojson, resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson; Input files updated by another job: data/eu_nuts2021/archive/2021-01-01/ref-nuts-2021-01m.geojson/NUTS_RG_01M_2021_4326_LEVL_3.geojson, data/osm_boundaries/build/unknown/XK_adm1.geojson, data/eez/archive/v12_20231025/World_EEZ_v12_20231025_LR/eez_v12_lowres.gpkg, data/jrc_ardeco/archive/2021/ARDECO-SNPTD.2021.table.csv, data/osm_boundaries/build/unknown/MD_adm1.geojson, data/population_count/archive/2018-11-01/ppp_2019_1km_Aggregated.tif, data/jrc_ardeco/archive/2021/ARDECO-SUVGDP.2021.table.csv, data/osm_boundaries/build/unknown/UA_adm1.geojson, data/gdp_per_capita/archive/2018-02-06/GDP_per_capita_PPP_1990_2015_v2.nc, data/osm_boundaries/build/unknown/BA_adm1.geojson
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=1500, mem=1.5 GB, mem_mib=1431
+[Thu Apr 30 15:02:58 2026]
+Finished jobid: 27 (Rule: retrieve_electricity_demand)
+20 of 41 steps (49%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Apr 30 15:02:58 2026]
+localrule build_electricity_demand:
+    input: data/electricity_demand_raw.csv, data/synthetic_electricity_demand/primary/v2/load_synthetic_raw.csv
+    output: resources/romania-winter-stress-baseline-20260430115844/electricity_demand.csv
+    log: logs/romania-winter-stress-baseline-20260430115844/build_electricity_demand.log
+    jobid: 26
+    benchmark: benchmarks/romania-winter-stress-baseline-20260430115844/build_electricity_demand
+    reason: Missing output files: resources/romania-winter-stress-baseline-20260430115844/electricity_demand.csv; Input files updated by another job: data/synthetic_electricity_demand/primary/v2/load_synthetic_raw.csv, data/electricity_demand_raw.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=5000, mem=5 GB, mem_mib=4769
+INFO:pyogrio._io:Created 2 records
+INFO:__main__:Processing NUTS regions.
+INFO:__main__:Processing non-NUTS regions.
+Benchmark: unable to collect cpu and memory benchmark statistics: 
+[Thu Apr 30 15:03:13 2026]
+Finished jobid: 34 (Rule: build_ship_raster)
+21 of 41 steps (51%) done
+INFO:__main__:Harmonising NUTS and non-NUTS regions.
+INFO:__main__:Clipping regions by offshore shapes.
+INFO:__main__:Importing JRC ARDECO GDP data for year 2019.
+INFO:__main__:Importing JRC ARDECO population data for year 2019.
+INFO:__main__:Simplifying geometries for Europe by removing small islands smaller than 500 km2 or further than 200 km away.
+INFO:__main__:Linearly interpolate gaps of size 3 and less.
+INFO:__main__:Filling larger gaps by copying time-slices of period '1w'.
+C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp_lbjfcd2.build_electricity_demand.py:71: Pandas4Warning: 'w' is deprecated and will be removed in a future version. Please use 'W' instead of 'w'.
+  shift = Delta(shift)
+C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp_lbjfcd2.build_electricity_demand.py:71: Pandas4Warning: 'w' is deprecated and will be removed in a future version. Please use 'W' instead of 'w'.
+  shift = Delta(shift)
+C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp_lbjfcd2.build_electricity_demand.py:71: Pandas4Warning: 'w' is deprecated and will be removed in a future version. Please use 'W' instead of 'w'.
+  shift = Delta(shift)
+C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp_lbjfcd2.build_electricity_demand.py:71: Pandas4Warning: 'w' is deprecated and will be removed in a future version. Please use 'W' instead of 'w'.
+  shift = Delta(shift)
+INFO:__main__:Supplement missing data with synthetic data.
+Benchmark: unable to collect cpu and memory benchmark statistics: 
+[Thu Apr 30 15:03:27 2026]
+Finished jobid: 26 (Rule: build_electricity_demand)
+22 of 41 steps (54%) done
+INFO:pyogrio._io:Created 4 records
+INFO:pyogrio._io:Created 1 records
+INFO:__main__:Exporting NUTS3 and ADM1 shapes with GDP and POP values to resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson.
+INFO:pyogrio._io:Created 115 records
+Benchmark: unable to collect cpu and memory benchmark statistics: 
+[Thu Apr 30 15:07:11 2026]
+Finished jobid: 8 (Rule: build_shapes)
+23 of 41 steps (56%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Apr 30 15:07:11 2026]
+localrule base_network:
+    input: data/osm/archive/0.6/converters.csv, data/osm/archive/0.6/lines.csv, data/osm/archive/0.6/buses.csv, data/osm/archive/0.6/links.csv, data/osm/archive/0.6/transformers.csv, resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/offshore_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/europe_shape.geojson
+    output: resources/romania-winter-stress-baseline-20260430115844/networks/base.nc, resources/romania-winter-stress-baseline-20260430115844/regions_onshore.geojson, resources/romania-winter-stress-baseline-20260430115844/regions_offshore.geojson, resources/romania-winter-stress-baseline-20260430115844/admin_shapes.geojson
+    log: logs/romania-winter-stress-baseline-20260430115844/base_network.log
+    jobid: 22
+    benchmark: benchmarks/romania-winter-stress-baseline-20260430115844/base_network
+    reason: Missing output files: resources/romania-winter-stress-baseline-20260430115844/regions_offshore.geojson, resources/romania-winter-stress-baseline-20260430115844/admin_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/networks/base.nc, resources/romania-winter-stress-baseline-20260430115844/regions_onshore.geojson; Input files updated by another job: data/osm/archive/0.6/links.csv, resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson, data/osm/archive/0.6/lines.csv, resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/europe_shape.geojson, data/osm/archive/0.6/transformers.csv, data/osm/archive/0.6/converters.csv, resources/romania-winter-stress-baseline-20260430115844/offshore_shapes.geojson, data/osm/archive/0.6/buses.csv
+    threads: 4
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=2000, mem=2 GB, mem_mib=1908
+[Thu Apr 30 15:07:12 2026]
+localrule build_hydro_profile:
+    input: resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, data/eia_hydro_annual_generation.csv, data/eia_hydro_annual_capacity.csv, data/country_runoff/archive/2025-08-13/era5-runoff-per-country.csv, data/cutout/archive/v0.8/europe-2023-sarah3-era5.nc
+    output: resources/romania-winter-stress-baseline-20260430115844/profile_hydro.nc
+    log: logs/romania-winter-stress-baseline-20260430115844/build_hydro_profile.log
+    jobid: 36
+    benchmark: benchmarks/romania-winter-stress-baseline-20260430115844/build_hydro_profile
+    reason: Missing output files: resources/romania-winter-stress-baseline-20260430115844/profile_hydro.nc; Input files updated by another job: resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, data/country_runoff/archive/2025-08-13/era5-runoff-per-country.csv
+    resources: tmpdir=C:\Users\ADMINI~1\AppData\Local\Temp, mem_mb=5000, mem=5 GB, mem_mib=4769
+INFO:__main__:Creating base network using osm vlatest.
+WARNING:country_converter.country_converter:Eurasia not found in regex
+C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\atlite\convert.py:1044: FutureWarning: aggregate_time='legacy' is deprecated and will be removed in a future release. Pass 'sum', 'mean', or None explicitly.
+  result = cutout.convert_and_aggregate(convert_func=convert_runoff, **params)
+INFO:atlite.convert:Convert and aggregate 'runoff'.
+INFO:__main__:Removing buses outside of range AC 220.0 - 750.0 V
+WARNING:__main__:Voltages {66.0, 132.0, 110.0, 150.0, 90.0, 63.0} not in the {63.0: '94-AL1/15-ST1A 20.0', 66.0: '94-AL1/15-ST1A 20.0', 90.0: '184-AL1/30-ST1A 110.0', 110.0: '184-AL1/30-ST1A 110.0', 132.0: '243-AL1/39-ST1A 110.0', 150.0: '243-AL1/39-ST1A 110.0', 220.0: 'Al/St 240/40 2-bundle 220.0', 300.0: 'Al/St 240/40 3-bundle 300.0', 330.0: 'Al/St 240/40 3-bundle 300.0', 380.0: 'Al/St 240/40 4-bundle 380.0', 400.0: 'Al/St 240/40 4-bundle 380.0', 500.0: 'Al/St 240/40 4-bundle 380.0', 750.0: 'Al/St 560/50 4-bundle 750.0'} or [220.0, 300.0, 330.0, 380.0, 400.0, 500.0, 750.0] list.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for buses. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'i_nom' is a standard attribute for other components but not for lines. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'v_nom' is a standard attribute for other components but not for lines. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for lines. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for transformers. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for links. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for links. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp32di52w1.base_network.py:431: FutureWarning: In future versions, adjacency_matrix will return a pandas DataFrame by default. To maintain the current behavior, explicitly set return_dataframe=False. To adopt the new behavior and silence this warning, set return_dataframe=True.
+  _, labels = csgraph.connected_components(network.adjacency_matrix(), directed=False)
+INFO:__main__:Removing 0 unconnected network components with less than nan buses. In total 0 buses.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for buses. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'i_nom' is a standard attribute for other components but not for lines. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'v_nom' is a standard attribute for other components but not for lines. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for lines. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for transformers. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+WARNING:pypsa.network.transform:The attribute 'geometry' is a standard attribute for other components but not for links. This could cause confusion and it should be renamed. See also: https://go.pypsa.org/warning-attr-misleading.
+INFO:__main__:Building bus regions per country level.
+
+Building onshore regions:   0%|          | 0/4 [00:00<?, ? regions/s]
+Building onshore regions:  25%|██▌       | 1/4 [00:28<01:25, 28.63s/ regions]
+Building onshore regions:  50%|█████     | 2/4 [00:28<00:23, 11.89s/ regions]
+Building onshore regions:  75%|███████▌  | 3/4 [00:28<00:06,  6.54s/ regions]
+Building onshore regions: 100%|██████████| 4/4 [00:28<00:00,  7.25s/ regions]
+INFO:__main__:In total 384 onshore regions.
+
+Building offshore regions:   0%|          | 0/4 [00:00<?, ? regions/s]
+Building offshore regions:  25%|██▌       | 1/4 [00:01<00:04,  1.38s/ regions]
+Building offshore regions: 100%|██████████| 4/4 [00:01<00:00,  2.76 regions/s]
+INFO:__main__:In total 5 offshore regions.
+WARNING:pypsa.networks:The network has not been optimized yet and no model is stored.
+WARNING:pypsa.networks:The network has not been optimized yet and no objective value is stored.
+WARNING:pypsa.networks:The network has not been optimized yet and no objective constant is stored.
+WARNING:pypsa.networks:The network has not been optimized yet and no model is stored.
+WARNING:pypsa.networks:The network has not been optimized yet and no objective value is stored.
+WARNING:pypsa.networks:The network has not been optimized yet and no objective constant is stored.
+INFO:pypsa.network.io:Exported network 'PyPSA-Eur (osm vlatest)' saved to 'resources/romania-winter-stress-baseline-20260430115844/networks/base.nc contains: carriers, lines, buses, transformers, shapes
+ERROR:root:Uncaught exception
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp32di52w1.base_network.py", line 1653, in <module>
+    n.export_to_netcdf(snakemake.output.base_network)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\Python\Python313\site-packages\pypsa\network\io.py", line 1739, in export_to_netcdf
+    with _ExporterNetCDF(path, compression, float32) as exporter:
+         ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\Python\Python313\site-packages\pypsa\network\io.py", line 124, in __exit__
+    self.finish()
+    ~~~~~~~~~~~^^
+  File "C:\Users\Administrator\AppData\Roaming\Python\Python313\site-packages\pypsa\network\io.py", line 1058, in finish
+    self.ds.to_netcdf(_path)
+    ~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\core\dataset.py", line 2030, in to_netcdf
+    return to_netcdf(  # type: ignore[return-value]  # mypy cannot resolve the overloads:(
+        self,
+    ...<10 lines>...
+        auto_complex=auto_complex,
+    )
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\api.py", line 1928, in to_netcdf
+    dump_to_store(
+    ~~~~~~~~~~~~~^
+        dataset, store, writer, encoding=encoding, unlimited_dims=unlimited_dims
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\api.py", line 1975, in dump_to_store
+    store.store(variables, attrs, check_encoding, writer, unlimited_dims=unlimited_dims)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\common.py", line 456, in store
+    variables, attributes = self.encode(variables, attributes)
+                            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\common.py", line 640, in encode
+    variables, attributes = cf_encoder(variables, attributes)
+                            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\conventions.py", line 785, in cf_encoder
+    _update_bounds_encoding(variables)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\conventions.py", line 306, in _update_bounds_encoding
+    is_datetime_type = np.issubdtype(
+                       ~~~~~~~~~~~~~^
+        v.dtype, np.datetime64
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ) or contains_cftime_datetimes(v)
+    ^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\numpy\_core\numerictypes.py", line 534, in issubdtype
+    arg1 = dtype(arg1).type
+           ~~~~~^^^^^^
+TypeError: Cannot interpret '<StringDtype(na_value=nan)>' as a data type
+RuleException:
+CalledProcessError in file "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\rules/build_electricity.smk", line 101:
+Command 'C:/Users/Administrator/.conda/envs/pypsa/python.exe "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmp32di52w1.base_network.py"' returned non-zero exit status 1.
+[Thu Apr 30 15:08:08 2026]
+Error in rule base_network:
+    message: None
+    jobid: 22
+    input: data/osm/archive/0.6/converters.csv, data/osm/archive/0.6/lines.csv, data/osm/archive/0.6/buses.csv, data/osm/archive/0.6/links.csv, data/osm/archive/0.6/transformers.csv, resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/offshore_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/europe_shape.geojson
+    output: resources/romania-winter-stress-baseline-20260430115844/networks/base.nc, resources/romania-winter-stress-baseline-20260430115844/regions_onshore.geojson, resources/romania-winter-stress-baseline-20260430115844/regions_offshore.geojson, resources/romania-winter-stress-baseline-20260430115844/admin_shapes.geojson
+    log: logs/romania-winter-stress-baseline-20260430115844/base_network.log (check log file(s) for error details)
+Removing output files of failed job base_network since they might be corrupted:
+resources/romania-winter-stress-baseline-20260430115844/networks/base.nc
+ERROR:root:Uncaught exception
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmpn5uu2hwp.build_hydro_profile.py", line 222, in <module>
+    inflow.to_netcdf(snakemake.output.profile)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\core\dataarray.py", line 4186, in to_netcdf
+    return to_netcdf(  # type: ignore[return-value]  # mypy cannot resolve the overloads:(
+        dataset,
+    ...<10 lines>...
+        auto_complex=auto_complex,
+    )
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\api.py", line 1928, in to_netcdf
+    dump_to_store(
+    ~~~~~~~~~~~~~^
+        dataset, store, writer, encoding=encoding, unlimited_dims=unlimited_dims
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\api.py", line 1975, in dump_to_store
+    store.store(variables, attrs, check_encoding, writer, unlimited_dims=unlimited_dims)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\common.py", line 456, in store
+    variables, attributes = self.encode(variables, attributes)
+                            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\backends\common.py", line 640, in encode
+    variables, attributes = cf_encoder(variables, attributes)
+                            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\conventions.py", line 785, in cf_encoder
+    _update_bounds_encoding(variables)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\xarray\conventions.py", line 306, in _update_bounds_encoding
+    is_datetime_type = np.issubdtype(
+                       ~~~~~~~~~~~~~^
+        v.dtype, np.datetime64
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ) or contains_cftime_datetimes(v)
+    ^
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\numpy\_core\numerictypes.py", line 534, in issubdtype
+    arg1 = dtype(arg1).type
+           ~~~~~^^^^^^
+TypeError: Cannot interpret '<StringDtype(na_value=nan)>' as a data type
+RuleException:
+CalledProcessError in file "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\rules/build_electricity.smk", line 412:
+Command 'C:/Users/Administrator/.conda/envs/pypsa/python.exe "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\scripts\tmpn5uu2hwp.build_hydro_profile.py"' returned non-zero exit status 1.
+[Thu Apr 30 15:09:03 2026]
+Error in rule build_hydro_profile:
+    message: None
+    jobid: 36
+    input: resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, data/eia_hydro_annual_generation.csv, data/eia_hydro_annual_capacity.csv, data/country_runoff/archive/2025-08-13/era5-runoff-per-country.csv, data/cutout/archive/v0.8/europe-2023-sarah3-era5.nc
+    output: resources/romania-winter-stress-baseline-20260430115844/profile_hydro.nc
+    log: logs/romania-winter-stress-baseline-20260430115844/build_hydro_profile.log (check log file(s) for error details)
+Removing output files of failed job build_hydro_profile since they might be corrupted:
+resources/romania-winter-stress-baseline-20260430115844/profile_hydro.nc
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look below for error messages
+[Thu Apr 30 15:09:03 2026]
+Error in rule base_network:
+    message: None
+    jobid: 22
+    input: data/osm/archive/0.6/converters.csv, data/osm/archive/0.6/lines.csv, data/osm/archive/0.6/buses.csv, data/osm/archive/0.6/links.csv, data/osm/archive/0.6/transformers.csv, resources/romania-winter-stress-baseline-20260430115844/nuts3_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/offshore_shapes.geojson, resources/romania-winter-stress-baseline-20260430115844/europe_shape.geojson
+    output: resources/romania-winter-stress-baseline-20260430115844/networks/base.nc, resources/romania-winter-stress-baseline-20260430115844/regions_onshore.geojson, resources/romania-winter-stress-baseline-20260430115844/regions_offshore.geojson, resources/romania-winter-stress-baseline-20260430115844/admin_shapes.geojson
+    log: logs/romania-winter-stress-baseline-20260430115844/base_network.log (check log file(s) for error details)
+[Thu Apr 30 15:09:03 2026]
+Error in rule build_hydro_profile:
+    message: None
+    jobid: 36
+    input: resources/romania-winter-stress-baseline-20260430115844/country_shapes.geojson, data/eia_hydro_annual_generation.csv, data/eia_hydro_annual_capacity.csv, data/country_runoff/archive/2025-08-13/era5-runoff-per-country.csv, data/cutout/archive/v0.8/europe-2023-sarah3-era5.nc
+    output: resources/romania-winter-stress-baseline-20260430115844/profile_hydro.nc
+    log: logs/romania-winter-stress-baseline-20260430115844/build_hydro_profile.log (check log file(s) for error details)
+Complete log(s): C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\.snakemake\log\2026-04-30T145951.401836.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.
+
+ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260430115844/networks/base_s_3_elec_.nc --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260430115844_baseline.yaml` failed. (See above for error)
