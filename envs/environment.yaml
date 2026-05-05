@@ -54,6 +54,7 @@ dependencies:
 - shapely >=2.0
 - snakemake-executor-plugin-cluster-generic >=1.0.9
 
+- google-cloud-storage >=2.10
 - snakemake-minimal >=9
 - snakemake-storage-plugin-http >=0.3
 - tenacity >=9.1.2

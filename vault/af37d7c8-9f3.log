@@ -1,0 +1,36 @@
+
+[2026-05-05T08:49:23.754Z] Unlock baseline workflow [conda-run]
+$ C:\ProgramData\anaconda3\condabin\conda.bat run -n pypsa python -m snakemake --storage-cached-http-skip-remote-checks --unlock --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260505084923_baseline.yaml
+Using workflow specific profile profiles\default for setting default command line arguments.
+ModuleNotFoundError in file "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\Snakefile", line 13:
+No module named 'pkg_resources'
+  File "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\Snakefile", line 13, in <module>
+  File "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\scripts\_helpers.py", line 19, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\pypsa\__init__.py", line 21, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\pypsa\examples.py", line 19, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\pypsa\networks.py", line 29, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\__init__.py", line 21, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\model.py", line 63, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\remote\__init__.py", line 11, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\remote\oetc.py", line 13, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\google\cloud\storage\__init__.py", line 35, in <module>
+
+ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks --unlock --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260505084923_baseline.yaml` failed. (See above for error)
+
+[2026-05-05T08:50:12.566Z] Solve baseline scenario [conda-run]
+$ C:\ProgramData\anaconda3\condabin\conda.bat run -n pypsa python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260505084923/networks/base_s_20_elec_.nc --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260505084923_baseline.yaml
+Using workflow specific profile profiles\default for setting default command line arguments.
+ModuleNotFoundError in file "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\Snakefile", line 13:
+No module named 'pkg_resources'
+  File "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\Snakefile", line 13, in <module>
+  File "C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\scripts\_helpers.py", line 19, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\pypsa\__init__.py", line 21, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\pypsa\examples.py", line 19, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\pypsa\networks.py", line 29, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\__init__.py", line 21, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\model.py", line 63, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\remote\__init__.py", line 11, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\linopy\remote\oetc.py", line 13, in <module>
+  File "C:\Users\Administrator\.conda\envs\pypsa\Lib\site-packages\google\cloud\storage\__init__.py", line 35, in <module>
+
+ERROR conda.cli.main_run:execute(127): `conda run python -m snakemake --storage-cached-http-skip-remote-checks -c all results/romania-winter-stress-baseline-20260505084923/networks/base_s_20_elec_.nc --configfile C:\Users\Administrator\Desktop\nextpypsa\pypsa-eur\config\adversarial\generated\romania-winter-stress_20260505084923_baseline.yaml` failed. (See above for error)
