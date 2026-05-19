@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="pypsa-eur-romania" version="29.6.6" type="device">
+  <diagram name="Resilience Measurement" id="fig09-resilience">
+    <mxGraphModel dx="1422" dy="800" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1240" pageHeight="820" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="banner" value="Operational Definition of Resilience and Its Measurement" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=18;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1160" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subbanner" value="Recovery / Absorption / Adaptation axes mapped to the seven-CSV result contract — Romania winter envelope (15–22 January 2023)" style="text;html=1;strokeColor=none;fillColor=#072A75;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#C9D7F5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="1160" height="26" as="geometry" />
+        </mxCell>
+
+        <mxCell id="col_abs" value="ABSORPTION&#10;ability to withstand the shock" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=12;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="124" width="370" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="col_rec" value="RECOVERY&#10;cost of restoring service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=12;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="124" width="370" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="col_ada" value="ADAPTATION&#10;reconfiguration of the residual fleet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=12;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="124" width="370" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r1_hdr" value="INDICATOR FAMILY" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="184" width="1130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ind_abs" value="Loss-of-service envelope&#10;(unserved energy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=11;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="212" width="370" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="ind_rec" value="Cost envelope + price envelope&#10;(macroeconomic + marginal stress)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=11;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="212" width="370" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="ind_ada" value="Generation-mix shift + congestion&amp;flow&#10;(substitution effort + loss of buffering)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=11;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="212" width="370" height="48" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r2_hdr" value="RESULT-CONTRACT CSV (seven-CSV schema)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="270" width="1130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="csv_abs" value="ens_summary.csv" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;fontSize=11;fontStyle=0;fontColor=#0A3DA3;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="298" width="370" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="csv_rec" value="system_cost_comparison.csv  +  lmp_summary_ro.csv" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;fontSize=11;fontStyle=0;fontColor=#0A3DA3;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="298" width="370" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="csv_ada" value="generation_mix_mwh.csv  +  interconnector_flow_congestion.csv  +  daily_net_imports_mwh.csv  +  curtailment_mwh.csv" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0A3DA3;fontSize=10;fontStyle=0;fontColor=#0A3DA3;fontFamily=Courier New;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="298" width="370" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r3_hdr" value="OBSERVED MAGNITUDE — Romania winter envelope" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F28C28;strokeColor=#F28C28;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="340" width="1130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="val_abs" value="45.2 GWh unserved energy&#10;concentrated in evening-peak hours&#10;and northern Romania" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C4372A;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="368" width="370" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="val_rec" value="+570 M EUR system cost (+31%)&#10;LMP 65 → 145 EUR/MWh (mean)&#10;LMP 180 → 380 EUR/MWh (peak)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C4372A;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="368" width="370" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="val_ada" value="Gas generation +37% (≈ +370 GWh)&#10;Coal generation +21%&#10;Net imports collapse to 0 MWh/h" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C4372A;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="368" width="370" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r4_hdr" value="REGULATORY ALIGNMENT — what the indicator answers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="454" width="1130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="reg_abs" value="CER Directive (EU) 2022/2557, Art. 13&#10;&quot;loss-of-service magnitude&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="482" width="370" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="reg_rec" value="CER Directive Art. 13 + TYNDP CBA&#10;&quot;cost of recovery&quot; / value of interconnection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="482" width="370" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="reg_ada" value="NIS2 + CER Directive&#10;&quot;substitution capacity / residual flexibility&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="482" width="370" height="48" as="geometry" />
+        </mxCell>
+
+        <mxCell id="synth_hdr" value="SYNTHESIS — resilience as a verifiable, inter-comparable property" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0F7B3B;strokeColor=#0F7B3B;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="552" width="1130" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="synth_body" value="Resilience is operationalised as five indicator families surfaced by the deterministic seven-CSV contract.&#10;Every indicator is expressed in SI units (GWh, EUR, EUR/MWh, MWh), reproducible from the same artefacts, and inter-comparable across scenarios, deployments and borders.&#10;The recovery / absorption / adaptation triplet is therefore measured, not asserted." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFF;strokeColor=#0F7B3B;fontSize=11;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="584" width="1130" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="footer" value="Source: authors. Indicator families derived from the project's result contract; regulatory alignment from Directive (EU) 2022/2555 (NIS2) and Directive (EU) 2022/2557 (CER)." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontColor=#5D6A7B;fontFamily=Helvetica;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="686" width="1130" height="22" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

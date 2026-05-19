@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="pypsa-eur-romania" version="29.6.6" type="device">
+  <diagram name="RQ to Findings" id="fig10-rq-findings">
+    <mxGraphModel dx="1422" dy="800" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1240" pageHeight="820" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="banner" value="From Research Questions to Findings and Proposals" style="text;html=1;strokeColor=none;fillColor=#0A3DA3;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=18;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1160" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subbanner" value="Three research questions (Introduction) answered as two evidenced findings and two forward-looking proposals (Conclusions)" style="text;html=1;strokeColor=none;fillColor=#072A75;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#C9D7F5;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="1160" height="26" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rq_band" value="RESEARCH QUESTIONS (Introduction)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="124" width="1130" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rq1" value="RQ1 — Interoperability&#10;&#10;Can an open-source modelling stack satisfy the four EIF layers (legal, organisational, semantic, technical) when its result schema, configuration grammar and orchestration are designed as contracts rather than as artefacts?" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=12;spacingRight=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="156" width="370" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="rq2" value="RQ2 — Dual-use qualification&#10;&#10;Does such a stack qualify as a dual-use technology under EU Reg. 2021/821 — usable for civilian decarbonisation studies and equally for defence-relevant resilience assessments — while remaining within the regulation's public-domain carve-out?" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=12;spacingRight=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="440" y="156" width="370" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="rq3" value="RQ3 — Funding alignment&#10;&#10;Do contemporary EU instruments (Horizon Europe Cluster 5, European Defence Fund, Connecting Europe Facility, rescEU) already foresee this dual orientation so that a platform internalising the EIF obligations can be co-funded across instruments without architectural duplication?" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0A3DA3;strokeColor=#0A3DA3;fontSize=11;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=12;spacingRight=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="820" y="156" width="370" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#5D6A7B;strokeWidth=2;fontSize=10;fontColor=#5D6A7B;" edge="1" parent="1" source="rq1" target="finding1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2a" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#5D6A7B;strokeWidth=2;fontSize=10;fontColor=#5D6A7B;" edge="1" parent="1" source="rq2" target="finding2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2b" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#5D6A7B;strokeWidth=2;fontSize=10;fontColor=#5D6A7B;" edge="1" parent="1" source="rq2" target="proposal1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3" value="" style="endArrow=classic;html=1;rounded=0;strokeColor=#5D6A7B;strokeWidth=2;fontSize=10;fontColor=#5D6A7B;" edge="1" parent="1" source="rq3" target="proposal2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sec_band" value="ANSWERED IN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#5D6A7B;strokeColor=#5D6A7B;fontSize=10;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="324" width="1130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="sec_rq1" value="§3 Platform architecture&#10;§7 EIF mapping" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="350" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="sec_rq2" value="§4 Case study + resilience metrics&#10;§5 Dual-use applicability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="440" y="350" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="sec_rq3" value="§6 Contemporary funding mechanisms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF5FF;strokeColor=#C7D5EF;fontSize=10;fontColor=#1E2B3A;fontFamily=Helvetica;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="820" y="350" width="370" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fp_band" value="FINDINGS AND PROPOSALS (Conclusions)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#072A75;strokeColor=#072A75;fontSize=11;fontStyle=1;fontColor=#FFFFFF;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="408" width="1130" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="finding1" value="FINDING 1&#10;&#10;A six-layer architecture for paired-scenario stress testing is feasible on an open substrate. Presentation, API, Domain Logic, Workflow and Optimisation, Persistence and External Data layers assembled around PyPSA-Eur and a Next.js dashboard, without modifying the optimisation core. Paired baseline+stressed run with comparison report in 20–25 min at 20 clusters, hourly resolution. Candidate substrate for national risk-assessment work under Directive (EU) 2022/2557." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0F7B3B;strokeColor=#0F7B3B;fontSize=10;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=10;spacingRight=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="444" width="270" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="finding2" value="FINDING 2&#10;&#10;Compact orthogonal shocks already produce CER-Directive-grade evidence. Five orthogonal channels — load multiplier, hydro reduction, gas capacity reduction, SCADA-proxy ramp constraints, directional import caps — combine into an envelope interpretable for resilience decision-making. Moderate simultaneous derating with electrical isolation produces order-of-magnitude signals: 45 GWh ENS, +31% cost, 2× LMP. Compact shock taxonomies are sufficient as the measurement instrument." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0F7B3B;strokeColor=#0F7B3B;fontSize=10;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=10;spacingRight=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="345" y="444" width="270" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="proposal1" value="PROPOSAL 1&#10;&#10;Add a governance layer to the European Interoperability Framework for critical-infrastructure modelling. A fifth cross-cutting layer bundling persistent job state, immutable templates, per-run logs, and a machine-readable assumptions-and-limitations object into a verifiable audit envelope. Interoperability becomes a property that can be audited, not only claimed — the threshold a national risk assessment under the CER Directive must meet to be admissible." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F28C28;strokeColor=#F28C28;fontSize=10;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=10;spacingRight=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="630" y="444" width="270" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="proposal2" value="PROPOSAL 2&#10;&#10;Make civilian-by-design platforms the default substrate for cross-pillar EU funding in critical-infrastructure security. A single-substrate posture lets Horizon Europe Cluster 5, EDF, CEF and rescEU finance complementary deliverables of one architecture instead of four parallel architectures, satisfying the public-domain carve-out under Reg. (EU) 2021/821 by construction. Recommended as an explicit eligibility criterion in the next work-programme cycle." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F28C28;strokeColor=#F28C28;fontSize=10;fontStyle=0;fontColor=#FFFFFF;fontFamily=Helvetica;align=left;spacingLeft=10;spacingRight=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="915" y="444" width="275" height="240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend_finding" value="■ Evidenced finding (supported by §3–§6 of the paper)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#0F7B3B;fontFamily=Helvetica;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="702" width="500" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_proposal" value="■ Forward-looking proposal (call to action for EU policy / EIF revision)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#F28C28;fontFamily=Helvetica;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="702" width="560" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="footer" value="Source: authors. Mapping consolidates the three claims previously stated in the Introduction into the structure requested by Reviewer 1 — research questions in the Introduction, evidenced findings and proposals in the Conclusions." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontColor=#5D6A7B;fontFamily=Helvetica;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="728" width="1130" height="22" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
